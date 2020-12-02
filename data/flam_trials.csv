@@ -1,5 +1,5 @@
 date,trial,trial.time,site,temp.id,species,mass.pre,mass.post,temp.d1.pre,temp.d2.pre,flame.ht,flame.dur,temp d1.post,temp.d2.post,vol.burned,notes
-0,1,9:54,Dickens.Top,jupi1,Juniperus pinchotti,89.5,77.7,104,93,2,0:22.32,96,94,2,
+09/24/2020,1,9:54,Dickens.Top,jupi1,Juniperus pinchotti,89.5,77.7,104,93,2,0:22.32,96,94,2,
 09/24/2020,2,10:06,Dickens.Top,rhtr1,Rhus trilobata,112.4,108,99,83,0,0,99,83,1,
 09/24/2020,3,10:14,Dickens.Top,celtis1,Celtis laevigata,127.5,115.9,94,100,14,0:9.2,114,112,3,
 09/24/2020,4,10:19,Dickens.Top,rhmI1,Rhus microphylla,123,113.5,105,104.3,12,0:13.67,117,120,10,
@@ -17,7 +17,7 @@ date,trial,trial.time,site,temp.id,species,mass.pre,mass.post,temp.d1.pre,temp.d
 11/1/2020,3,12:37:00,Dickens,PRGL1,,81.5,51.1,145.7,145.7,51,0:38,145.7,145.7,85,
 11/1/2020,4,12:44:00,Dickens,JUPI2,,288.9,159,145,143.1,63,4:32,145,143.1,45,
 11/1/2020,5,12:56:00,Dickens,PRGL2,,75.8,51.3,158.1,157.7,63,0:55,158.1,157.7,85,
-11/1/2020,6,013:04:00,Dickens,JUPI3,,190.8,141.5,145.7,141.6,38,2:08,145.7,141.6,10,
+11/1/2020,6,13:04:00,Dickens,JUPI3,,190.8,141.5,145.7,141.6,38,2:08,145.7,141.6,10,
 11/1/2020,7,13:11:00,Dickens,PRGL3,,70.1,64.2,149.6,150,6,0:19,149.6,150,5,
 11/1/2020,8,13:17:00,Dickens,JUPI4,,420,73.9,138.2,120.2,102,3:25,138.2,120.2,95,
 11/1/2020,9,13:36:00,Dickens,PRGL4,,89.8,68.5,149.6,145.6,44,0:21,149.6,145.6,50,
