@@ -23,7 +23,7 @@ date,trial,trial.time,site,temp.id,species,mass.pre,mass.post,temp.d1.pre,temp.d
 11/1/2020,9,13:36:00,Dickens,PRGL4,Prosopis glandulosa,89.8,68.5,149.6,145.6,44,0:21,149.6,145.6,50,
 11/1/2020,10,13:42:00,Dickens,JUPI5,Juniperus pinchotti,242.9,215.7,149.1,150.3,0,0:0,149.1,150.3,1,* [DNI] did not ignite
 11/1/2020,11,13:47:00,Dickens,PRGL5,Prosopis glandulosa,69.6,60.7,151,151.3,17,0:20,151,151.3,30,
-11/1/2020,12,13:52:00,Dickens,JUPI6,Juniperus pinchotti,323.5,323.5*,150,149.5,0,0:0,150,149.5,1,* [DNI] did not ignite - missing data for mass.post but assumed same as mass.pre
+11/1/2020,12,13:52:00,Dickens,JUPI6,Juniperus pinchotti,323.5,323.5,150,149.5,0,0:0,150,149.5,1,* [DNI] did not ignite - missing data for mass.post but assumed same as mass.pre
 11/1/2020,13,14:04:00,Dickens,PRGL6,Prosopis glandulosa,91.2,69.1,169,153,63,0:26,169,153,20,
 11/1/2020,14,14:10:00,Dickens,JUPI7,Juniperus pinchotti,405.2,108,134,126.2,90,3:21,134,126.2,95,
 11/1/2020,15,14:27:00,Dickens,PRGL7,Prosopis glandulosa,72.9,60.3,152.6,145,43,0:08,152.6,145,30,
