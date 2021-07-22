@@ -1,4 +1,4 @@
-Sample_ID,Species_ID,Trial,Trial_Time,RH,WS,Temp,Pre_Mass,Post_Mass,Ptemp_D1,Ptemp_D2,Flame_Ht,Flame_Du,Potemp_D1,Potmep_D2,Vol_Bu,Max_Temp
+Sample_ID,Species_ID,Trial,Trial Time,RH_Percent,WS_Mile/hr,Tem(F),Pre_Mass_gm,Post_Mass_gm,Pre.Tem(D1)_Celcius,Pre.Tem(D2)_Celcius,Flame_Ht_cm,Flame_Dur_Sec,Post.Tem(D1)_Celcius,Post.Tem(D2)_Celcius,Vol_Bur(%),Max.Tem
 ED19,1022,13,12:20,45.5,2.9,90.5,214.4,179.4,153.3,129.2,0,0,146.3,120.7,3,217
 ED20,1000,18,10:25,52.7,1,85.5,88.8,65.2,154.1,144.1,38,30,152.6,151.5,18,209.2
 ED21,1021,15,9:59,66.3,1,81.8,210.9,77.7,158.9,152.6,63,107,163.1,252.1,60,400.4

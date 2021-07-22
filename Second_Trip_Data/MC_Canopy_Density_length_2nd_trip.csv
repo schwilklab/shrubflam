@@ -1,4 +1,4 @@
-Sample ID,Species ID,Fresh Mass(gm),Bottom Width(Inch),Middle Width(Inch),Top Width(Inch),Average Width(Inch),Length(cm),Dry Mass(gm)
+Sample_ID,Species_ID,Fresh_Mass_gm,Bottom_Width_inch,Middle_Width_inch,Top_Width_inch,Average_Width_inch,Length_cm,Dry_Mass_gm
 ME01,1022,1.044,0.6,7,8,,70,0.6973
 ME02,1002,0.5814,3,4.5,10,,70,0.3245
 ME03,1113,1.0068,3,9,15,,70,0.608

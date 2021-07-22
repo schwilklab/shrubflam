@@ -1,4 +1,4 @@
-Sample_ID,Species_ID,Fresh_Mass,Leaf_Area,Dry_Mass,LMA,Dead_Material
+Sample_ID,Species_ID,Freah_Mass_gm,Leaf_Area_cm^2,Dry_Mass_gm,LMA,Dry_Material(%)
 ED19,1022,1.0195,1.11,0.6042,,25
 ED20,1000,0.9484,39.54,0.5499,,12
 ED21,1021,4.2257,99.9,2.3372,,2

@@ -1,4 +1,4 @@
-Sample_ID,Species_ID,Fresh_Mass,Bottom_Width,Middle_Width,Top_Width,Average_Width,Length,Dry_Mass
+Sample_ID,Species_ID,Fresh_Mass_gm,Bottom_Width_inch,Middle_Width_inch,Top_Width_inch,Average_Width_inch,Length_cm,Dry_Mass_gm
 ED19,1022,1.0068,0.5,7,9.5,,70,0.7043
 ED20,1000,0.9095,0.4,4,7,,70,0.7757
 ED21,1021,1.0861,0.5,5,12,,70,0.6
