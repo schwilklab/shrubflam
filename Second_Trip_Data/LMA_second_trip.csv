@@ -1,4 +1,4 @@
-Sample Id,Species ID,Fresh Mass(gm),Leaf Area(cm^2),Dry Mass(gm),LMA,% of Dead Material
+Sample_ID,Species_ID,Fresh Mass,Leaf Area,Dry Mass,LMA,Dead Material
 ME01,1022,0.3529,8.21,0.1858,,22
 ME02,1002,0.6489,9.76,0.3893,,3
 ME03,1113,1.9259,25.66,0.8594,,15
