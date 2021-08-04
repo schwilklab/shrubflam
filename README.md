@@ -44,4 +44,5 @@ Canopy Density:
 # Looks like Quercus buckleyi and shummardii are similar in terms of morphology.
 # Collected one Quercus virginianna and want to exclude that.
 # Want to add Juniperus pinchottii,Forestiera reticulata, Rhus trilobata, Garrya elliptica.
+# Flame duration of RE03 is 5:18 or 318 seconds
 
