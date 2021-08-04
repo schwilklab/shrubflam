@@ -3,6 +3,7 @@ Measurements:
 # Fresh mass and Dry Mass for LMA and Moisture content measured in gram.
 # Width of Canopy density measured in Inch.
 # Disc temperature measured in Celcius.
+# Air temperature measured in Farenheit.
 # Castro Data, Wind speed in miles per hour, Temperature in Farenheit, Relative Humidity in Percentage.
 # Emissivity of the thermometer is .95.
 
@@ -30,14 +31,10 @@ Right: 27.5 inch.
 # Few samples were less than 70 cm from the first trip.
 # Got the hobo data (Temperature and Humidity of the drying period) only from the last second burn of second trip.
 # Got 24 hours of hobo data of the second burn of second trip samples.
-
-Canopy Density:
 # The width measured in inch(Bottom,Middle and Top Width).
 # The leaf sample for ED11 is missing and I didn't measure it's LMA.
 # Some samples are less than 70 cm.
 # I have confusion with some species in terms of identification.
-# Leaf area measured in centimeter square.
-# Emissivity of the thermometer is .95.
 # Species like juniper, mimosa, pinus I did measured only the projection not the morphological leaf area.
 # Senegalia wrightii and senegalia romeriana are morphologically same.
 # Want to exclude the Yucca rupicola since I have collected only one sample.
