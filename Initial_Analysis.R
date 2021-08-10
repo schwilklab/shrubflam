@@ -48,7 +48,8 @@ Epi_first_third <- Epi_first_third%>%
 # Turning those three dataset into one
 Epi_data <- rbind(Epi_first_third,Epi_second)
 
-# Getting all the column except Species_ID to merge with burning and mc data
+# Getting all the column except Species_ID to merge with burning and moisture content
+# data
 Epi_data <- Epi_data%>%
   select(-c(5))
 
@@ -148,6 +149,10 @@ Epi_canopy_burn <- Epi_canopy_burn%>%
 Epi_canopy_burn <- separate(Epi_canopy_burn,Species, into = c("Genus","Species"),sep = " ")
 
 # Changing the unit and get the total mass of each sample
+# The width measured in inch and length in cm.
+# Total mass is the addition of the mass of sample before burning
+# plus the mass of the small portion which used to measure the moisture content
+# on dry basis.
 Epi_canopy_burn <- Epi_canopy_burn%>%
   mutate(Bottom_Width_inch=Bottom_Width_inch*0.0254,
          Middle_Width_inch=Middle_Width_inch*0.0254,
@@ -161,7 +166,7 @@ Epi_canopy_burn <- Epi_canopy_burn%>%
 
 Epi_canopy_burn$Average_Width <- apply(Epi_canopy_burn[,(8:10)],1,mean)
 
-# Determine canopy volume and Canopy_Density
+# Determine canopy volume( though unnecessary) and Canopy_Density
 Epi_canopy_burn <- Epi_canopy_burn%>%
   mutate(Canopy_Volume=pi*(Average_Width)^2*Length_cm)%>%
   mutate(Canopy_Density=Total_Mass/Canopy_Volume)
@@ -422,6 +427,24 @@ pis <- ggplot(Ignitibility_by_speciesid,aes(x=reorder(Species_ID, Mean_Ignitibil
   xlab("Species_ID")
 
 
+# Heat release of disc one
+Epi_canopy_burn <- Epi_canopy_burn%>%
+  mutate(Heat_release_D1=(Post_Temp_D1-Pre_Temp_D1)*0.897*50.3054,
+         Heat_release_D2=(Post_Temp_D2-Pre_Temp_D2)*0.897*50.3054,
+         Heat_release=(Heat_release_D1+Heat_release_D2)/2)
+
+# Mass loss of those samples which are not ignited
+Epi_canopy_burn_ignitibility <- Epi_canopy_burn%>%
+  filter(Ignitibility=="0")
+Epi_canopy_burn_ignitibility<- Epi_canopy_burn_ignitibility%>%
+  mutate(Mass_loss=Pre_Mass_gm-Post_Mass_gm)
+
+ggplot(Epi_canopy_burn_ignitibility,aes(Genus,Mass_loss))+
+  geom_boxplot(aes(color=Genus))+
+  theme(axis.text.x = element_text(angle = 45,hjust = 1,face="italic"))
+  
+
+
 # Scoring flammability as Dr. Tim Curran's lab
 # Flammability by ignitibility,sustainability as flame duration, consumability as 
 # volume burn, combustibility as maximum temperature.
@@ -509,31 +532,6 @@ Drying_data <- apply(Hobo_data[(1:3),],2,mean)
 
 # Temperature Relative_Humidity         Dew_Point 
 # 23.82333          50.44667          12.92667 
-
-# Statistical analysis
-# Get Leaf area,Dry matter from Lma data to merge with Epi_canopy_burn
-# data for correlation test 
-LMA_data <- Lma_data%>%
-  select(Sample_ID,Leaf_Area,Dry_Material)
-Stat <- merge(Epi_canopy_burn,LMA_data,by="Sample_ID")
-Stat$Vol_Burn[Stat$Ignitibility==0] <- 0
-Stat$Max_Temp[Stat$Ignitibility==0] <- 0 
-Stat$Flammability <- apply(Stat[,c(24,27,28,36)],1,sum)
-
-cor.test(Stat$Flammability,Stat$Dry_Material,method="spearm",exact = FALSE)
-# Significat
-cor.test(Stat$Flammability,Stat$Canopy_Density,method = "spearm",exact=FALSE)
-# Not significan!!
-cor.test(Stat$Flammability,Stat$Temp_Diff,method = "spearm",exact = FALSE)
-# Significatn
-cor.test(Stat$Flammability,Stat$WS,method = "spearm",exact = FALSE)
-# Wind speed is not significant
-cor.test(Stat$Flammability,Stat$Pre_Temp_D1,method = "spearm",exact = FALSE)
-cor.test(Stat$Flammability,Stat$Pre_Temp_D2,method = "spearm",exact = FALSE)
-# Pre disc temperature for both disc is not significant
-cor.test(Stat$Flammability,Stat$Temp,method = "spearm",exact = FALSE)
-cor.test(Stat$Flammability,Stat$RH_Percent,method = "spearm",exact = FALSE)
-# Both air temperature and relative humidity is insignificant
 
 
 
