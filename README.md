@@ -19,7 +19,7 @@
 
  - Thermocouples height and distance: 
  
- [I don;t understand this].
+ [I don't understand this].
  
 Height:
 Left:7 inch
