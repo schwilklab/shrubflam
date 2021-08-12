@@ -2,25 +2,33 @@
 # Shrub Flammability
 # Summer 2021
 
-install.packages("readr")
+## DWS edits 2021-08-12
+
+
 library(readr)
-install.packages("stringr")
 library(stringr)
-install.packages("dplyr")
 library(dplyr)
-install.packages("tidyverse")
-library(tidyverse)
+#library(tidyverse) ## DWS: redundant with much above!
 library(ggplot2)
-install.packages("lubridate")
 library(lubridate)
-install.packages("cluster")
 library(cluster)
+
+
 
 # Getting the Epicollect data
 
+## DWS: Why is the epicollect data in multiple files by trip? The database
+## itself on epicollect knows nothing about "trips". This makes no sense.
+
+
 # Get the epicollect data from the second trip
 
-Epi_second <- read.csv("Epicollect5_second_Trip.csv")
+Epi_second <- read.csv("../data/year_2021/epicollect_data_dump/Epicollect5.csv")
+## DWS: I could not find the file "Epicollect5_second_Trip.csv" anywhere in
+## your data on that branch.
+
+## DWS: why are you loading "readr" then using
+## read.csv? Do one or the other.
 
 # Shape the data and select some specific column
 Epi_second <- Epi_second%>%
@@ -33,7 +41,11 @@ Epi_second <- Epi_second%>%
 
 # Get the epicollect data from first and third trip
 
-Epi_first_third <- read.csv("Epicollect5_Third_First_Trip.csv")
+# Epi_first_third <- read.csv("Epicollect5_Third_First_Trip.csv")
+
+## DWS: again, I cannot find this file. You code doesn't make any sense with your data.
+
+## DWS; I'm stopping now. FIX this.
 
 # shape the data, rename the column name and select some specific column
 
