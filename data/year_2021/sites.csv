@@ -1,4 +1,4 @@
-date,site,lat_location,long_location,sample_ID,species,species_ID
+date,property,lat_location,long_location,sample_ID,species,species_ID
 15/06/2021,Menard 2020-01,30.92469,-99.55593,ME01,Juniperus ashei,1022
 15/06/2022,Menard 2020-01,30.92455,-99.55585,ME02,Mahonia trifoliolata,1002
 15/06/2023,Menard 2020-01,30.92464,-99.55618,ME03,Prosopis glandulosa,1113
