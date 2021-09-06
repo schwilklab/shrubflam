@@ -2,20 +2,6 @@
 # Shrub Flammability
 # Summer 2021
 
-install.packages("readr")
-library(readr)
-install.packages("stringr")
-library(stringr)
-install.packages("dplyr")
-library(dplyr)
-install.packages("tidyverse")
-library(tidyverse)
-library(ggplot2)
-install.packages("lubridate")
-library(lubridate)
-install.packages("cluster")
-library(cluster)
-
 # Getting canopy measurement data
 canopy_measurement <- read.csv("C://Users//user//shrubflam//data//year_2021//canopy_measurements.csv")
 
