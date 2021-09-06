@@ -1,6 +1,6 @@
 date,property,lat_location,long_location,sample_id,species,species_id
 13/08/2021,Real 2020-12,33.628439,-100.827718,DP17,Juniperus pinchottii,2011
-13/08/2021,Real 2020-12,33.628833,-100.827767,DP16,Ziziphus obtusfolia,2007
+13/08/2021,Real 2020-12,33.628833,-100.827767,DP16,Ziziphus obtusifolia,2007
 13/08/2021,Real 2020-12,33.628686,-100.827748,DP15,Prosopis glandulosa,1113
 13/08/2021,Real 2020-12,33.628724,-100.827782,DP14,Rhus trilobata,2012
 13/08/2021,Real 2020-12,33.628578,-100.828167,DP13,Juniperus pinchottii,2011
@@ -11,12 +11,12 @@ date,property,lat_location,long_location,sample_id,species,species_id
 13/08/2021,Real 2020-12,33.628553,-100.827968,DP08,Juniperus pinchottii,2011
 13/08/2021,Real 2020-12,33.628569,-100.82796,DP07,Prosopis glandulosa,1113
 13/08/2021,Real 2020-12,33.628461,-100.826279,DP06,Mimosa borealis,1009
-13/08/2021,Real 2020-12,33.628445,-100.826104,DP05,Ziziphus obtufolia,2007
+13/08/2021,Real 2020-12,33.628445,-100.826104,DP05,Ziziphus obtusifolia,2007
 13/08/2021,Real 2020-12,33.62814,-100.825765,DP04,Rhus microphylla,2006
 13/08/2021,Real 2020-12,33.628245,-100.825878,DP03,Juniperus pinchottii,2011
 13/08/2021,Real 2020-12,33.628037,-100.825852,DP02,Prosopis glandulosa,1113
 13/08/2021,Real 2020-12,33.628115,-100.825879,DP01,Rhus trilobata,2012
-13/07/2021,Edwards 2020-23,30.0287,-100.008327,ED43,Senegalia writhii,2005
+13/07/2021,Edwards 2020-23,30.0287,-100.008327,ED43,Senegalia wrightii,2005
 13/07/2021,Edwards 2020-23,30.029002,-100.008235,ED42,Mahonia trifoliolata,1002
 13/07/2021,Edwards 2020-23,30.029163,-100.008268,ED41,Quercus laceyi,1059
 13/07/2021,Edwards 2020-23,30.030131,-100.009293,ED40,Pinus remota,2001
@@ -26,13 +26,13 @@ date,property,lat_location,long_location,sample_id,species,species_id
 13/07/2021,Edwards 2020-22,30.028731,-100.007317,ED36,Quercus fusiformis,2000
 13/07/2021,Edwards 2020-22,29.751011,-100.530033,ED35,Pinus remota,2001
 13/07/2021,Edwards 2020-22,29.750936,-100.53011,ED34,Senegalia wrightii,2005
-13/07/2021,Edwards 2020-22,29.750576,-100.530156,ED33,Condalia hookerii,2003
-13/07/2021,Edwards 2020-22,29.749519,-100.529664,ED32,Foresteria reticulata,2010
+13/07/2021,Edwards 2020-22,29.750576,-100.530156,ED33,Condalia hookeri,2003
+13/07/2021,Edwards 2020-22,29.749519,-100.529664,ED32,Forestiera reticulata,2010
 13/07/2021,Edwards 2020-22,29.749473,-100.529313,ED31,Quercus fusiformis,2000
 13/07/2021,Edwards 2020-22,29.749249,-100.529198,ED30,Senegalia wrightii,2005
-13/07/2021,Edwards 2020-22,29.749255,-100.528481,ED29,Foresteria reticulata,2010
+13/07/2021,Edwards 2020-22,29.749255,-100.528481,ED29,Forestiera reticulata,2010
 13/07/2021,Edwards 2020-22,29.749292,-100.528539,ED28,Quercus fusiformis,2000
-13/07/2021,Edwards 2020-22,29.748977,-100.528539,ED27,Condalia hookerii,2003
+13/07/2021,Edwards 2020-22,29.748977,-100.528539,ED27,Condalia hookeri,2003
 13/07/2021,Edwards 2020-22,29.748974,-100.528553,ED26,Mimosa borealis,1009
 13/07/2021,Edwards 2020-22,29.749036,-100.528386,ED25,Rhus microphylla,2006
 12/07/202,Edwards 2020-22,29.751488,-100.530508,ED24,Mimosa borealis,1009
@@ -56,11 +56,11 @@ date,property,lat_location,long_location,sample_id,species,species_id
 21/05/2021,Edwards 2020-23,30.028807,-100.008891,ED13,Juniperus ashei,1022
 21/05/2021,Edwards 2020-23,30.02886,-100.008761,ED12,Sophora secundiflora,1021
 21/05/2021,Edwards 2020-22,29.749179,-100.529123,ED11,Senegalia wrightii,2005
-21/05/2021,Edwards 2020-22,29.749182,-100.52908,ED10,Mamosa borealis,1009
+21/05/2021,Edwards 2020-22,29.749182,-100.52908,ED10,Mimosa borealis,1009
 21/05/2021,Edwards 2020-22,29.749284,-100.529058,ED09,Condalia hookeri,2003
 21/05/2021,Edwards 2020-22,29.749295,-100.529069,ED08,Rhus virens,1036
 21/05/2021,Edwards 2020-22,29.749184,-100.529083,ED07,Sophora secundiflora,1021
-21/05/2021,Edwards 2020-22,29.749242,-100.529138,ED06,Quercus spp,QS
+21/05/2021,Edwards 2020-22,29.749242,-100.529138,ED06,Quercus virginiana,QS
 21/05/2021,Edwards 2020-22,29.749115,-100.529089,ED05,Pinus remota,2001
 21/05/2021,Edwards 2020-22,29.74916,-100.528938,ED04,Juniperus ashei,1022
 21/05/2021,Edwards 2020-22,29.749112,-100.528893,ED03,Quercus fusiformis,2000
@@ -81,7 +81,7 @@ date,property,lat_location,long_location,sample_id,species,species_id
 17/06/2021,Real 2020-12,29.84125,-99.75522,RE11,Diospyros texana,1000
 17/06/2021,Real 2020-12,29.84129,-99.75577,RE12,Rhus virens,1036
 17/06/2021,Real 2020-12,29.84189,-99.75117,RE13,Condalia hookeri,2003
-17/06/2021,Real 2020-12,29.84186,-99.75109,RE14,Senegalia romeriana,2005
+17/06/2021,Real 2020-12,29.84186,-99.75109,RE14,Senegalia wrightii,2005
 18/06/2021,Real 2020-11,29.79572,-99.69608,RE15,Sophora secundiflora,1021
 18/06/2021,Real 2020-11,29.79566,-99.69637,RE16,Mahonia trifoliolata,1002
 18/06/2021,Real 2020-11,29.79566,-99.69629,RE17,Juniperus ashei,1022
