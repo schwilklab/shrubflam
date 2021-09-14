@@ -2,18 +2,25 @@
 # Shrub Flammability
 # Summer 2021
 
+library(readr)
+library(stringr)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
 # Getting canopy measurement data
-canopy_measurement <- read.csv("C://Users//user//shrubflam//data//year_2021//canopy_measurements.csv")
+canopy_measurement <- read_csv("../data/year_2021/canopy_measurements.csv")
+
 
 # Getting burn_trials data
-burn_trials <- read.csv("C://Users//user//shrubflam//data//year_2021//burn_trials.csv")
+burn_trials <- read_csv("../data/year_2021/burn_trials.csv")
 
 # Getting site data
-site_data <- read.csv("C://Users//user//shrubflam//data//year_2021//sites.csv")
+site_data <- read_csv("../data/year_2021/sites.csv")
 
 # Getting leaf measurement data
 
-leaf_measurement <- read.csv("C://Users//user//shrubflam//data//year_2021//leaf_measurements.csv")
+leaf_measurement <- read_csv("../data//year_2021/leaf_measurements.csv")
 
 # Separate the species into genus and species of site data
 site_data <- separate(site_data,species,into = c("genus","species"),sep = " ")
@@ -71,7 +78,7 @@ ggplot(canopy_density_data,aes(x=reorder(genus,canopy_density),y=canopy_density)
   geom_boxplot(aes(color=genus),outlier.colour = "red",outlier.size = 2)+
   theme(axis.text.x = element_text(angle = 30, hjust = 1, face = "italic"))+
   xlab("Genus")+
-  ylab("Canopy density in gmcm^-3")
+  ylab("Canopy density In gmcm^-3")
 
 
 # canopy density by species
@@ -80,7 +87,7 @@ ggplot(canopy_density_data,aes(x=reorder(species,canopy_density),y=canopy_densit
   geom_boxplot(aes(color=species),outlier.colour = "red",outlier.size = 2)+
   theme(axis.text.x = element_text(angle = 30,hjust=1,face = "italic"))+
   xlab("Species")+
-  ylab("Canopy density in gmcm^-3")
+  ylab("Canopy density In gmcm^-3")
 
 
 
@@ -231,7 +238,7 @@ ggplot(burning_trials,aes(x=reorder(genus,flame.ht),y=flame.ht))+
   geom_boxplot(aes(color=genus),outlier.colour = "red",outlier.size = 2)+
   theme(axis.text.x = element_text(angle = 30,hjust = 1,face = "italic"))+
   xlab("Genus")+
-  ylab("Flame Duration In Seconds")
+  ylab("Flame Duration In Centimeter")
 
 # Plot of flame height by species
 
@@ -329,27 +336,5 @@ ggplot(burning_trials,aes(x=reorder(species,PC1),PC1))+
 ggsave("Flammability Score (PC1) By Species.pdf")
 
 
-# Hobo data for drying temperature
 
-Hobo_dry1 <- read.csv("C://Users//user//shrubflam//data//year_2021//lab_temperatures_during_drydown//Second Trip//20966279 2021-06-23 08_35_10 CST (Data CST).csv")
-Hobo_dry1 <- Hobo_dry1%>%
-  select(2:5)
 
-Hobo_dry2 <- read.csv("C://Users//user//shrubflam//data//year_2021//lab_temperatures_during_drydown//Third Trip//20966279 2021-07-18 09_08_46 CST (Data CST).csv")
-Hobo_dry2 <- Hobo_dry2%>%
-  select(2:5)
-
-hobo_dry3 <- read.csv("C://Users//user//shrubflam//data//year_2021//lab_temperatures_during_drydown//Dickens Park//20966279 2021-08-16 09_27_30 CST (Data CST)(1).csv")
-hobo_dry3 <- hobo_dry3%>%
-  select(2:5)
-
-hobo_dry <- rbind(Hobo_dry1,Hobo_dry2,hobo_dry3)
-hobo_dry <- hobo_dry%>%
-  rename(date=Date.Time..CST. ,
-         temperature=Ch..1...Temperature....Â.C.,
-         rh=Ch..2...RH......,
-         dew.point=Dew.Point....Â.C.)%>%
-  na.omit()%>%
-  summarise(mean_temp=mean(temperature),
-            mean_rh=mean(rh),
-            mean_dew_point=mean(dew.point))

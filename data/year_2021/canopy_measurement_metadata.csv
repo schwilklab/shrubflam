@@ -1,0 +1,7 @@
+variables,type,unit,description
+sample_id,character,,unique sample id for each sample
+species_id,character,,unique species id for each species
+length_cm,numeric,centimeter,70 cm branch collected in large ziplog bag from the field
+bottom_width_in,numeric,inches,Width of the bottom part of the 70 cm sample
+middle_width_in,numeric,inches,Width of the middle part of the 70 cm sample
+top_width_in,numeric,inches,Width of the top part of the 70 cm sample

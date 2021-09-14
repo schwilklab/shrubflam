@@ -1,0 +1,7 @@
+variables,type,unit,description
+sample_id,character,,unique sample id for each sample
+species_id,character,,unique species id for each species
+lma_fresh_mass_g,numeric,gram,"The weight of the leaves which were used in measuring the leaf area, the leaves are collected separately in small ziplog bag from the field"
+leaf_area_cm2,numeric,centimeter square,"Determined in Li-coR Leaf Area Meter(Model 3100 Area Meter), The number of leaf was not specified"
+lma_dry_mass_g,numeric,gram,Measured after 48 hours of oven drying at 65 degree celsius temperature
+dry_material_perc,numeric,percentage,"Percentage of above ground dead material, estimated visually"

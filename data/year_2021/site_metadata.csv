@@ -1,0 +1,8 @@
+variables,type,unit,description
+date,character,,The date at which sample is collected
+property,character,,the name of the property
+lat_location,numeric,degree,
+long_location,numeric,degree,
+sample_id,character,,unique sample id for each sample
+species,character,,scientific name of species
+species_id,character,,unique species id for each species

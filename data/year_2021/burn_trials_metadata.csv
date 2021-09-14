@@ -1,0 +1,19 @@
+variables,type,unit,description
+sample_id,character,,unique id for each sample
+species_id,character,,unique id for each species
+burn.date,character,,"burning data, the date when burned"
+trial,numeric,,sequencial number of trials
+time,character,,the time when the sample put on the grill for pre heating
+rh,numeric,percentage,"measured by Nielsen Kellerman,Kestrel-3000 weather meter"
+windspeed,numeric,miles per hour,"measured by Nielsen Kellerman,Kestrel-3000 weather meter"
+air.temp.F,numeric,fahrenheit,"measured by Nielsen Kellerman,Kestrel-3000 weather meter"
+mass.pre,numeric,gram,a tiny portion of 70 cm sample separated just right before the burning
+mass.post,numeric,gram,measured after 48 hours of oven drying at 65 degree celsius temperature
+temp.d1.pre,numeric,degree celsius,measured by Fluke 572-2 IR Thermometer
+temp.d2.pre,numeric,degree celsius,measured by Fluke 572-2 IR Thermometer
+flame.ht,numeric,centimeter,measured by a scale attached with the barbecue apparatus
+flame.dur,numeric,seconds,the time of flame appeared after ten seconds ignition
+temp.d1.post,numeric,degree celsius,measured by Fluke 572-2 IR Thermometer
+temp.d2.post,numeric,degree celsius,measured by Fluke 572-2 IR Thermometer
+vol.burned,numeric,percentage,estimated visually 
+max.temp,numeric,degree celsius,"measured by Fluke 572-2 IR Thermometer, pointing the gun at the burning site after the flame disappeared"
