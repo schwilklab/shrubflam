@@ -88,9 +88,6 @@ burn_trials <- burn_trials %>%
   select(-temp.d1.post, -temp.d1.pre, -temp.d2.post, -temp.d1.pre)
 
 
-## TODO: more calculations here?
-
-
 ###############################################################################
 ## Merge all the data
 ###############################################################################
