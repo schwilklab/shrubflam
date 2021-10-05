@@ -62,7 +62,8 @@ canopy_measurements <- canopy_measurements %>%
                                top_width_in) / 3,
          canopy_volume_cm3 = pi * (average_width_cm)^2 * length_cm,
          moisture_content = ((fresh_mass_g - dry_mass_g) / dry_mass_g) * 100,
-         total_mass_g = fresh_mass_g + mass.pre,
+         # total mass should be dry mass equivalent (estimated)
+         total_mass_g = (fresh_mass_g + mass.pre) * dry_mass_g/fresh_mass_g,
          canopy_density = total_mass_g / canopy_volume_cm3) %>%
   select(-bottom_width_in, -middle_width_in, -top_width_in, -mass.pre)
 
