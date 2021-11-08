@@ -1,0 +1,9 @@
+variables,type,unit,description
+#,numeric,,one minute interval
+Date-Time (CST),character,,date and time
+Ch: 1 - Temperature   (°C),numeric,percentage,
+Ch: 2 - RH   (%) ,numeric,degree celsius,
+Dew Point   (°C),numeric,degree celsius,
+ Host Connected ,logical,,
+Button Down  ,logical,,
+End of File ,,,

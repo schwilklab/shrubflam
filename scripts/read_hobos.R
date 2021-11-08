@@ -1,4 +1,4 @@
-# Shrub Flammability project
+ # Shrub Flammability project
 # Dylan Schwilk, Azaj Mahmud
 # 2021
 

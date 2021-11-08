@@ -161,27 +161,87 @@ ggplot(alldata, aes(x=reorder(species,flame.ht),y=flame.ht))+
 ##   theme(axis.text.x = element_text(angle = 30,hjust = 1,face = "italic"))+
 ##   xlab("Species")+
 ##   ylab("Heat Release In Joule")
-
+set.seed(100)
 ## # PCA analysis
+library(ggplot2)
+pca <- prcomp(select(alldata,massconsumed, heat_release_J, vol.burned, flame.dur,flame.ht),scale=TRUE)
+summary(pca)
+plot(pca,type="l")
 
-## pca <- prcomp(select(burning_trials,massconsumed, tempdiff, vol.burned, flame.ht, flame.dur),scale=TRUE)
+biplot(pca,scale = 0)
+alldata$PC1 <- pca$x[,1]
+print(pca)
+ok <- lm(canopy_density~PC1,data = alldata)
+ok2 <- lm(leaf_mass_area~PC1,data = alldata)
+plot(ok)
 
-## summary(pca)
+summary(ok)
 
-## plot(pca,type="l")
+## # ggplot of flammability score (PC1) by species
 
-## biplot(pca,scale = 0)
+ggplot(alldata,aes(x=reorder(species,PC1),-PC1))+
+   geom_boxplot(aes(color=species,fill=species),outlier.colour = "red",outlier.size = 2)+
+   theme(axis.text.x = element_text(angle = 30,hjust = 1,face = "italic"))+
+   xlab("Species")+
+   ylab("Flammability Score (PC1)")
+str(alldata)
 
-## burning_trials$PC1 <- pca$x[,1]
+new<-with(alldata, data.frame(flame.ht, flame.dur,vol.burned))
 
-## # ggplot of flammability score (PC1) by genus
+hist(new$flame.ht)
 
-## ggplot(burning_trials,aes(x=reorder(genus,PC1),PC1))+
-##   geom_boxplot(aes(color=genus,fill=genus),outlier.colour = "red",outlier.size = 2)+
-##   theme(axis.text.x = element_text(angle = 30,hjust = 1,face = "italic"))+
-##   xlab("Genus")+
-##   ylab("Flammability Score (PC1)")
-## ggsave("Flammability Score (PC1) By Genus.pdf")
+library(vegan)
+
+new<-decostand(new, method = "hellinger")
+
+hist(new$vol.burned)
+pc<-prcomp(new)
+pcnew<-data.frame(pc$x)
+
+str(pcnew)
+str(new)
+
+EvenNewer<-cbind(pcnew, new)
+
+plot(EvenNewer$vol.burned ~ EvenNewer$PC1)
+print(pc)
+
+
+
+flam_lm <- lm(PC1~massconsumed+heat_release_J+vol.burned+flame.ht+flame.dur,data = alldata)
+residuals <- resid(flam_lm)
+library(ggpubr)
+ggdensity(alldata, x = "vol.burned", fill = "lightgray", title = "vol.burned") +
+  stat_overlay_normal_density(color = "red", linetype = "dashed")
+
+transformed_data <- alldata%>%
+  select(sample_id,species,canopy_density,dry_material_perc,leaf_mass_area,moisture_content,
+         massconsumed,heat_release_J,vol.burned,flame.dur,flame.ht)%>%
+  na.omit()%>%
+  mutate(canopy_density=log10(canopy_density),
+  dry_material_perc=log10(dry_material_perc),
+  leaf_mass_area=log10(leaf_mass_area),
+  moisture_content=sqrt(moisture_content))
+
+
+test <- prcomp(select(transformed_data,massconsumed, heat_release_J, vol.burned,flame.dur,flame.ht),scale=TRUE)
+summary(test)
+biplot(test)
+
+transformed_data$PC1 <- test$x[,1]
+
+print(test)
+
+transformed_data$flammability <- transformed_data$PC1*(-1)
+
+second_test <- lm(flammability~canopy_density+dry_material_perc+leaf_mass_area+moisture_content,data = transformed_data)
+
+all(is.finite(transformed_data))
+
+
+summary(pca)
+
+ggsave("Flammability Score (PC1) By Genus.pdf")
 
 ## # ggplot of flammability score (PC1) by species
 
