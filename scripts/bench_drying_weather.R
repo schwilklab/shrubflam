@@ -19,20 +19,17 @@ concat_hobo_files <- function(filelist){
   return(r)
 }
 
-hobo_bench_drying <- concat_hobo_files(list.files("..data/
-                                                  year_2021/
-                                                  hobo_data_during_bench_drying",
-                                                  recursive = TRUE,full.names = TRUE,
-                                              pattern="bench.drying*.csv"))
+hobo_bench_drying <- concat_hobo_files(
+  list.files("../data/year_2021/hobo_data_during_bench_drying", recursive = TRUE,
+             full.names = TRUE, pattern="*.csv"))
 
-hobo_bench_drying # A tibble: 0 x 0!!!! Couldn't figure it out
+#hobo_bench_drying 
 
 # Summary of weather data
-bench_dying_summary <- hobo_bench_drying%>%
+bench_drying_summary <- hobo_bench_drying %>%
   select(1:4)%>%
   na.omit()%>%
   summarise(mean.temp=mean(temp),max.temp=max(temp),min.temp=min(temp),
             mean.rh=mean(rh),max.rh=max(rh),min.rh=min(rh),
             mean.dewpt=mean(dewpt),max.dewpt=max(dewpt),min.dewpt=min(dewpt))
-
 

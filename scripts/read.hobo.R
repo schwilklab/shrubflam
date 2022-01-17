@@ -7,7 +7,7 @@ TZ = "CST6CDT"
 library(dplyr)
 library(lubridate)
 library(ggplot2)
-library(tidyverse)
+library(tidyverse)  # Why? isnt dplyr in tidyverse? Why this?
 
 # Read trials data
 

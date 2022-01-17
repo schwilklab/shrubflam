@@ -36,7 +36,7 @@ burn_trials <- read_csv("../data/year_2021/burn_trials.csv")
 
 ## Samples (one row per individual plant with collection data)
 ###############################################################################
-samples <- tidyr::separate(samples, species, into = c("genus","species"),
+samples <- tidyr::separate(samples, species, into = c("genus","specific_epithet"),
                            sep = " ")
 
 ###############################################################################
@@ -62,7 +62,8 @@ canopy_measurements <- canopy_measurements %>%
                                top_width_in) / 3,
          canopy_volume_cm3 = pi * (average_width_cm)^2 * length_cm,
          moisture_content = ((fresh_mass_g - dry_mass_g) / dry_mass_g) * 100,
-         total_mass_g = fresh_mass_g + mass.pre,
+         # total mass should be dry mass equivalent (estimated)
+         total_mass_g = (fresh_mass_g + mass.pre) * dry_mass_g/fresh_mass_g,
          canopy_density = total_mass_g / canopy_volume_cm3) %>%
   select(-bottom_width_in, -middle_width_in, -top_width_in, -mass.pre)
 
@@ -94,8 +95,9 @@ burn_trials <- burn_trials %>%
 
 alldata <- left_join(samples, canopy_measurements) %>%
   left_join(leaf_measurements) %>%
-  left_join(burn_trials)
-## This should automatically merge by c("sample_id","species_id"))
+  left_join(burn_trials) %>%
+  mutate(species = paste(genus, specific_epithet),
+         display_name = paste(substr(genus, 1, 1), ". ", specific_epithet, sep=""))
 
 ## DWS: if we need to filter out short branches, that can be done here.
 
