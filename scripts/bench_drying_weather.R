@@ -33,5 +33,3 @@ bench_drying_summary <- hobo_bench_drying %>%
             mean.rh=mean(rh),max.rh=max(rh),min.rh=min(rh),
             mean.dewpt=mean(dewpt),max.dewpt=max(dewpt),min.dewpt=min(dewpt))
 
-
-## 
