@@ -19,22 +19,21 @@
 
 ## Burning trials notes
 
-# Thermocouples and Discs distnce from the scale ( By which measuring the flame height)
-# Distance 
+# Thermocouples and Disks distnce from the scale ( By which measuring the flame height)
+# Distances 
  - From scale to first thermocouple 19.05 cm
- - From scale to disc one 31.75 cm
+ - From scale to disk one 31.75 cm
  - From scale to second thermometer 40.64 cm
- - From scale to disc two 57.15 cm
+ - From scale to disk two 57.15 cm
  - From scale to third thermocouple 69.85 cm
 
 # Height:
- - From bed (where we put the sample for pre-heation) to first thermocouple 17.78 cm
- - From bed (where we put the sample for pre-heation) to disc one 16.51 cm
- - From bed (where we put the sample for pre-heation) to second thermocouple 18.415 cm
- - From bed (where we put the sample for pre-heation) to disc two 17.145
- - From bed (where we put the sample for pre-heation) to third thermocouple 20.32 cm
 
-
+From bed (where we put the sample for pre-heation) to first thermocouple 17.78 cm
+From bed (where we put the sample for pre-heation) to disc one 16.51 cm
+From bed (where we put the sample for pre-heation) to second thermocouple 18.415 cm
+From bed (where we put the sample for pre-heation) to disc two 17.145
+From bed (where we put the sample for pre-heation) to third thermocouple 20.32 cm
 ## Other notes
 
 

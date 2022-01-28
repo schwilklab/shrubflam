@@ -72,7 +72,8 @@ canopy_measurements <- canopy_measurements %>%
 ## Leaf level traits
 
 leaf_measurements <- leaf_measurements %>%
-  mutate(leaf_mass_area = lma_dry_mass_g / leaf_area_cm2)
+  mutate(leaf_mass_area = lma_dry_mass_g / leaf_area_cm2)%>%
+  mutate(leaf_area=leaf_area_cm2/number_of_leaf)
 
 ###############################################################################
 ## Burning trials

@@ -5,12 +5,48 @@
 # Summer 2021
 
 library(ggplot2)
+source("./stats.fig.R")
 
 azaj_boxplot <- geom_boxplot(aes(color=genus), outlier.colour = "red",
                              outlier.size = 2)
 species_x_theme <- theme(axis.text.x = element_text(angle = 30,
                                                     hjust = 1,
                                                     face = "italic"))
+
+# Does moisture content influence ignition?
+alldata <- alldata%>%
+  mutate(ignition=ifelse(flame.dur==0,0,1))
+
+ggplot(alldata,aes(moisture_content,ignition,
+                   color=display_name))+
+  geom_point(size=3)+
+  geom_smooth(aes(group=display_name),method="lm",se=FALSE)+
+  theme_bw()+
+  labs(x="Moisture content (%)",
+       y="Ignition")
+
+# How about only juniperus ashei since 4 sample didn't get ignited
+
+only_juniperus_ashei <- alldata%>%
+  filter(species_id=="1022")
+  
+ggplot(only_juniperus_ashei,aes(moisture_content,ignition,
+                                ))+
+  geom_point()
+
+# Looks like moisture content didn't affect in ignition in 
+# Juniperus ashei!!!
+
+# Does leaf area influence heat release?
+alldata <- alldata%>%
+  filter(! is.na(leaf_area))
+
+ggplot(alldata,aes(leaf_area,heat_release_J,color=display_name))+
+  geom_point(size=3)+
+  geom_smooth(aes(group=display_name),method = "lm",se=FALSE)+
+  xlab(expression(paste("Leaf area(",cm^2 ,")"))) +
+  ylab("Heat Release (J)")
+
 
 
 
@@ -161,60 +197,54 @@ ggplot(alldata, aes(x=reorder(species,flame.ht),y=flame.ht))+
 ##   theme(axis.text.x = element_text(angle = 30,hjust = 1,face = "italic"))+
 ##   xlab("Species")+
 ##   ylab("Heat Release In Joule")
-set.seed(100)
+#set.seed(100)
 ## # PCA analysis
-library(ggplot2)
-pca <- prcomp(select(alldata,massconsumed, heat_release_J, vol.burned, flame.dur,flame.ht),scale=TRUE)
-summary(pca)
-plot(pca,type="l")
+#library(ggplot2)
+#pca <- prcomp(select(alldata,massconsumed, heat_release_J, vol.burned, flame.dur,flame.ht),scale=TRUE)
+#summary(pca)
+#plot(pca,type="l")
 
-biplot(pca,scale = 0)
-alldata$PC1 <- pca$x[,1]
-print(pca)
-ok <- lm(canopy_density~PC1,data = alldata)
-ok2 <- lm(leaf_mass_area~PC1,data = alldata)
-plot(ok)
+#biplot(pca,scale = 0)
+#alldata$PC1 <- pca$x[,1]
 
-summary(ok)
 
 ## # ggplot of flammability score (PC1) by species
 
-ggplot(alldata,aes(x=reorder(species,PC1),-PC1))+
+#ggplot(alldata,aes(x=reorder(species,PC1),-PC1))+
    geom_boxplot(aes(color=species,fill=species),outlier.colour = "red",outlier.size = 2)+
    theme(axis.text.x = element_text(angle = 30,hjust = 1,face = "italic"))+
    xlab("Species")+
    ylab("Flammability Score (PC1)")
-str(alldata)
 
-new<-with(alldata, data.frame(flame.ht, flame.dur,vol.burned))
 
-hist(new$flame.ht)
+#new<-with(alldata, data.frame(flame.ht, flame.dur,vol.burned))
+
+#hist(new$flame.ht)
 
 library(vegan)
 
-new<-decostand(new, method = "hellinger")
+#new<-decostand(new, method = "hellinger")
 
-hist(new$vol.burned)
-pc<-prcomp(new)
-pcnew<-data.frame(pc$x)
-
-str(pcnew)
-str(new)
-
-EvenNewer<-cbind(pcnew, new)
-
-plot(EvenNewer$vol.burned ~ EvenNewer$PC1)
-print(pc)
+#hist(new$vol.burned)
+#pc<-prcomp(new)
+#pcnew<-data.frame(pc$x)
 
 
 
-flam_lm <- lm(PC1~massconsumed+heat_release_J+vol.burned+flame.ht+flame.dur,data = alldata)
-residuals <- resid(flam_lm)
+#EvenNewer<-cbind(pcnew, new)
+
+#plot(EvenNewer$vol.burned ~ EvenNewer$PC1)
+
+
+
+
+#flam_lm <- lm(PC1~massconsumed+heat_release_J+vol.burned+flame.ht+flame.dur,data = alldata)
+#residuals <- resid(flam_lm)
 library(ggpubr)
-ggdensity(alldata, x = "vol.burned", fill = "lightgray", title = "vol.burned") +
+#ggdensity(alldata, x = "vol.burned", fill = "lightgray", title = "vol.burned") +
   stat_overlay_normal_density(color = "red", linetype = "dashed")
 
-transformed_data <- alldata%>%
+#transformed_data <- alldata%>%
   select(sample_id,species,canopy_density,dry_material_perc,leaf_mass_area,moisture_content,
          massconsumed,heat_release_J,vol.burned,flame.dur,flame.ht)%>%
   na.omit()%>%
@@ -224,33 +254,7 @@ transformed_data <- alldata%>%
   moisture_content=sqrt(moisture_content))
 
 
-test <- prcomp(select(transformed_data,massconsumed, heat_release_J, vol.burned,flame.dur,flame.ht),scale=TRUE)
-summary(test)
-biplot(test)
 
-transformed_data$PC1 <- test$x[,1]
-
-print(test)
-
-transformed_data$flammability <- transformed_data$PC1*(-1)
-
-second_test <- lm(flammability~canopy_density+dry_material_perc+leaf_mass_area+moisture_content,data = transformed_data)
-
-all(is.finite(transformed_data))
-
-
-summary(pca)
-
-ggsave("Flammability Score (PC1) By Genus.pdf")
-
-## # ggplot of flammability score (PC1) by species
-
-## ggplot(burning_trials,aes(x=reorder(species,PC1),PC1))+
-##   geom_boxplot(aes(color=species,fill=species),outlier.colour = "red",outlier.size = 2)+
-##   theme(axis.text.x = element_text(angle = 30,hjust = 1,face = "italic"))+
-##   xlab("Species")+
-##   ylab("Flammability Score (PC1)")
-## ggsave("Flammability Score (PC1) By Species.pdf")
 
 
 

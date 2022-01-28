@@ -31,7 +31,7 @@ ggplot(alldata, aes(moisture_content, heat_release_J, color=display_name)) +
   xlab("Moisture content") +
   ylab("Heat Release (J)")
 
-## No evidence for overall fuel mostiure effect. Hmm?? Is data correct? What
+## No evidence for overall fuel mosisture effect. Hmm?? Is data correct? What
 ## about density?
 ggplot(alldata, aes(canopy_density, heat_release_J, color=display_name)) +
   geom_point(size = 3) +
@@ -39,7 +39,7 @@ ggplot(alldata, aes(canopy_density, heat_release_J, color=display_name)) +
   xlab(expression(paste("Canopy density (", g / cm^3, ")"))) +
   ylab("Heat Release (J)")
 
-# Juniper cating weird? higher density = lower flam? Let's look at this without
+# Juniper acating weird? higher density = lower flam? Let's look at this without
 # junipers:
 ggplot(filter(alldata, genus!="Juniperus"), aes(canopy_density, heat_release_J, color=display_name)) +
   geom_point(size = 3) +
@@ -52,6 +52,7 @@ ggplot(filter(alldata, genus!="Juniperus"), aes(canopy_density, heat_release_J, 
 # just the random effect of species:
 mod.den <- lmer(heat_release_J ~ canopy_density + (1 | display_name), alldata)
 mod.den.null <- lmer(heat_release_J ~ 1 + (1 | display_name), alldata)
+
 summary(mod.den)
 anova(mod.den.null,mod.den)
 ## DWS: so nope, no evidence for significant fixed effect
@@ -77,3 +78,9 @@ summary(mod.mass.mixed)
 
 ## DWS: So it is all about biomass maybe? Why is density not showing up then?
 ## Weird.
+summary(pca)
+View(alldata)
+loadings <- pca$rotation[,1:2]
+loadings
+View(alldata)
+

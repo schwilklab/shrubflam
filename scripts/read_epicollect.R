@@ -42,6 +42,8 @@ read_epicollect_data <- function() {
   return(csv_result)
 }
 
+View(read_epicollect_data())
+
 # code below only for branches, not used for shrubflam project
 
 ## # url.branch<- paste("https://five.epicollect.net/api/export/entries/", proj.slug, "?map_index=0&branch_ref=", branch.ref, "&format=json&per_page=1000", sep= "") ## if using json; pushing max number of records from default 50 to 1000
@@ -52,5 +54,4 @@ read_epicollect_data <- function() {
 ## ct2<- read.csv(res2$url)
 ## # ct2<- fromJSON(rawToChar(content(res2))) ## if using json
 ## str(ct2)
-
 
