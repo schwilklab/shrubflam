@@ -5,7 +5,7 @@
 # Summer 2021
 
 library(ggplot2)
-source("./stats.fig.R")
+source("./stats_figs.R")
 
 azaj_boxplot <- geom_boxplot(aes(color=genus), outlier.colour = "red",
                              outlier.size = 2)
