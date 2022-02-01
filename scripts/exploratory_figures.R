@@ -49,9 +49,6 @@ ggplot(alldata,aes(leaf_area,heat_release_J,color=display_name))+
 
 
 
-
-
-
 # canopy density by genus
 ggplot(alldata, aes(x=reorder(genus,canopy_density),
                                 y=canopy_density)) + 

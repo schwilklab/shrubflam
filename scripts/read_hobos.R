@@ -119,7 +119,7 @@ ggplot(plot_trials,aes(display_name,dur.100,color=display_name))+
                                    hjust = 1,
                                    face = "italic"))+
   labs(x="Display name",
-       y=expression(paste("Duration over ",100^degree*C, " in (s)")))+
+       y=expression(paste("Duration over ",100^degree*C, " in (s)")))
   
        
 
@@ -128,6 +128,7 @@ ggplot(plot_trials,aes(display_name,dur.100,color=display_name))+
 ggplot(plot_trials,aes(display_name,degsec.100,color=display_name))+
   geom_jitter(width = 0)+
   facet_grid(.~position)+
+  theme_bw()+
   theme(axis.text.x = element_text(angle = 45,
                                    hjust = 1,
                                    face = "italic"))+
@@ -136,6 +137,7 @@ ggplot(plot_trials,aes(display_name,degsec.100,color=display_name))+
 ggplot(plot_trials,aes(display_name,peak.temp,color=display_name))+
   geom_jitter(width = 0)+
   facet_grid(.~position)+
+  theme_bw()+
   theme(axis.text.x = element_text(angle = 45,
                                    hjust = 1, 
                                    face = "italic"))+
