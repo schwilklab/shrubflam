@@ -103,11 +103,9 @@ hobo_temp_sum <- hobos_long %>% group_by(label, position) %>%
 
 # Merge the trials data with hobo summary data and alldata
 
-plot_trials <- trials %>% select(c("sample_id","species_id","label")) %>% 
-     right_join(hobo_temp_sum, by ="label")%>%
-  left_join(select(alldata,"sample_id","species_id","display_name"),
-            by=c("sample_id","species_id"))
-
+plot_trials <- alldata %>%
+  mutate(label=paste(sample_id,species_id,sep = "_"))%>%
+     right_join(hobo_temp_sum, by ="label")
 
 # Plot for the summary
 

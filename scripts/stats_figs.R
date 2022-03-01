@@ -21,7 +21,7 @@ pca <- prcomp(select(alldata, massconsumed, heat_release_J, vol.burned,
 biplot(pca) # So PC1 is NEG flam
 # summary(pca)
 alldata$flam_PC1 <- 0-pca$x[,1]
-
+fviz_contrib(pca,choice = "var",axes=1)
 
 
 # Does fuel moisture influence heat release?
@@ -39,7 +39,7 @@ ggplot(alldata, aes(canopy_density, heat_release_J, color=display_name)) +
   xlab(expression(paste("Canopy density (", g / cm^3, ")"))) +
   ylab("Heat Release (J)")
 
-# Juniper acating weird? higher density = lower flam? Let's look at this without
+# Juniper acting weird? higher density = lower flam? Let's look at this without
 # junipers:
 ggplot(filter(alldata, genus!="Juniperus"), aes(canopy_density, heat_release_J, color=display_name)) +
   geom_point(size = 3) +
@@ -57,7 +57,7 @@ summary(mod.den)
 anova(mod.den.null,mod.den)
 ## DWS: so nope, no evidence for significant fixed effect
 
-# Altenrative method using afex:mixed() and Kenward-Roger approximation for
+# Alternative method using afex:mixed() and Kenward-Roger approximation for
 # degrees of freedom:
 mod.den.mixed <- mixed(heat_release_J ~ canopy_density + (1 | display_name),
                        data=alldata,  method="KR")
