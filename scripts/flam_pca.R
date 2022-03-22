@@ -37,8 +37,8 @@ summary(flam_pca)
 flam_loadings <- flam_pca$rotation[,1:2] 
 flam_loadings
 
-# Loadings are positive for all variables in PC1 
-# and dur.100  positively correlated with PC2.
+# Loadings are negative for all variables in PC1 
+# and dur.100  negative correlated with PC2.
 ####################################################################
 
 
@@ -99,7 +99,7 @@ fviz_contrib(flam_pca,choice = "var",axes = 2)
 ## Assigning PC1 to pca_data and then merged with samples_more_than_three
 ## dataset for doing rest of the analysis.
 
-pca_data$PC1 <- flam_pca$x[,1]
+pca_data$PC1 <- 0-flam_pca$x[,1] #PC1 is negative
 model_data <- samples_more_than_three%>%
   right_join(select(pca_data,label,PC1),by="label")
 
