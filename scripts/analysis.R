@@ -10,6 +10,18 @@ library(lme4)
 library(afex)
 source("./flam_pca.R")
 
+ggplot(model_data,aes(genus,leaf_area_per_leaflet))+
+  geom_jitter(size=3,alpha=1/10)+
+  xlab("Genus")+
+  ylab(expression(paste("Leaf area per leaflet (",cm^2,")")))
+ggplot(model_data,aes(genus,leaf_mass_area))+
+  geom_jitter(size=3,alpha=1/10)
+ggplot(model_data,aes(genus,total_mass_g))+
+  geom_jitter(size=3,alpha=1/10)
+ggplot(model_data,aes(genus,canopy_density))+
+  geom_jitter(size=3,alpha=1/10)
+  
+ 
 #################################################################################
 # Does leaf traits and canopy traits influence flammability?
 

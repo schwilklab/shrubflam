@@ -103,13 +103,13 @@ hobo_temp_sum <- hobos_long %>% group_by(label, position) %>%
 
 # Merge the trials data with hobo summary data and alldata
 
-plot_trials <- alldata %>%
+hobo_plots <- alldata %>%
   mutate(label=paste(sample_id,species_id,sep = "_"))%>%
      right_join(hobo_temp_sum, by ="label")
 
 # Plot for the summary
 
-ggplot(plot_trials,aes(display_name,dur.100,color=display_name))+
+ggplot(hobo_plots,aes(display_name,dur.100,color=display_name))+
   geom_jitter(width = 0)+
   facet_grid(.~position)+
   theme_bw()+
@@ -123,7 +123,7 @@ ggplot(plot_trials,aes(display_name,dur.100,color=display_name))+
 
 
 
-ggplot(plot_trials,aes(display_name,degsec.100,color=display_name))+
+ggplot(hobo_plots,aes(display_name,degsec.100,color=display_name))+
   geom_jitter(width = 0)+
   facet_grid(.~position)+
   theme_bw()+
@@ -132,7 +132,7 @@ ggplot(plot_trials,aes(display_name,degsec.100,color=display_name))+
                                    face = "italic"))+
   labs(x="Display name")
 
-ggplot(plot_trials,aes(display_name,peak.temp,color=display_name))+
+ggplot(hobo_plots,aes(display_name,peak.temp,color=display_name))+
   geom_jitter(width = 0)+
   facet_grid(.~position)+
   theme_bw()+

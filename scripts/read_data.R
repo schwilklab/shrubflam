@@ -30,6 +30,7 @@ canopy_measurements <- read_csv("../data/year_2021/canopy_measurements.csv")
 leaf_measurements <- read_csv("../data/year_2021/leaf_measurements.csv")
 burn_trials <- read_csv("../data/year_2021/burn_trials.csv")
 species_table <- read_csv("../data/year_2021/species_table.csv")
+juniperus_leaf_area <- read.csv("../data/year_2021/leaf_area_juniperus.csv")
 ###############################################################################
 ## Calculations and cleaning
 ###############################################################################
@@ -81,10 +82,34 @@ canopy_measurements <- canopy_measurements %>%
 
 ###############################################################################
 ## Leaf level traits
+# Juniperus leaves are needle shape and measured their one side projected
+# leaf area, that's why multiplying them by pi since we assuemed the needles
+# are cylindrical shape.
+
+leaf_measurements <- leaf_measurements%>%
+  mutate(leaf_area_cm2=ifelse(species_id %in% c("2011","1022"), leaf_area_cm2*3.1416,leaf_area_cm2))
 
 leaf_measurements <- leaf_measurements %>%
   mutate(leaf_mass_area = lma_dry_mass_g / leaf_area_cm2)%>%
   mutate(leaf_area_per_leaflet=leaf_area_cm2/number_of_leaflet)
+
+# Calculating leaf area per (Surface area of cylinder) needle for Juniperus species
+# where each needle assumed to be a cylinder whose length 
+# is the height and diameter is diameter respectively.
+# The diameter measured in mm and converted to cm.
+
+juniperus_leaf_area <- juniperus_leaf_area%>%
+  mutate(diameter_mm=diameter_mm*0.1)%>% # converting mm to cm
+  mutate(leaf_area_per_leaflet=2*3.1416*diameter_mm*(diameter_mm+length_cm))%>%
+  group_by(sample_id)%>%
+  summarise(leaf_area_per_leaflet=mean(leaf_area_per_leaflet))
+
+
+# Assigning leaf area of Juniperus species in leaf_measurements
+
+leaf_measurements$leaf_area_per_leaflet[leaf_measurements$species_id %in% c("2011","1022")] <- 
+  juniperus_leaf_area$leaf_area_per_leaflet
+
 
 ###############################################################################
 ## Burning trials
@@ -117,7 +142,6 @@ alldata <- left_join(samples, canopy_measurements) %>%
 ################################################################################
 #Subsetting species which have three or more than three samples
 ################################################################################
-
 samples_more_than_three <- alldata%>%
   group_by(species)%>%
   summarise(number_of_individual=n())%>%
@@ -127,4 +151,4 @@ samples_more_than_three <- alldata%>%
   filter( number_of_individual != "NA")
 
 ## clean up work space, export only one data frame, alldata
-rm(canopy_measurements, leaf_measurements, burn_trials, samples)
+rm(canopy_measurements, leaf_measurements, burn_trials, samples,juniperus_leaf_area)
