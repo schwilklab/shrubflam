@@ -40,7 +40,7 @@ juniperus_leaf_area <- read.csv("../data/year_2021/leaf_area_juniperus.csv")
 ###############################################################################
 
 samples <- species_table%>%
-  select(-c(3,10))%>%
+  select(species,species_id,group)%>%
   right_join(samples,by=c("species","species_id"))
 
 ###############################################################################

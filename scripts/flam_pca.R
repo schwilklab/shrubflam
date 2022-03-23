@@ -9,6 +9,7 @@
 library(dplyr)
 library(FactoMineR)
 library(factoextra)
+library(missMDA)
 source("./read_hobos.R")
 source("./read_data.R")
 

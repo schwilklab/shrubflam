@@ -10,26 +10,16 @@ library(lme4)
 library(afex)
 source("./flam_pca.R")
 
-ggplot(model_data,aes(genus,leaf_area_per_leaflet))+
-  geom_jitter(size=3,alpha=1/10)+
-  xlab("Genus")+
-  ylab(expression(paste("Leaf area per leaflet (",cm^2,")")))
-ggplot(model_data,aes(genus,leaf_mass_area))+
-  geom_jitter(size=3,alpha=1/10)
-ggplot(model_data,aes(genus,total_mass_g))+
-  geom_jitter(size=3,alpha=1/10)
-ggplot(model_data,aes(genus,canopy_density))+
-  geom_jitter(size=3,alpha=1/10)
-  
+
  
 #################################################################################
 # Does leaf traits and canopy traits influence flammability?
 
-#null.model <- lmer(PC1~1+ (1| ),
-                   #data=model_data, method="REML")
+#null.model <- lmer(PC1~1+ (1|group),
+                   data=model_data, method="REML")
 #traits.model <- lmer(PC1~total_mass_g+canopy_density+leaf_mass_area+
-                       #leaf_area_per_leaflet+(1| ),
-                     #data=model_data, method="REML")
+                       leaf_area_per_leaflet+moisture_content+(1|group),
+                     data=model_data, method="REML")
 # summary(traits.model)
 # anova(null.model,traits.model)
 # plot(resid(traits.model))
@@ -40,10 +30,8 @@ ggplot(model_data,aes(genus,canopy_density))+
 # 26633483/collinearity-after-accounting-for-random-mixed-effects)
 
 vif.lme <- function (fit) {
-## adapted from rms::vif
 vif.lme <- vcov(fit)
 nam <- names(fixef(fit))
-## exclude intercepts
 ns <- sum(1 * (nam == "Intercept" | nam == "(Intercept)"))
 if (ns > 0) {
   v <- v[-(1:ns), -(1:ns), drop = FALSE]
@@ -62,4 +50,21 @@ vif.lme(traits.model)
                               #leaf_area_per_leaflet+(1| ),
                               #data=model_data, method="KR")
 #summary(traits.mixed.model)
+#################################################################################
+
+#################################################################################
+#Samples those only get ignited
+#traits.model.ignited <- lmer(PC1~total_mass_g+canopy_density+leaf_mass_area+
+                               leaf_area_per_leaflet+moisture_content+(1|group),
+                             data=filter(model_data,ignition==1) method="REML")
+#Summary(traits.model.ignited)
+
+#################################################################################
+
+#################################################################################
+# Without juniperus species
+#traits.model.wjuniperus <- lmer(PC1~total_mass_g+canopy_density+leaf_mass_area+
+                                  leaf_area_per_leaflet+moisture_content+(1|group),
+                                data=filter(model_data, genus !="Juniperus"), method="REML")
+#summary(traits.model.wjuniperus)
 #################################################################################
