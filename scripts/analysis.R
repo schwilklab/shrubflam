@@ -10,6 +10,8 @@ library(lme4)
 library(afex)
 source("./flam_pca.R")
 
+<<<<<<< HEAD
+
 
  
 #################################################################################
@@ -51,6 +53,7 @@ vif.lme(traits.model)
                               #data=model_data, method="KR")
 #summary(traits.mixed.model)
 #################################################################################
+<<<<<<< HEAD
 
 #################################################################################
 #Samples those only get ignited
@@ -68,3 +71,5 @@ vif.lme(traits.model)
                                 data=filter(model_data, genus !="Juniperus"), method="REML")
 #summary(traits.model.wjuniperus)
 #################################################################################
+=======
+>>>>>>> 329a8ed8d55b75430a8fa973c3c81006ccd81cf6
