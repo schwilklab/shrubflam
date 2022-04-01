@@ -25,12 +25,14 @@ MASS_DISK_2      = 0.53  # g
 
 ## We need to read them all in first before cleaning because some calculations
 ## require columns from multiple files
+
 samples <- read_csv("../data/year_2021/samples.csv")
 canopy_measurements <- read_csv("../data/year_2021/canopy_measurements.csv")
 leaf_measurements <- read_csv("../data/year_2021/leaf_measurements.csv")
 burn_trials <- read_csv("../data/year_2021/burn_trials.csv")
 species_table <- read_csv("../data/year_2021/species_table.csv")
 juniperus_leaf_area <- read.csv("../data/year_2021/leaf_area_juniperus.csv")
+
 ###############################################################################
 ## Calculations and cleaning
 ###############################################################################
@@ -45,8 +47,8 @@ samples <- species_table%>%
 
 ###############################################################################
 
-
 ## Samples (one row per individual plant with collection data)
+
 ###############################################################################
 samples <- tidyr::separate(samples, species, into = c("genus","specific_epithet"),
                            sep = " ")
@@ -60,6 +62,7 @@ samples <- tidyr::separate(samples, species, into = c("genus","specific_epithet"
 # the sample separated from the sample to determine the moisture content.So the
 # total mass is the addition of pre.mass and the mass of tiny part that used
 # for measuring moisture content.
+
 canopy_measurements <- left_join(canopy_measurements,
                                  select(burn_trials, sample_id, mass.pre))
 
@@ -68,6 +71,7 @@ canopy_measurements <- left_join(canopy_measurements,
 # branch respectively. Clean up the data frame by removing the non metric
 # measurements. Remove mass.pre since we get it with the burn trial data in the
 # big merge later.
+
 canopy_measurements <- canopy_measurements %>%
   mutate(average_width_cm = 2.54*(bottom_width_in +
                                middle_width_in +

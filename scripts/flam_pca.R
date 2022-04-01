@@ -6,12 +6,14 @@
 ## PCA analysis
 ## Used prcomp() for PCA and factoextra for graphics.
 
+
 library(dplyr)
 library(FactoMineR)
 library(factoextra)
 library(missMDA)
-source("./read_hobos.R")
 source("./read_data.R")
+source("./read_hobos.R")
+
 
 
 

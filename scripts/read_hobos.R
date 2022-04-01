@@ -10,9 +10,10 @@ TZ = "CST6CDT"
 
 library(dplyr)
 library(lubridate)
-library(tidyverse)
+library(tidyr)
 library(dplyr)
 library(ggplot2)
+library(stringr)
 
 # Read trials data
 
@@ -21,14 +22,23 @@ trials <- read.csv("../data/year_2021/burn_trials.csv",
 
 # Get the end trial time
 trials <- trials%>%
-  rename(trial.time=start.time)%>%
-  mutate(start.time=as.POSIXct(paste(burn.date,
-                                     trial.time,sep = " "),
-                               format="%m/%d/%Y %H:%M:%S",tz=TZ))%>%
-  mutate(end.time=start.time+130+flame.dur)%>% # Two minutes
-  # pre-heating and ten seconds ignition period, 130s in total
+  mutate(start.time = mdy_hm(str_c(burn.date, " ",
+                                   start.time),tz=TZ))%>%
+  mutate(end.time=as.POSIXct(start.time+10+flame.dur),
+         format="%m-%d-%y %H:%M:%S",tz=TZ)%>% # Two minutes
+  #pre-heating and ten seconds ignition period, 130s in total
   mutate(intervals=interval(start.time,end.time))%>%
   mutate(label=paste(sample_id,species_id,sep = "_"))
+  
+  #rename(trial.time=start.time)%>%
+  #mutate(start.time=as.POSIXct(paste(burn.date,
+                                     #trial.time,sep = " "),
+                               #format="%m/%d/%Y %H:%M:%S",tz=TZ))%>%
+  #mutate(end.time=start.time+130+flame.dur)%>% # Two minutes
+  # pre-heating and ten seconds ignition period, 130s in total
+  #mutate(intervals=interval(start.time,end.time))%>%
+  #mutate(label=paste(sample_id,species_id,sep = "_"))
+  
 
 
 
@@ -56,22 +66,36 @@ flam.left <- concat_hobo_files(list.files("../data/year_2021/burn_trial_hobo_tem
                                      full.names=TRUE, recursive=TRUE,
                                      pattern = "flam.left*.csv"),
                                "flam.left")
+
+any(is.na(flam.left$flam.left)) # No missing value in flam.left
+any(is.na(flam.left$time)) # No missing value in in time
+
  
 flam.mid <- concat_hobo_files(list.files("../data/year_2021/burn_trial_hobo_temps",
                                      full.names=TRUE, recursive=TRUE,
                                      pattern = "flam.mid*.csv"),
                                "flam.mid")
+any(is.na(flam.mid$flam.mid)) # No NA in flam.mid
+any(is.na(flam.mid$time)) # No NA 
+
 flam.right <- concat_hobo_files(list.files("../data/year_2021/burn_trial_hobo_temps",
                                      full.names=TRUE, recursive=TRUE,
                                      pattern = "flam.right*.csv"),
                                "flam.right")
+
+any(is.na(flam.right$flam.right)) # No NA
+any(is.na(flam.right$time)) # No NA
  
+
 # Get them all in a single data frame
 
 hobos <- full_join(flam.left,flam.mid,by = "time") %>% 
   full_join(flam.right,by="time")
 
+any(is.na(hobos))
 
+without.na <- hobos%>%
+  na.omit()
 
 
 get_trial_label <- function(time) {
@@ -101,6 +125,13 @@ hobo_temp_sum <- hobos_long %>% group_by(label, position) %>%
             peak.time = time[which(peak.temp == temperature)[1]],
             num.NA = sum(is.na(temperature))) %>% ungroup()
 
+names(hobo_temp_sum)
+hobos_wider <- hobo_temp_sum%>%
+  pivot_wider(names_from = position)%>%
+  group_by(label)%>%
+  summarise(dur.100=mean(dur.100),
+            peak.temp=max(peak.temp),
+            degsec.100=max(degsec.100))
 # Merge the trials data with hobo summary data and alldata
 
 hobo_plots <- alldata %>%
@@ -135,7 +166,7 @@ ggplot(hobo_plots,aes(display_name,degsec.100,color=display_name))+
 ggplot(hobo_plots,aes(display_name,peak.temp,color=display_name))+
   geom_jitter(width = 0)+
   facet_grid(.~position)+
-  theme_bw()+
+  theme_bw()+ 
   theme(axis.text.x = element_text(angle = 45,
                                    hjust = 1, 
                                    face = "italic"))+
