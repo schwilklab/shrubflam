@@ -15,6 +15,7 @@ library(lubridate)
 # 2021-09-24. We need to measure the disk masses since I don't know which is
 # which. From the grass experiments we had 52.91g and 53.21g. I'll put in 53g
 # for both as a temporary measure.
+
 SPECIFIC_HEAT_AL = 0.921 # in J/g
 MASS_DISK_1      = 0.53  # g
 MASS_DISK_2      = 0.53  # g
@@ -89,22 +90,26 @@ canopy_measurements <- canopy_measurements %>%
 # Juniperus leaves are needle shape and measured their one side projected
 # leaf area, that's why multiplying them by pi since we assuemed the needles
 # are cylindrical shape.
-
-leaf_measurements <- leaf_measurements%>%
-  mutate(leaf_area_cm2=ifelse(species_id %in% c("2011","1022"), leaf_area_cm2*3.1416,leaf_area_cm2))
+###############################################################################
+pi <- 3.1416
+leaf_measurements <- leaf_measurements%>% # Multiplying the juniperus
+  # leaf area by pi
+  mutate(leaf_area_cm2=ifelse(species_id %in% c("2011","1022"), leaf_area_cm2*pi,leaf_area_cm2))
 
 leaf_measurements <- leaf_measurements %>%
   mutate(leaf_mass_area = lma_dry_mass_g / leaf_area_cm2)%>%
   mutate(leaf_area_per_leaflet=leaf_area_cm2/number_of_leaflet)
 
+####################################################################################
 # Calculating leaf area per (Surface area of cylinder) needle for Juniperus species
 # where each needle assumed to be a cylinder whose length 
 # is the height and diameter is diameter respectively.
 # The diameter measured in mm and converted to cm.
+#####################################################################################
 
 juniperus_leaf_area <- juniperus_leaf_area%>%
   mutate(diameter_mm=diameter_mm*0.1)%>% # converting mm to cm
-  mutate(leaf_area_per_leaflet=2*3.1416*diameter_mm*(diameter_mm+length_cm))%>%
+  mutate(leaf_area_per_leaflet=2*pi*diameter_mm*(diameter_mm+length_cm))%>%
   group_by(sample_id)%>%
   summarise(leaf_area_per_leaflet=mean(leaf_area_per_leaflet))
 
@@ -117,9 +122,9 @@ leaf_measurements$leaf_area_per_leaflet[leaf_measurements$species_id %in% c("201
 
 ###############################################################################
 ## Burning trials
-
 # Measurements of burning trials. Determining temperature difference of discs,
 # and mass consumed during burning.
+###############################################################################
 
 burn_trials <- burn_trials %>%
   mutate(burn.date = mdy(burn.date),
@@ -146,13 +151,30 @@ alldata <- left_join(samples, canopy_measurements) %>%
 ################################################################################
 #Subsetting species which have three or more than three samples
 ################################################################################
+
+################################################################################
+# Filtering samples for those species which has at least three samples
+# in the dataset
+################################################################################
+
 samples_more_than_three <- alldata%>%
   group_by(species)%>%
   summarise(number_of_individual=n())%>%
   filter(number_of_individual >=3)%>%
-  right_join(alldata,by="species")%>%
+  left_join(alldata,by="species")%>%
+  filter(leaf_area_per_leaflet !="NA")%>% # keeping only those 
+  # samples who has leaf_area_per_leaflet data
+  filter(leaf_mass_area != "NA")%>%
   mutate(label=paste(sample_id,species_id,sep = "_"))%>%
-  filter( number_of_individual != "NA")
+  filter( number_of_individual != "NA")%>%
+  select(-c(number_of_individual,genus))
+   
+dim(samples_more_than_three) # 98 rows
+# I will use this dataset to do rest of the analysis
 
-## clean up work space, export only one data frame, alldata
+#####################################################################
+## clean up work space, export two data frame, alldata and 
+# samples_more_than_three
+#####################################################################
+
 rm(canopy_measurements, leaf_measurements, burn_trials, samples,juniperus_leaf_area)
