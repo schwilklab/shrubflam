@@ -19,6 +19,7 @@ schwilkcolors <- c("#D68D18", "#836B43", "#A0AE6A", "#362908", "#EC4E15")
 bestfit <- geom_smooth(method="lm",se = F, color = "black", size=1.5)
 textsize <- 14
 smsize <- textsize-2
+axissz <- smsize
 pt2mm <- 0.35146
 smsize.mm <- smsize*pt2mm
 fontfamily = "ArialMT"
