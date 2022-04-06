@@ -13,7 +13,7 @@ library(dplyr)
 library(pscl)
 source("./read_data.R")
 source("./flam_pca.R")
-
+source("./ggplot_theme.R")
 
 ## Does moisture content affects ignition?
 
@@ -43,7 +43,26 @@ summary(log.mod.moisture) # p value 0.0573 , not statistically significant!!
 pscl::pR2(log.mod.moisture)["McFadden"] #McFadden 0.04627074
 
 
- 
+
+#### figure
+model_data_sum <- model_data %>% group_by(group) %>%
+  summarize(across(c(canopy_density, total_mass_g, PC1), list(mean = mean, sum  = sum)), na.rm=TRUE)
+
+fig1 <- ggplot(model_data, aes(total_mass_g, PC1)) +
+  geom_point(alpha=0.4, size=3) +
+  geom_point(data=model_data_sum, aes(total_mass_g_mean, PC1_mean), size=5) +
+  #scale_colour_manual(schwilkcolors) +
+  bestfit +
+  #geom_smooth(method="lm",se=FALSE, color="black") +
+  xlab("Mass per 70 cm (g)") +
+  ylab("Flammability (PC1 score)") +
+  prestheme.nogridlines +
+  theme(legend.position="none")
+
+fig1
+ggsave("../results/shrubflam_fig1.pdf", fig1, width=0.8*col1, height=0.8*col1)
+
+
 #################################################################################
 # Does leaf traits and canopy traits influence flammability?
 
@@ -69,6 +88,15 @@ traits.mixed.model <- mixed(PC1 ~ total_mass_g + canopy_density +
                               air.temp.F + rh + (1|group),
                               data=model_data, method="KR")
 summary(traits.mixed.model)
+
+traits.mixed.model <- mixed(PC1 ~ total_mass_g + canopy_density + 
+                              leaf_area_per_leaflet + moisture_content + 
+                              air.temp.F + (1|group),
+                              data=model_data, method="KR")
+summary(traits.mixed.model)
+
+
+
 
 #################################################################################
 #Samples those only get ignited
