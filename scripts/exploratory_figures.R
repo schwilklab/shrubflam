@@ -330,6 +330,160 @@ library(ggpubr)
   leaf_mass_area=log10(leaf_mass_area),
   moisture_content=sqrt(moisture_content))
 
+  
+############################################################
+# Does Flammability~canopy_density relationship varies among 
+# groups?
+############################################################
+  
+ggplot(model_data,aes(canopy_density,PC1))+
+    geom_point(shape=21,size=4,colour = "black", 
+               fill = "white",stroke=2)+
+    geom_smooth(method = "lm",se=FALSE)+
+    facet_wrap(~group)+
+    theme_bw()+
+    theme(panel.grid = element_blank(),
+          axis.title = element_text(size = 12, face = "bold"))+
+    xlab(expression(paste("Canopy density (", g / cm^3, ")")))+
+    ylab("Flammability score (PC1)")
+  
+# Yes, the relationship differ among groups. 
+  
+##################################################################
+  
+###################################################################
+# Does Flammability~total_mass relationship varies among 
+# groups?
+####################################################################
+  
+ggplot(model_data,aes(total_mass_g,PC1))+
+    geom_point(shape=21, size=4,
+               color="black",fill="white",stroke=2)+
+    geom_smooth(method = "lm",se=FALSE)+
+    facet_wrap(~group)+
+    theme_bw()+
+    theme(panel.grid = element_blank(),
+          axis.title = element_text(size = 12, face="bold"))+
+    xlab("Total mass in dry basis (g)")+
+    ylab("Flammability score (PC1)")
+  
+# Yes, the flammability~total_mass_g relationship differ among
+# groups
+  
+##########################################################################
+# Does flammability~leaf_mass_area relationship varies 
+# among groups?
+#########################################################################
+  
+ggplot(model_data,aes(leaf_mass_area,PC1))+
+    geom_point(shape=21,size=4, color="black",
+               fill="white",stroke=2)+
+    geom_smooth(method = "lm",se=FALSE)+
+    facet_wrap(~group)+
+    theme_bw()+
+    theme(panel.grid = element_blank(),
+          axis.title = element_text(size=12, face="bold"))+
+    xlab(expression(paste("Leaf mass per area (", g / cm^2, ")")))+
+    ylab("Flammability score (PC1)")
+  
+# Yes, relationship differ among groups!!
+  
+#########################################################################
+# Does the flammability~leaf_area_per_leaflet relationship 
+# varies among groups?
+#########################################################################
+  
+ggplot(model_data,aes(leaf_area_per_leaflet,PC1))+
+    geom_point(shape=21, size=4,color="black",
+               fill="white",stroke=2)+
+    geom_smooth(method = "lm",se=FALSE)+
+    facet_wrap(~group)+
+    theme_bw()+
+    theme(panel.grid = element_blank(),
+          axis.title = element_text(size=12, face="bold"))+
+    xlab(expression(paste("Leaf area per leaflet (",cm^2,")")))+
+    ylab("Flammability score (PC1)")
+  
+# Yes, relationship  between flammabilit~leaf_area_per_leaflet 
+# differ among groups!!
+  
+########################################################################
+# Does flammability~moisture content relationship varies among
+# groups?
+#######################################################################
+  
+ggplot(model_data,aes(moisture_content,PC1))+
+    geom_point(shape=21, size=4, color="black",
+               fill="white",stroke=2)+
+    geom_smooth(method = "lm",se=FALSE)+
+    facet_wrap(~group)+
+    theme_bw()+
+    theme(panel.grid = element_blank(),
+          axis.title = element_text(size=12, face="bold"))+
+    xlab("Moisture content in dry basis") + 
+    ylab("Flammability score (PC1)")
+  
+# Yes, the relationship between flammability~moisture content 
+# differ among groups.
+  
+#####################################################################
+# Does the relationship between flammabilit~windspeed differ
+# among groups?
+#####################################################################
+  
+ggplot(model_data,aes(windspeed,PC1))+
+    geom_point(shape=21,size=4,color="black",fill="white",
+               stroke=2)+
+    geom_smooth(method = "lm")+
+    facet_wrap(~group)+
+    theme_bw()+
+    theme(panel.grid = element_blank(),
+          axis.title = element_text(size=12, face="bold"))+
+    xlab(expression(paste("Windspeed (",miles/hr,") "))) + 
+    ylab("Flammability score (PC1)")
+  
+# Yes, the relationship differ among groups.
+  
+#####################################################################
+# Does the relationship between flammabilit~relative humidity differ
+# among groups?
+#####################################################################
+  
+ggplot(model_data,aes(rh,PC1))+
+    geom_point(shape=21,size=4,color="black",fill="white",
+               stroke=2)+
+    geom_smooth(method = "lm")+
+    facet_wrap(~group)+
+    theme_bw()+
+    theme(panel.grid = element_blank(),
+          axis.title = element_text(size=12, face="bold"))+
+    xlab("Relative humidity (%)") + 
+    ylab("Flammability score (PC1)")
+  
+# Yes, the relationship differ among groups.
+  
+#####################################################################
+# Does the relationship between flammability~air temperature differ
+# among groups?
+#####################################################################
+  
+ggplot(model_data,aes(rh,PC1))+
+    geom_point(shape=21,size=4,color="black",fill="white",
+               stroke=2)+
+    geom_smooth(method = "lm")+
+    facet_wrap(~group)+
+    theme_bw()+
+    theme(panel.grid = element_blank(),
+          axis.title = element_text(size=12, face="bold"))+
+    xlab(expression("Temperature ("*~degree*F*")")) + 
+    ylab("Flammability score (PC1)")
+  
+# Yes, the relationship differ among groups.
+  
+# It seems that random intercept and slope model would more
+# appropiate for this dataset.
+  
+
 
 
 

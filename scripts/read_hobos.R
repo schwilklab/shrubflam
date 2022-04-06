@@ -110,6 +110,10 @@ flam.mid <- concat_hobo_files(list.files("../data/year_2021/burn_trial_hobo_temp
 class(flam.mid$time) # As POSIXct
 any(is.na(flam.mid$flam.mid)) # No NA in flam.mid
 any(is.na(flam.mid$time)) # No NA 
+flam.mid.separate <- separate(flam.mid,time, into = c("date","time"),
+                              sep = " ")
+unique(flam.mid.separate$date) # Nine trials date, 
+# data from mid.hobo from 2021-06-04 is absent
 
 #####################################################################
 # Grabbing all the hobo files from right
@@ -133,8 +137,12 @@ hobos <- full_join(flam.left,flam.mid,by = "time") %>%
 
 class(hobos$time) # As POSIXct
 any(is.na(hobos)) # Yes, hobos has NA
-#View(hobos) # flam.mid and flam.righ shows missing
-# values in 06/22/2021 but it is not missing in raw data!!!
+#View(hobos) 
+hobos_separate <- separate(hobos,time, into = c("date","time"),
+                           sep= " ")
+hobos_separate <- hobos_separate%>%
+  filter(date == "2021-06-04")%>%
+  View() # Yes, 2021-06-04 has no flam.mid data
 
 #####################################################################
 # Function to assign the labels after matching the trails time hobos
@@ -190,12 +198,14 @@ hobos_long <- hobos%>%
 #####################################################################
 
 hobo_temp_sum <- hobos_long %>% group_by(label, position) %>%
-  summarise(dur.100 = sum(temperature > 100,na.rm = TRUE),
-            degsec.100= sum(temperature[temperature >100],na.rm = TRUE),
-            peak.temp = max(temperature, na.rm=TRUE),
+  summarise(dur.100 = sum(temperature > 100),
+            degsec.100= sum(temperature[temperature >100]),
+            peak.temp = max(temperature),
             peak.time = time[which(peak.temp == temperature)[1]],
-            num.NA = sum(is.na(temperature))) %>% ungroup()
+            num.NA = sum(is.na(temperature))) %>% ungroup()%>%
+  filter(label != "NA")
 
+# hobo.mid is missing for all trails on 2021-06-04.
 #dim(hobo_temp_sum)
 #hobo_temp_sum_without.na <- hobo_temp_sum%>%
   #na.omit()
@@ -209,14 +219,19 @@ hobo_temp_sum <- hobos_long %>% group_by(label, position) %>%
 ########################################################################
 
 hobos_wider <- hobo_temp_sum%>%
-  pivot_wider(names_from = position)%>%
   group_by(label)%>%
-  summarise(dur.100=mean(dur.100),
-            peak.temp=max(peak.temp),
-            degsec.100=max(degsec.100))
+  summarise(dur.100=mean(dur.100, na.rm = TRUE),
+            peak.temp=max(peak.temp, na.rm = TRUE),
+            degsec.100=max(degsec.100, na.rm = TRUE))
 
-unique(hobos_wider$label) # 119 unique labels with one NA
-dim(hobos_wider) 
+# 16 samples from day 2021-06-04 showed NA for missing
+# the mid.hobos data and just removed the NA during summarising
+# by label. Will report them accordingly.
+
+unique(hobos_wider$label) # 118 unique labels
+dim(hobos_wider)
+#View(hobos_wider)
+
 
 #####################################################################
 # Plotting the summarized data

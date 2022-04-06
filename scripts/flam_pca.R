@@ -27,7 +27,14 @@ pca_data <- samples_more_than_three%>%
   select(label,heat_release_J,massconsumed,vol.burned, 
   flame.ht,flame.dur,dur.100,peak.temp)
 
-dim(pca_data) # 98 rows
+dim(pca_data) # 97 rows same as samples_more_than_three
+#unique(pca_data$label)
+
+#pca_data_check <- tidyr::separate(pca_data, label, into = c("sample_id","species_id"),
+                                  #sep = "_")
+#species_id_count <- pca_data_check%>%
+  #count(species_id)%>%
+  #View()
 
 any(is.na(pca_data)) # No NA
 #View(pca_data)
@@ -52,6 +59,7 @@ flam_loadings
 
 fviz_eig(flam_pca,addlabels = TRUE) 
 eig.val <- get_eigenvalue(flam_pca) 
+
 eig.val
 
 variables_info <- get_pca_var(flam_pca) # Variables information
@@ -81,15 +89,19 @@ fviz_contrib(flam_pca,choice = "var",axes = 2) # # Contributions of variables in
 # dataset for doing rest of the analysis.
 #####################################################################
 
-pca_data$PC1 <- 0-flam_pca$x[,1] #PC1 is negative
+pca_data$PC1 <- flam_pca$x[,1]*(-1) #PC1 is negative
 
 model_data <- samples_more_than_three%>%
   right_join(select(pca_data,label,PC1),by="label")
 
-dim(model_data) # 98 rows
+dim(model_data) # 97 rows
 #View(model_data)
 
 ######################################################################
-
+# All the variables are negative with PC1 and PC1 and PC2 accounts
+# for 75.25% and 9.34% variation respectively.
+# vol.burned, heat_release_J, peak.temp and massconsumed
+# contributed the most in PC1 and dur.100 and flame.dur 
+# contributed the most in PC2
 ######################################################################
 

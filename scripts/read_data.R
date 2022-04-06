@@ -91,6 +91,7 @@ canopy_measurements <- canopy_measurements %>%
 # leaf area, that's why multiplying them by pi since we assuemed the needles
 # are cylindrical shape.
 ###############################################################################
+
 pi <- 3.1416
 leaf_measurements <- leaf_measurements%>% # Multiplying the juniperus
   # leaf area by pi
@@ -100,6 +101,11 @@ leaf_measurements <- leaf_measurements %>%
   mutate(leaf_mass_area = lma_dry_mass_g / leaf_area_cm2)%>%
   mutate(leaf_area_per_leaflet=leaf_area_cm2/number_of_leaflet)
 
+leaf_measurements$leaf_area_cm2[leaf_measurements$sample_id == "ED07"] <- 99.61 
+# The value of ED07 was .61 instead of actual value 99.61 which
+# I found when I created plot the relationship between leaf_area_per_leaflet
+# and PC1 among groups (codes in exploratory.figures.R)
+
 ####################################################################################
 # Calculating leaf area per (Surface area of cylinder) needle for Juniperus species
 # where each needle assumed to be a cylinder whose length 
@@ -108,18 +114,36 @@ leaf_measurements <- leaf_measurements %>%
 #####################################################################################
 
 juniperus_leaf_area <- juniperus_leaf_area%>%
-  mutate(diameter_mm=diameter_mm*0.1)%>% # converting mm to cm
-  mutate(leaf_area_per_leaflet=2*pi*diameter_mm*(diameter_mm+length_cm))%>%
+  mutate(diameter_mm = diameter_mm*0.1)%>% # converting mm to cm
+  mutate(radius = diameter_mm/2)%>%
+  mutate(leaf_area_per_leaflet=2*pi*radius*(radius+length_cm))%>%
   group_by(sample_id)%>%
   summarise(leaf_area_per_leaflet=mean(leaf_area_per_leaflet))
 
 
 # Assigning leaf area of Juniperus species in leaf_measurements
 
-leaf_measurements$leaf_area_per_leaflet[leaf_measurements$species_id %in% c("2011","1022")] <- 
-  juniperus_leaf_area$leaf_area_per_leaflet
+leaf_measurement <- leaf_measurements%>%
+  filter(sample_id  %in% juniperus_leaf_area$sample_id )%>% #grabbing only juniperus
+  select(-leaf_area_per_leaflet)%>% # Removing leaf_area_per_leaflet since they are empty
+  left_join(juniperus_leaf_area,by="sample_id")%>% # Merging with juniperus_leaf_area
+  rbind(filter(leaf_measurements,
+               !sample_id  %in% juniperus_leaf_area$sample_id)) # Grabbing samples except Juniperus
+# and attaching with only Juniperus samples by rbind
+  
 
+#leaf_measurements$leaf_area_per_leaflet[leaf_measurements$species_id %in% c("2011","1022")] <- 
+  #juniperus_leaf_area$leaf_area_per_leaflet
 
+#for(i in 1:length(juniperus_leaf_area$sample_id)){
+
+#if(juniperus_leaf_area$sample_id %in% leaf_measurements$sample_id)
+
+#leaf_measurements$leaf_area_per_leaflet[i] <- juniperus_leaf_area$leaf_area_per_leaflet
+#} else {
+#leaf_measurements$leaf_area_per_leaflet <- leaf_measurements$leaf_area_per_leaflet
+#}
+#}
 ###############################################################################
 ## Burning trials
 # Measurements of burning trials. Determining temperature difference of discs,
@@ -140,7 +164,7 @@ burn_trials <- burn_trials %>%
 ###############################################################################
 
 alldata <- left_join(samples, canopy_measurements) %>%
-  left_join(leaf_measurements) %>%
+  left_join(leaf_measurement) %>%
   left_join(burn_trials) %>%
   mutate(species = paste(genus, specific_epithet),
          display_name = paste(substr(genus, 1, 1), ". ", specific_epithet, sep=""))%>%
@@ -158,23 +182,32 @@ alldata <- left_join(samples, canopy_measurements) %>%
 ################################################################################
 
 samples_more_than_three <- alldata%>%
+  filter(leaf_area_per_leaflet !="NA")%>%
+  filter(leaf_mass_area != "NA")%>%
   group_by(species)%>%
   summarise(number_of_individual=n())%>%
   filter(number_of_individual >=3)%>%
   left_join(alldata,by="species")%>%
-  filter(leaf_area_per_leaflet !="NA")%>% # keeping only those 
-  # samples who has leaf_area_per_leaflet data
-  filter(leaf_mass_area != "NA")%>%
   mutate(label=paste(sample_id,species_id,sep = "_"))%>%
+  filter(leaf_area_per_leaflet !="NA")%>%
+  filter(leaf_mass_area != "NA")%>%
   filter( number_of_individual != "NA")%>%
   select(-c(number_of_individual,genus))
-   
-dim(samples_more_than_three) # 98 rows
+
+
+unique(samples_more_than_three$species) # Now it's ok
+any(is.na(samples_more_than_three$leaf_mass_area)) # Ok
+any(is.na(samples_more_than_three$leaf_area_per_leaflet)) # Ok
+dim(samples_more_than_three)# 97 rows, now it's ok since Mimosa
+# species was included previously.
 # I will use this dataset to do rest of the analysis
+#species_id_count <- samples_more_than_three%>%
+  #count(species_id)%>%
+  #View()
 
 #####################################################################
 ## clean up work space, export two data frame, alldata and 
 # samples_more_than_three
 #####################################################################
 
-rm(canopy_measurements, leaf_measurements, burn_trials, samples,juniperus_leaf_area)
+rm(canopy_measurements, leaf_measurements,leaf_measurement, burn_trials, samples,juniperus_leaf_area)
