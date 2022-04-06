@@ -1,12 +1,11 @@
 ## Figures and tables for presentations and publications
 
-source("./ggplot_theme.R")
 source("./analysis.R")
-
+source("./ggplot_theme.R")
 
 
 ## Ignition
-fig_ignition <- ggplot(alldata,aes(moisture_content,ignition)) +
+fig_ignition_moisture <- ggplot(alldata, aes(moisture_content, ignition)) +
   geom_point() +
   geom_smooth(method = "glm",method.args=list(family=binomial(link = "cloglog")), 
               fullrange=TRUE, se=FALSE,color="red") +
@@ -16,8 +15,19 @@ fig_ignition <- ggplot(alldata,aes(moisture_content,ignition)) +
   ylab("Probability of ignition") +
   prestheme.nogridlines +
   theme(axis.title = element_text(size=12,face = "bold"))
-ggsave("../results/ignition_moisture_logistic_figure.pdf", plot = fig_ignition,
-       height=beamer_height, unit="cm")
+ggsave("../results/ignition_moisture_logistic_figure.pdf", plot = fig_ignition_moisture,
+       height=beamer_height, width=beamer_height, units="cm")
+
+fig_ignition_wind <- ggplot(alldata,aes(windspeed, ignition)) +
+  geom_point() +
+  geom_smooth(method = "glm",method.args=list(family=binomial(link = "cloglog")), 
+              fullrange=TRUE, se=FALSE,color="red") +
+  scale_x_continuous(limits = c(0,8.7), breaks = c(0,2,4,6,8)) +
+  xlab("Windspeed") +
+  ylab("Probability of getting ignited") +
+  prestheme.nogridlines
+ggsave("../results/ignition_wind_logistic_figure.pdf", plot = fig_ignition_wind,
+       height=beamer_height, width=beamer_height, units="cm")
 
 
 #### Figure: Flammability vs mass
@@ -36,5 +46,5 @@ fig1 <- ggplot(model_data, aes(total_mass_g, PC1)) +
   theme(legend.position="none")
 
 #fig1
-ggsave("../results/shrubflam_fig1.pdf", fig1, width=beamer_height, height=beamer_height)
+ggsave("../results/shrubflam_fig1.pdf", fig1, width=10, height=beamer_height, units="cm")
 

@@ -18,7 +18,8 @@ library(afex)
 library(ggplot2)
 library(dplyr)
 library(pscl)
-source("./read_data.R")
+#source("./read_data.R")
+## You are calling read_data twice! because it is also called in flam_pca.
 source("./flam_pca.R")
 
 ########################################################################
@@ -102,16 +103,6 @@ pscl::pR2(log.mod.moisture)["McFadden"] #McFadden 0.04627074
 ########################################################################
 ## Does windspeed affects ignition?
 ########################################################################
-
-ggplot(alldata,aes(windspeed,ignition))+
-  geom_point()+
-  geom_smooth(method = "glm",method.args=list(family=binomial(link = "cloglog")), 
-              fullrange=TRUE, se=FALSE,color="red")+
-  scale_x_continuous(limits = c(0,8.7),
-                     breaks = c(0,2,4,6,8))+
-  xlab("Windspeed")+
-  ylab("Probability of getting ignited")+
-  theme_bw()
 
 log.mod.windspeed <- glm(ignition~windspeed,
                         family = binomial(link = "cloglog"),
