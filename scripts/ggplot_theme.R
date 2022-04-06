@@ -17,7 +17,7 @@ schwilkcolors <- c("#D68D18", "#836B43", "#A0AE6A", "#362908", "#EC4E15")
 #362908
 
 bestfit <- geom_smooth(method="lm",se = F, color = "black", size=1.5)
-textsize <- 14
+textsize <- 12
 smsize <- textsize-2
 axissz <- smsize
 pt2mm <- 0.35146
@@ -65,8 +65,8 @@ pubtheme.nogridlines <- pubtheme +
 
 # presentation theme. Meant for beamer output with a graph height of 7 cm. New
 # text sizes aimed at screens rather than page:
-prestxsz <- 18
-pressmsz <- 16
+prestxsz <- 14
+pressmsz <- 12
 prestheme   <- pubtheme +
   theme(axis.title.y = element_text(size = prestxsz),
         axis.title.x = element_text(size = prestxsz),
