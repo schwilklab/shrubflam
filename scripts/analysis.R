@@ -5,6 +5,11 @@
 # Need to set the directory as setwd("../scripts") to read the scripts
 # Need to make sure that the number of observations are same for each 
 # model in model_data.
+
+## DWS: I recommended changing to use root of repo as the working directory.
+## Ten set that in your rstudio project file (not in version control) and
+## document in the readme. That has become the standard way to do this.
+
 #################################################################################
 ## Random intercept model
 
@@ -15,7 +20,6 @@ library(dplyr)
 library(pscl)
 source("./read_data.R")
 source("./flam_pca.R")
-source("./ggplot_theme.R")
 
 ########################################################################
 # scaling the response variables since they measured in different
@@ -29,6 +33,8 @@ model_data[ ,c("canopy_density","total_mass_g","leaf_mass_area",
                                                          "leaf_mass_area","leaf_area_per_leaflet",
                                                          "moisture_content","windspeed",
                                                        "air.temp.F","rh")],scale=TRUE)
+
+## DWS: I would do this as a mutate() call.
 
 ###############################################################################
 # At first do the random intercept model and then random 
@@ -61,6 +67,7 @@ plot(interaction.model)
 summary(interaction.model) 
 anova(null.model,traits.model,interaction.model)
 
+## Does this even make sense for samples that did not ignite?
 
 #################################################################################
 #Samples those only get ignited
@@ -77,18 +84,6 @@ summary(traits.model.ignited)
 ########################################################################
 ## Does moisture content affects ignition?
 ########################################################################
-
-ggplot(alldata,aes(moisture_content,ignition))+
-  geom_point()+
-  geom_smooth(method = "glm",method.args=list(family=binomial(link = "cloglog")), 
-              fullrange=TRUE, se=FALSE,color="red")+
-  scale_x_continuous(limits = c(2.406877,131.754543),
-                     breaks = c(0,25,50,75,100,125))+
-  xlab("Moisture content (%)")+
-  ylab("Probability of getting ignited")+
-  theme_bw()+
-  theme(axis.title = element_text(size=12,face = "bold"))
-
 ## Null model for comparison.
 
 log.null.moisture <- glm(ignition~1,
@@ -135,25 +130,6 @@ summary(traits.mixed.model)
 #Samples those only get ignited
 #################################################################################
 
-#### figure
-model_data_sum <- model_data %>% group_by(group) %>%
-  summarize(across(c(canopy_density, total_mass_g, PC1), list(mean = mean, sum  = sum)), na.rm=TRUE)
-
-fig1 <- ggplot(model_data, aes(total_mass_g, PC1)) +
-  geom_point(alpha=0.4, size=3) +
-  geom_point(data=model_data_sum, aes(total_mass_g_mean, PC1_mean), size=5) +
-  #scale_colour_manual(schwilkcolors) +
-  bestfit +
-  #geom_smooth(method="lm",se=FALSE, color="black") +
-  xlab("Mass per 70 cm (g)") +
-  ylab("Flammability (PC1 score)") +
-  prestheme.nogridlines +
-  theme(legend.position="none")
-
-fig1
-ggsave("../results/shrubflam_fig1.pdf", fig1, width=0.8*col1, height=0.8*col1)
-
-
 #################################################################################
 # Does leaf traits and canopy traits influence flammability?
 
@@ -186,4 +162,7 @@ vif.lme <- function (fit) {
   v <- diag(solve(v/(d %o% d)))
   names(v) <- nam
   v }
-vif.lme(traits.model)
+## DWS: function above does not make sense, it refers to "v" before it is defined:
+## Error in vif.lme(traits.model) : object 'v' not found
+
+#vif.lme(traits.model)
