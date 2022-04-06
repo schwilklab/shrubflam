@@ -15,7 +15,7 @@ library(dplyr)
 library(pscl)
 source("./read_data.R")
 source("./flam_pca.R")
-
+source("./ggplot_theme.R")
 
 ########################################################################
 # scaling the response variables since they measured in different
@@ -124,8 +124,48 @@ log.mod.windspeed <- glm(ignition~windspeed,
 
 summary(log.mod.windspeed)
 
+traits.mixed.model <- mixed(PC1 ~ total_mass_g + canopy_density + 
+                              leaf_area_per_leaflet + moisture_content + 
+                              air.temp.F + (1|group),
+                              data=model_data, method="KR")
+summary(traits.mixed.model)
 
 
+#################################################################################
+#Samples those only get ignited
+#################################################################################
+
+#### figure
+model_data_sum <- model_data %>% group_by(group) %>%
+  summarize(across(c(canopy_density, total_mass_g, PC1), list(mean = mean, sum  = sum)), na.rm=TRUE)
+
+fig1 <- ggplot(model_data, aes(total_mass_g, PC1)) +
+  geom_point(alpha=0.4, size=3) +
+  geom_point(data=model_data_sum, aes(total_mass_g_mean, PC1_mean), size=5) +
+  #scale_colour_manual(schwilkcolors) +
+  bestfit +
+  #geom_smooth(method="lm",se=FALSE, color="black") +
+  xlab("Mass per 70 cm (g)") +
+  ylab("Flammability (PC1 score)") +
+  prestheme.nogridlines +
+  theme(legend.position="none")
+
+fig1
+ggsave("../results/shrubflam_fig1.pdf", fig1, width=0.8*col1, height=0.8*col1)
+
+
+#################################################################################
+# Does leaf traits and canopy traits influence flammability?
+
+null.model <- lmer(PC1~1+ (1|group),
+                   data=model_data)
+
+traits.model <- lmer(PC1 ~ total_mass_g + canopy_density + leaf_mass_area+
+                       leaf_area_per_leaflet + moisture_content + windspeed + 
+                       air.temp.F + rh + (1|group), data = model_data)
+summary(traits.model)
+anova(null.model,traits.model)
+plot(resid(traits.model))
 
 
 #################################################################################
@@ -147,5 +187,3 @@ vif.lme <- function (fit) {
   names(v) <- nam
   v }
 vif.lme(traits.model)
-ggplot(model_data, aes(total_mass_g,PC1))+
-  geom_point()
