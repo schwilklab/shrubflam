@@ -5,6 +5,11 @@
 # Need to set the directory as setwd("../scripts") to read the scripts
 # Need to make sure that the number of observations are same for each 
 # model in model_data.
+
+## DWS: I recommended changing to use root of repo as the working directory.
+## Ten set that in your rstudio project file (not in version control) and
+## document in the readme. That has become the standard way to do this.
+
 #################################################################################
 ## Random intercept model
 
@@ -13,9 +18,9 @@ library(afex)
 library(ggplot2)
 library(dplyr)
 library(pscl)
-source("./read_data.R")
+#source("./read_data.R")
+## You are calling read_data twice! because it is also called in flam_pca.
 source("./flam_pca.R")
-
 
 ########################################################################
 # scaling the response variables since they measured in different
@@ -29,6 +34,8 @@ model_data[ ,c("canopy_density","total_mass_g","leaf_mass_area",
                                                          "leaf_mass_area","leaf_area_per_leaflet",
                                                          "moisture_content","windspeed",
                                                        "air.temp.F","rh")],scale=TRUE)
+
+## DWS: I would do this as a mutate() call.
 
 ###############################################################################
 # At first do the random intercept model 
@@ -60,6 +67,7 @@ plot(interaction.model)
 summary(interaction.model) 
 AIC(null.model,traits.model,interaction.model)
 
+## Does this even make sense for samples that did not ignite?
 
 #################################################################################
 #Samples those only get ignited
@@ -109,18 +117,6 @@ AIC(null.without.juniperus, traits.without.juniperus, interaction.without.junipe
 ########################################################################
 ## Does moisture content affects ignition?
 ########################################################################
-
-ggplot(alldata,aes(moisture_content,ignition))+
-  geom_point()+
-  geom_smooth(method = "glm",method.args=list(family=binomial(link = "cloglog")), 
-              fullrange=TRUE, se=FALSE,color="red")+
-  scale_x_continuous(limits = c(2.406877,131.754543),
-                     breaks = c(0,25,50,75,100,125))+
-  xlab("Moisture content (%)")+
-  ylab("Probability of getting ignited")+
-  theme_bw()+
-  theme(axis.title = element_text(size=12,face = "bold"))
-
 ## Null model for comparison.
 
 log.null.moisture <- glm(ignition~1,
@@ -140,24 +136,35 @@ pscl::pR2(log.mod.moisture)["McFadden"] #McFadden 0.04627074
 ## Does windspeed affects ignition?
 ########################################################################
 
-ggplot(alldata,aes(windspeed,ignition))+
-  geom_point()+
-  geom_smooth(method = "glm",method.args=list(family=binomial(link = "cloglog")), 
-              fullrange=TRUE, se=FALSE,color="red")+
-  scale_x_continuous(limits = c(0,8.7),
-                     breaks = c(0,2,4,6,8))+
-  xlab("Windspeed")+
-  ylab("Probability of getting ignited")+
-  theme_bw()
-
 log.mod.windspeed <- glm(ignition~windspeed,
                         family = binomial(link = "cloglog"),
                         data = alldata)
 
 summary(log.mod.windspeed)
 
+traits.mixed.model <- mixed(PC1 ~ total_mass_g + canopy_density + 
+                              leaf_area_per_leaflet + moisture_content + 
+                              air.temp.F + (1|group),
+                              data=model_data, method="KR")
+summary(traits.mixed.model)
 
 
+#################################################################################
+#Samples those only get ignited
+#################################################################################
+
+#################################################################################
+# Does leaf traits and canopy traits influence flammability?
+
+null.model <- lmer(PC1~1+ (1|group),
+                   data=model_data)
+
+traits.model <- lmer(PC1 ~ total_mass_g + canopy_density + leaf_mass_area+
+                       leaf_area_per_leaflet + moisture_content + windspeed + 
+                       air.temp.F + rh + (1|group), data = model_data)
+summary(traits.model)
+anova(null.model,traits.model)
+plot(resid(traits.model))
 
 
 #################################################################################
@@ -178,6 +185,7 @@ vif.lme <- function (fit) {
   v <- diag(solve(v/(d %o% d)))
   names(v) <- nam
   v }
-vif.lme(traits.model)
-ggplot(model_data, aes(total_mass_g,PC1))+
-  geom_point()
+## DWS: function above does not make sense, it refers to "v" before it is defined:
+## Error in vif.lme(traits.model) : object 'v' not found
+
+#vif.lme(traits.model)

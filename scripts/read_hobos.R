@@ -14,6 +14,8 @@ library(dplyr)
 library(ggplot2)
 library(stringr)
 
+## DWS: Do you need all those packages?
+
 ####################################################################
 # Reading trials data in order to grab the temperatures from hobo
 # data loggers
@@ -140,10 +142,19 @@ any(is.na(hobos)) # Yes, hobos has NA
 #View(hobos) 
 hobos_separate <- separate(hobos,time, into = c("date","time"),
                            sep= " ")
-hobos_separate <- hobos_separate%>%
-  filter(date == "2021-06-04")%>%
-  View() # Yes, 2021-06-04 has no flam.mid data
 
+
+hobos_separate <- hobos_separate %>%
+  filter(date == "2021-06-04")
+
+##
+##  View() # Yes, 2021-06-04 has no flam.mid data
+# DWS: Don't send stuff to popups
+
+## That is also weird, view() is called for its side effects, don;t use it in
+## assignment.
+
+  
 #####################################################################
 # Function to assign the labels after matching the trails time hobos
 #####################################################################

@@ -46,7 +46,8 @@ any(is.na(pca_data)) # No NA
 
 flam_pca <- prcomp(pca_data[,-1], 
                         scale=TRUE)
-biplot(flam_pca)
+# biplot(flam_pca) Don't make plots in data analysis code, slows things down.
+# Put plots where you need them.
 summary(flam_pca)
 flam_loadings <- flam_pca$rotation[,1:2] 
 flam_loadings
@@ -57,7 +58,9 @@ flam_loadings
 ## Scree plot, eigenvalue and variables info
 ####################################################################
 
-fviz_eig(flam_pca,addlabels = TRUE) 
+# fviz_eig(flam_pca,addlabels = TRUE)
+## DWS: if code needs to make plots, save them to a file and don't have them
+## blow past the user on the screen.
 eig.val <- get_eigenvalue(flam_pca) 
 
 eig.val
@@ -72,17 +75,19 @@ head(variables_info$contrib) # Contributions of variables
 ## Plot based on cos2 values of variables
 ####################################################################
 
-fviz_pca_var(flam_pca,col.var = "cos2",
-             gradient.cols=c("#00AFBB","#E7B800","#FC4E07"),
-             repel = TRUE)
+## fviz_pca_var(flam_pca,col.var = "cos2",
+##              gradient.cols=c("#00AFBB","#E7B800","#FC4E07"),
+##              repel = TRUE)
+
+## DWS: save to a file if you need it!
 
 ####################################################################
 ## Contributions of variables in Principle components
 ####################################################################
 
-fviz_contrib(flam_pca,choice = "var",axes=1) # Contributions of variables in PC1
+#fviz_contrib(flam_pca,choice = "var",axes=1) # Contributions of variables in PC1
 
-fviz_contrib(flam_pca,choice = "var",axes = 2) # # Contributions of variables in PC2
+#fviz_contrib(flam_pca,choice = "var",axes = 2) # # Contributions of variables in PC2
 
 #####################################################################
 # Assigning PC1 to pca_data and then merging with samples_more_than_three
