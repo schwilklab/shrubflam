@@ -92,6 +92,11 @@ canopy_measurements <- canopy_measurements %>%
 # are cylindrical shape.
 ###############################################################################
 
+leaf_measurements$leaf_area_cm2[leaf_measurements$sample_id == "ED07"] <- 99.61 
+# The value of ED07 was .61 instead of actual value 99.61 which
+# I found when I created plot the relationship between leaf_area_per_leaflet
+# and PC1 among groups (codes in exploratory.figures.R)
+
 pi <- 3.1416
 leaf_measurements <- leaf_measurements%>% # Multiplying the juniperus
   # leaf area by pi
@@ -101,10 +106,6 @@ leaf_measurements <- leaf_measurements %>%
   mutate(leaf_mass_area = lma_dry_mass_g / leaf_area_cm2)%>%
   mutate(leaf_area_per_leaflet=leaf_area_cm2/number_of_leaflet)
 
-leaf_measurements$leaf_area_cm2[leaf_measurements$sample_id == "ED07"] <- 99.61 
-# The value of ED07 was .61 instead of actual value 99.61 which
-# I found when I created plot the relationship between leaf_area_per_leaflet
-# and PC1 among groups (codes in exploratory.figures.R)
 
 ####################################################################################
 # Calculating leaf area per (Surface area of cylinder) needle for Juniperus species
@@ -132,18 +133,7 @@ leaf_measurement <- leaf_measurements%>%
 # and attaching with only Juniperus samples by rbind
   
 
-#leaf_measurements$leaf_area_per_leaflet[leaf_measurements$species_id %in% c("2011","1022")] <- 
-  #juniperus_leaf_area$leaf_area_per_leaflet
 
-#for(i in 1:length(juniperus_leaf_area$sample_id)){
-
-#if(juniperus_leaf_area$sample_id %in% leaf_measurements$sample_id)
-
-#leaf_measurements$leaf_area_per_leaflet[i] <- juniperus_leaf_area$leaf_area_per_leaflet
-#} else {
-#leaf_measurements$leaf_area_per_leaflet <- leaf_measurements$leaf_area_per_leaflet
-#}
-#}
 ###############################################################################
 ## Burning trials
 # Measurements of burning trials. Determining temperature difference of discs,
@@ -195,9 +185,9 @@ samples_more_than_three <- alldata%>%
   select(-c(number_of_individual,genus))
 
 
-unique(samples_more_than_three$species) # Now it's ok
-any(is.na(samples_more_than_three$leaf_mass_area)) # Ok
-any(is.na(samples_more_than_three$leaf_area_per_leaflet)) # Ok
+#unique(samples_more_than_three$species) # Now it's ok
+#any(is.na(samples_more_than_three$leaf_mass_area)) # Ok
+#any(is.na(samples_more_than_three$leaf_area_per_leaflet)) # Ok
 dim(samples_more_than_three)# 97 rows, now it's ok since Mimosa
 # species was included previously.
 # I will use this dataset to do rest of the analysis

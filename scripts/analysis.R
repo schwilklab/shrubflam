@@ -31,8 +31,7 @@ model_data[ ,c("canopy_density","total_mass_g","leaf_mass_area",
                                                        "air.temp.F","rh")],scale=TRUE)
 
 ###############################################################################
-# At first do the random intercept model and then random 
-# intercept and slope model and will do compare them.
+# At first do the random intercept model 
 ###################################################################################
 
 #################################################################################
@@ -42,9 +41,9 @@ model_data[ ,c("canopy_density","total_mass_g","leaf_mass_area",
 null.model <- afex::lmer(PC1 ~ 1 + (1|group),
                    data=model_data)
 
-traits.model <- afex::lmer(PC1 ~ total_mass_g + canopy_density + leaf_mass_area+
-                       leaf_area_per_leaflet + moisture_content + windspeed + 
-                       air.temp.F  + (1|group), data = model_data)
+traits.model <- afex::lmer(PC1 ~ total_mass_g + canopy_density + leaf_mass_area +
+                       leaf_area_per_leaflet + moisture_content +
+                       (1|group), data = model_data)
 
 
 summary(traits.model)
@@ -52,27 +51,60 @@ anova(null.model,traits.model)
 plot(resid(traits.model))
 
 
-interaction.model <- afex::lmer(PC1 ~ total_mass_g*leaf_mass_area*moisture_content +
-                                      canopy_density*leaf_mass_area*moisture_content +
-                                      leaf_area_per_leaflet + air.temp.F + windspeed +
-                                      (1 | group),data = model_data)
+interaction.model <- afex::lmer(PC1 ~ total_mass_g*canopy_density*moisture_content +
+                                      total_mass_g*leaf_mass_area*moisture_content +
+                                      leaf_area_per_leaflet + (1 | group), data = model_data)
 
 plot(interaction.model)
+
 summary(interaction.model) 
-anova(null.model,traits.model,interaction.model)
+AIC(null.model,traits.model,interaction.model)
 
 
 #################################################################################
 #Samples those only get ignited
 #################################################################################
 
-traits.model.ignited <- afex::lmer(PC1 ~ total_mass_g*leaf_mass_area*moisture_content +
-                                         canopy_density*leaf_mass_area*moisture_content +
-                                         leaf_area_per_leaflet + air.temp.F + windspeed +
-                                         (1 | group), data = filter(model_data, ignition == 1))
+null.ignited <- afex::lmer(PC1 ~ 1 + (1|group),
+                           data = filter(model_data, ignition == 1))
 
-summary(traits.model.ignited) 
+traits.model.ignited <- afex::lmer(PC1 ~ total_mass_g + canopy_density + leaf_mass_area+
+                                     leaf_area_per_leaflet + moisture_content +
+                                     (1|group), data = filter(model_data, ignition == 1))
 
+summary(traits.model.ignited)
+
+interaction.model.ignited <- afex::lmer(PC1 ~ total_mass_g*canopy_density*moisture_content +
+                                          total_mass_g*leaf_mass_area*moisture_content +
+                                          leaf_area_per_leaflet + (1 | group), data = filter(model_data,
+                                                                                             ignition == 1))
+
+
+summary(interaction.model.ignited)
+
+AIC(null.ignited, traits.model.ignited, interaction.model.ignited)
+
+##############################################################################
+# Models without Juniperus
+##############################################################################
+
+null.without.juniperus <- afex::lmer( PC1 ~ 1 + (1|group),
+                                      data = filter(model_data,
+                                                    group != "Juniperus"))
+
+traits.without.juniperus <- afex::lmer(PC1 ~ total_mass_g + canopy_density + leaf_mass_area +
+                                         leaf_area_per_leaflet + moisture_content +
+                                         (1|group), data = filter(model_data,
+                                                                  group != "Juniperus"))
+summary(traits.without.juniperus)
+
+interaction.without.juniperus <- afex::lmer(PC1 ~ total_mass_g*canopy_density*moisture_content +
+                                              total_mass_g*leaf_mass_area*moisture_content +
+                                              leaf_area_per_leaflet + (1 | group),
+                                              data = filter(model_data, group != "Juniperus"))
+summary(interaction.without.juniperus)
+
+AIC(null.without.juniperus, traits.without.juniperus, interaction.without.juniperus)
 
 ########################################################################
 ## Does moisture content affects ignition?
