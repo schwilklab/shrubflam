@@ -13,11 +13,13 @@
 #################################################################################
 ## Random intercept model
 
-library(lme4)
+
 library(afex)
+library(MuMIn)
 library(ggplot2)
 library(dplyr)
 library(pscl)
+
 #source("./read_data.R")
 ## You are calling read_data twice! because it is also called in flam_pca.
 source("./flam_pca.R")
@@ -27,13 +29,20 @@ source("./flam_pca.R")
 # units
 ########################################################################
 
+zscore <- function(x) (x -mean(x, na.rm=TRUE))/ sd(x, na.rm = TRUE)
 
-model_data[ ,c("canopy_density","total_mass_g","leaf_mass_area",
-             "leaf_area_per_leaflet","moisture_content","windspeed",
-             "air.temp.F","rh")] <- scale(model_data[ ,c("canopy_density","total_mass_g",
-                                                         "leaf_mass_area","leaf_area_per_leaflet",
-                                                         "moisture_content","windspeed",
-                                                       "air.temp.F","rh")],scale=TRUE)
+
+model_data <- model_data %>%
+  mutate_at(c("canopy_density","total_mass_g","leaf_mass_area",
+              "leaf_area_per_leaflet","moisture_content","windspeed",
+              "air.temp.F","rh"), list(zscore))
+
+#model_data[ ,c("canopy_density","total_mass_g","leaf_mass_area",
+             #"leaf_area_per_leaflet","moisture_content","windspeed",
+             #"air.temp.F","rh")] <- scale(model_data[ ,c("canopy_density","total_mass_g",
+                                                         #"leaf_mass_area","leaf_area_per_leaflet",
+                                                         #"moisture_content","windspeed",
+                                                       #"air.temp.F","rh")],scale=TRUE)
 
 ## DWS: I would do this as a mutate() call.
 
@@ -41,96 +50,170 @@ model_data[ ,c("canopy_density","total_mass_g","leaf_mass_area",
 # At first do the random intercept model 
 ###################################################################################
 
+
 #################################################################################
-# Does leaf traits and canopy traits influence flammability?
-##################################################################################
+# Getting the best model for leaf traits
+#################################################################################
+
+options(na.action = "na.fail")
+
+leaf.traits.model <- afex::lmer( PC1 ~ leaf_mass_area + leaf_area_per_leaflet +
+                                    leaf_mass_area*leaf_area_per_leaflet +
+                                    ( 1|group), data = model_data)
+
+leaf.traits.models <- dredge(leaf.traits.model)
+
+get.models(leaf.traits.models, subset = TRUE)[[1]] # The best model,null model
+
+get.models(leaf.traits.models, subset = TRUE)[[2]] # The second best model, only 
+# leaf_mass_area (LMA)
+
+leaf.models <- model.avg(leaf.traits.models, rank = "AICc",
+          rank.args = list(REML = TRUE))
+
+#plot(leaf.models, full = TRUE, intercept = TRUE)
+ 
+summary(model.avg(leaf.traits.models)) # AIC value for null model
+# and leaf_mass_area(LMA) is 428.87 and 431.46 respectively
+
+lma.model <- afex::lmer(PC1 ~ leaf_mass_area +
+                              (1|group), data = model_data)
+
+#################################################################################
+# Getting the best model for canopy_traits
+#################################################################################
+
+canopy.traits.model <- afex::lmer( PC1 ~ total_mass_g + canopy_density + moisture_content +
+                                     total_mass_g*canopy_density +
+                                     total_mass_g*moisture_content +
+                                     canopy_density*moisture_content + 
+                                     ( 1| group), data = model_data)
+
+canopy.traits.models <- dredge(canopy.traits.model)
+
+get.models(canopy.traits.models, subset = TRUE)[[1]] # Only total mass is the
+# best model
+
+get.models(canopy.traits.models,subset = TRUE)[[2]] # Moisture_content +
+# total_mass_g is the second best
+
+canopy.models <- model.avg(canopy.traits.models, rank = "AICc",
+          rank.args = list(REML = TRUE))
+
+#canopy.models.fig <- plot(canopy.models, full = TRUE, intercept = TRUE) +
+  #prestheme.nogridlines
+
+
+summary(model.avg(canopy.traits.models))
 
 null.model <- afex::lmer(PC1 ~ 1 + (1|group),
-                   data=model_data)
+                         data = model_data)
 
-traits.model <- afex::lmer(PC1 ~ total_mass_g + canopy_density + leaf_mass_area +
-                       leaf_area_per_leaflet + moisture_content +
-                       (1|group), data = model_data)
+total.biomass.model <- afex::lmer( PC1 ~ total_mass_g +
+                                     (1|group), data = model_data)
 
+AIC(null.model,lma.model, total.biomass.model) # Total biomass is better (lower AIC, 412.1905)
 
-summary(traits.model)
-anova(null.model,traits.model)
-plot(resid(traits.model))
+biomass.lma.model <- afex::lmer(PC1 ~ total_mass_g + leaf_mass_area +
+                                      (1|group), data = model_data)
 
-
-interaction.model <- afex::lmer(PC1 ~ total_mass_g*canopy_density*moisture_content +
-                                      total_mass_g*leaf_mass_area*moisture_content +
-                                      leaf_area_per_leaflet + (1 | group), data = model_data)
-
-plot(interaction.model)
-
-summary(interaction.model) 
-AIC(null.model,traits.model,interaction.model)
-
-## Does this even make sense for samples that did not ignite?
+AIC(null.model,total.biomass.model,lma.model,biomass.lma.model) # total.biomass.model 
+# is the best (lower AIC 412.1905)
 
 #################################################################################
-#Samples those only get ignited
+# What about only those samples are got ignited
 #################################################################################
+# Canopy traits
+
+ignited_samples <- filter(model_data,
+                          ignition == 1)
+
+canopy.traits.model.ignited <- afex::lmer(PC1 ~ total_mass_g + canopy_density + moisture_content +
+                                            total_mass_g*canopy_density +
+                                            total_mass_g*moisture_content +
+                                            canopy_density*moisture_content + (1|group), 
+                                          data = ignited_samples)
+
+canopy.traits.model.ignited2 <- dredge(canopy.traits.model.ignited)
+
+get.models(canopy.traits.model.ignited2, subset = TRUE)[[1]] # Only total mass is the
+# best model
+
+get.models(canopy.traits.model.ignited2,subset = TRUE)[[2]] # Moisture_content +
+
+# total_mass_g is the second best
+model.avg(canopy.traits.model.ignited2, rank = "AICc",
+          rank.args = list(REML = TRUE))
+
+summary(model.avg(canopy.traits.model.ignited2))
+
+
+# Same thing
+
+#############################################################################
+# Leaf traits
+#############################################################################
+
+leaf.traits.model.ignited <- afex::lmer( PC1 ~ leaf_mass_area + leaf_area_per_leaflet +
+                                           leaf_mass_area*leaf_area_per_leaflet +
+                                           ( 1|group), data = ignited_samples)
+
+leaf.traits.model.ignited2 <- dredge(leaf.traits.model.ignited)
+
+get.models(leaf.traits.model.ignited2, subset = TRUE)[[1]] # The best model,null model
+
+get.models(leaf.traits.model.ignited2, subset = TRUE)[[2]] # The second best model, only 
+# leaf_mass_area (LMA)
+
+model.avg(leaf.traits.model.ignited2, rank = "AICc",
+          rank.args = list(REML = TRUE))
+
+summary(model.avg(leaf.traits.model.ignited2)) # The full model is the best (AIC 255.01)
+
+################################################################################################
+# Model comparison
+################################################################################################
 
 null.ignited <- afex::lmer(PC1 ~ 1 + (1|group),
-                           data = filter(model_data, ignition == 1))
+                           data = ignited_samples)
 
-traits.model.ignited <- afex::lmer(PC1 ~ total_mass_g + canopy_density + leaf_mass_area+
-                                     leaf_area_per_leaflet + moisture_content +
-                                     (1|group), data = filter(model_data, ignition == 1))
+biomass.ignited <- afex::lmer(PC1 ~ total_mass_g +
+                                (1|group), data = ignited_samples)
 
-summary(traits.model.ignited)
+lma.model.ignited <- afex::lmer(PC1 ~ leaf_mass_area + leaf_area_per_leaflet +
+                                  leaf_mass_area*leaf_area_per_leaflet +
+                                  (1|group), data = ignited_samples)
 
-interaction.model.ignited <- afex::lmer(PC1 ~ total_mass_g*canopy_density*moisture_content +
-                                          total_mass_g*leaf_mass_area*moisture_content +
-                                          leaf_area_per_leaflet + (1 | group), data = filter(model_data,
-                                                                                             ignition == 1))
+AIC(null.ignited,biomass.ignited,lma.model.ignited)  # Still biomass, lowes AIC (340.1540)
+# is better
 
+leaf.traits.biomass.ignited <- afex::lmer(PC1 ~ total_mass_g +
+                                            leaf_mass_area + leaf_area_per_leaflet +
+                                            leaf_mass_area*leaf_area_per_leaflet +
+                                            (1|group), data = ignited_samples)
 
-summary(interaction.model.ignited)
+AIC(null.ignited,biomass.ignited,lma.model.ignited,leaf.traits.biomass.ignited) # Still biomass, AIC (340.1540)
 
-AIC(null.ignited, traits.model.ignited, interaction.model.ignited)
-
-##############################################################################
-# Models without Juniperus
-##############################################################################
-
-null.without.juniperus <- afex::lmer( PC1 ~ 1 + (1|group),
-                                      data = filter(model_data,
-                                                    group != "Juniperus"))
-
-traits.without.juniperus <- afex::lmer(PC1 ~ total_mass_g + canopy_density + leaf_mass_area +
-                                         leaf_area_per_leaflet + moisture_content +
-                                         (1|group), data = filter(model_data,
-                                                                  group != "Juniperus"))
-summary(traits.without.juniperus)
-
-interaction.without.juniperus <- afex::lmer(PC1 ~ total_mass_g*canopy_density*moisture_content +
-                                              total_mass_g*leaf_mass_area*moisture_content +
-                                              leaf_area_per_leaflet + (1 | group),
-                                              data = filter(model_data, group != "Juniperus"))
-summary(interaction.without.juniperus)
-
-AIC(null.without.juniperus, traits.without.juniperus, interaction.without.juniperus)
 
 ########################################################################
 ## Does moisture content affects ignition?
 ########################################################################
+
+
 ## Null model for comparison.
 
-log.null.moisture <- glm(ignition~1,
+log.null.moisture <- glm(ignition ~ 1,
                          family = binomial(link = "cloglog"), 
                          data = alldata) 
 
-log.mod.moisture <- glm(ignition~moisture_content,
+log.mod.moisture <- glm(ignition ~ moisture_content,
                         family = binomial(link = "cloglog"),
                         data = alldata)
 
 summary(log.mod.moisture) # p value 0.0573 , not statistically significant!!
 
 
-pscl::pR2(log.mod.moisture)["McFadden"] #McFadden 0.04627074
+pscl::pR2(log.mod.moisture)["McFadden"] # McFadden 0.04627074
 
 ########################################################################
 ## Does windspeed affects ignition?
@@ -142,34 +225,8 @@ log.mod.windspeed <- glm(ignition~windspeed,
 
 summary(log.mod.windspeed)
 
-traits.mixed.model <- mixed(PC1 ~ total_mass_g + canopy_density + 
-                              leaf_area_per_leaflet + moisture_content + 
-                              air.temp.F + (1|group),
-                              data=model_data, method="KR")
-summary(traits.mixed.model)
 
-
-#################################################################################
-#Samples those only get ignited
-#################################################################################
-
-#################################################################################
-# Does leaf traits and canopy traits influence flammability?
-
-null.model <- lmer(PC1~1+ (1|group),
-                   data=model_data)
-
-traits.model <- lmer(PC1 ~ total_mass_g + canopy_density + leaf_mass_area+
-                       leaf_area_per_leaflet + moisture_content + windspeed + 
-                       air.temp.F + rh + (1|group), data = model_data)
-summary(traits.model)
-anova(null.model,traits.model)
-plot(resid(traits.model))
-
-
-#################################################################################
-
-#################################################################################
+#########################################################
 #  variance inflation factors for random mixed effect model
 # source(https://stackoverflow.com/questions/
 # 26633483/collinearity-after-accounting-for-random-mixed-effects)

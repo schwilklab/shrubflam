@@ -8,13 +8,13 @@
 # TODO: read GMT offset or specify timezone explicitly
 TZ = "CST6CDT"
  
-library(lubridate)
+
 library(tidyr)
-library(dplyr)
 library(ggplot2)
 library(stringr)
 
 ## DWS: Do you need all those packages?
+# AM: removed unnecessary packages.
 
 ####################################################################
 # Reading trials data in order to grab the temperatures from hobo

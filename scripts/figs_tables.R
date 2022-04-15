@@ -48,3 +48,37 @@ fig1 <- ggplot(model_data, aes(total_mass_g, PC1)) +
 #fig1
 ggsave("../results/shrubflam_fig1.pdf", fig1, width=10, height=beamer_height, units="cm")
 
+####################################################################
+## Plot based on cos2 values of variables
+####################################################################
+
+var_contributions_by_cos2 <- fviz_pca_var(flam_pca,col.var = "cos2",
+             gradient.cols=c("#00AFBB","#E7B800","#FC4E07"),
+             repel = TRUE) +
+  prestheme.nogridlines
+ggsave("../results/variables_contributions.pdf", 
+       var_contributions_by_cos2, width = 10, height = beamer_height,units = "cm")
+
+## DWS: save to a file if you need it!
+
+####################################################################
+## Contributions of variables in Principle components
+####################################################################
+
+contributor_pc1 <-  fviz_contrib(flam_pca,choice = "var",axes=1) +
+  prestheme.nogridlines  # Contributions of variables in PC1
+
+ggsave("../results/contributors_pc1.pdf",
+       contributor_pc1, width = 10, height = beamer_height, units = "cm")
+
+contributor_pc2 <- fviz_contrib(flam_pca,choice = "var",axes = 2) +
+  prestheme.nogridlines  # Contributions of variables in PC2
+
+ggsave("../results/contributors_pc2.pdf",contributor_pc2,
+       width = 10, height = beamer_height, units = "cm")
+
+pca_biplot <- biplot(flam_pca)
+                    #Don't make plots in data analysis code, slows things down.
+# Put plots where you need them.
+ggsave("../results/pca_biplot.pdf",
+       pca_biplot, width = 10, height = beamer_height, units = "cm")
