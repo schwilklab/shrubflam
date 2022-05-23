@@ -1,0 +1,8 @@
+variables,type,unit,descriptions
+date,date,,the date which samples were collected
+lat,numeric,,latitude of the collection site
+long,numeric,,longitude of the collection site
+site,character,,the property from which the sample collected
+sample_id,integer,,each sample has unique id
+species_id,integer,,each species has unique id
+notes,character,,

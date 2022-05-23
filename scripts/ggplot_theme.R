@@ -83,3 +83,4 @@ prestheme.nogridlines <- prestheme +
           panel.grid.major = element_blank(),
           strip.background = element_blank())
 
+

@@ -1,0 +1,12 @@
+variables,type,unit,description
+sample_id,numeric,integer,each sample has it's unique sample_id
+species_id,numeric,integer,each species has it's unique species_id
+fresh_leaf_weight_gm,numeric,gram,leaf with rachis and petiole were separated from other 70 cm sample and their fresh weigh
+fresh_stem_weight_gm,numeric,gram,"stem of the other 70 cm sample, chopped up into samll pieces and took their fresh weight"
+dry_leaf_weight_gm,numeric,gram,dry weight of the leaves
+dry_stem_weight_gm,numeric,gram,dry weight of the stem
+bottom_diameter_cm,numeric,centimeter,diameter of at the bottom of each sample
+top_diameter_cm,numeric,centimeter,diameter of at the top of each sample
+maximum_diameter_cm,numeric,centimeter,maximum diamter of the sample
+distance_from_bottom_cm,integer,centimeter,distance of the maximum diameter from the bottom
+type,character,character,"three possible shape: truncated cone, two right cone and cylinder"

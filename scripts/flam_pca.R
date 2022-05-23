@@ -22,8 +22,9 @@ source("./read_hobos.R")
 pca_data <- samples_more_than_three%>%
   left_join(hobos_wider, by ="label")%>%
   select(label,heat_release_J,massconsumed,vol.burned, 
-  flame.ht,flame.dur,dur.100,peak.temp)
-
+  flame.ht,flame.dur,dur.100,peak.temp) #%>%
+  #rename(expression("Duration over 100("*~degree*C*")") == dur.100)
+names(pca_data)[7] <- "Duration over (100\u00B0C)"
 dim(pca_data) # 97 rows same as samples_more_than_three
 #unique(pca_data$label)
 
@@ -89,4 +90,5 @@ dim(model_data) # 97 rows
 # contributed the most in PC1 and dur.100 and flame.dur 
 # contributed the most in PC2
 ######################################################################
+
 

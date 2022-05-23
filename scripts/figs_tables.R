@@ -46,7 +46,7 @@ fig1 <- ggplot(model_data, aes(total_mass_g, PC1)) +
   theme(legend.position="none")
 
 #fig1
-ggsave("../results/shrubflam_fig1.pdf", fig1, width=10, height=beamer_height, units="cm")
+ggsave("../results/shrubflam_fig1.png", fig1, width=10, height=beamer_height, units="cm")
 
 ####################################################################
 ## Plot based on cos2 values of variables
@@ -55,8 +55,9 @@ ggsave("../results/shrubflam_fig1.pdf", fig1, width=10, height=beamer_height, un
 var_contributions_by_cos2 <- fviz_pca_var(flam_pca,col.var = "cos2",
              gradient.cols=c("#00AFBB","#E7B800","#FC4E07"),
              repel = TRUE) +
-  prestheme.nogridlines
-ggsave("../results/variables_contributions.pdf", 
+  prestheme.nogridlines +
+  theme(legend.position="none")
+ggsave("../results/variables_contributions.jpg", 
        var_contributions_by_cos2, width = 10, height = beamer_height,units = "cm")
 
 ## DWS: save to a file if you need it!
@@ -65,20 +66,69 @@ ggsave("../results/variables_contributions.pdf",
 ## Contributions of variables in Principle components
 ####################################################################
 
-contributor_pc1 <-  fviz_contrib(flam_pca,choice = "var",axes=1) +
-  prestheme.nogridlines  # Contributions of variables in PC1
+contributor_pc1 <-  fviz_contrib(flam_pca,choice = "var",
+                                 axes=1,
+                                 fill = "lightgray",
+                                 color="black") +
+  theme(axis.text.x = element_text(angle = 45, size = 12,
+                                   hjust = 1,color = "black"),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 12, color = "black"),
+        panel.border = element_rect(size = 1.6, fill=NA))
+p <- ggpar(contributor_pc1, ylab = "Relative contributions (%)",
+      title = "Contribution of variables to PC1 (75.3%)")
+  
 
-ggsave("../results/contributors_pc1.pdf",
-       contributor_pc1, width = 10, height = beamer_height, units = "cm")
 
-contributor_pc2 <- fviz_contrib(flam_pca,choice = "var",axes = 2) +
-  prestheme.nogridlines  # Contributions of variables in PC2
+  
+  
+#+ prestheme.nogridlines  # Contributions of variables in PC1
 
-ggsave("../results/contributors_pc2.pdf",contributor_pc2,
-       width = 10, height = beamer_height, units = "cm")
+
+  
+ggsave("../results/contributors_pc1.jpg",
+       p, width = 11, height = 8, units = "cm")
+
+contributor_pc2 <- fviz_contrib(flam_pca,choice = "var",axes = 2,
+                                fill = "lightgray",color = "black") +
+  theme(axis.text.x = element_text(angle = 45, size = 8,
+                                   hjust = 1,color = "black"),
+        axis.title.x = element_blank(),
+        axis.title.y  = element_text(color="black",
+                                     size = 10),
+        panel.border = element_rect(size = 1.7, fill=NA)) # Contributions of variables in PC2
+
+q <- ggpar(contributor_pc2, ylab = "Relative contributions (%)",
+           title = "Contribution of variables to PC2 (9.3%)")
+ggsave("../results/contributors_pc2.jpg",q,
+       width = 11, height = 8, units = "cm")
 
 pca_biplot <- biplot(flam_pca)
                     #Don't make plots in data analysis code, slows things down.
 # Put plots where you need them.
-ggsave("../results/pca_biplot.pdf",
+ggsave("../results/pca_biplot.jpg",
        pca_biplot, width = 10, height = beamer_height, units = "cm")
+canopy_traits_plot <- sjPlot::plot_model(canopy.traits.model,
+                   show.values =TRUE,
+                   show.p = TRUE, se = TRUE,
+                   show.data = TRUE,
+                   vline.color = "red",
+                   intercept = TRUE,
+                   sort.est = TRUE,
+                   ci.lvl = 0.95,
+                   auto.label = TRUE,
+                   title ="Canopy traits effect on flammability (PC1 score)") +
+  prestheme.nogridlines
+ggsave("../results/canopy_traits_model.jpg",
+       canopy_traits_plot, width = 16.5, height = beamer_height,
+       units = "cm")
+leaf_traits_model_plot <- sjPlot::plot_model(leaf.traits.model,
+                   show.values = TRUE,
+                   show.p = TRUE, show.intercept = TRUE,
+                   vline.color = "red",
+                   title = "Leaf traits effect on flammability(PC1 score)") +
+  theme(title = element_text(size = 7.5)) +
+  prestheme.nogridlines
+ggsave("../results/leaf_traits_model.jpg",
+       leaf_traits_model_plot, width = 16.5,
+       height = beamer_height, units = "cm")

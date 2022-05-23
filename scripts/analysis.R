@@ -70,7 +70,7 @@ get.models(leaf.traits.models, subset = TRUE)[[2]] # The second best model, only
 
 leaf.models <- model.avg(leaf.traits.models, rank = "AICc",
           rank.args = list(REML = TRUE))
-
+ 
 #plot(leaf.models, full = TRUE, intercept = TRUE)
  
 summary(model.avg(leaf.traits.models)) # AIC value for null model
@@ -103,7 +103,6 @@ canopy.models <- model.avg(canopy.traits.models, rank = "AICc",
 #canopy.models.fig <- plot(canopy.models, full = TRUE, intercept = TRUE) +
   #prestheme.nogridlines
 
-
 summary(model.avg(canopy.traits.models))
 
 null.model <- afex::lmer(PC1 ~ 1 + (1|group),
@@ -111,6 +110,7 @@ null.model <- afex::lmer(PC1 ~ 1 + (1|group),
 
 total.biomass.model <- afex::lmer( PC1 ~ total_mass_g +
                                      (1|group), data = model_data)
+
 
 AIC(null.model,lma.model, total.biomass.model) # Total biomass is better (lower AIC, 412.1905)
 

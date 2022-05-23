@@ -1,0 +1,12 @@
+variables,type,unit,description
+sample_id,integer,,each sample has unique sample_id
+species_id,integer,,each sepcies has unique species_id
+lma_fresh_mass_gm,numeric,gram,the fresh weight of five leaves separated from the subsamples of leaves and twigs which were used for field moisture content
+leaf_area_cm2,numeric,centimeter square,"the area of five leaves measured in licor  3100 leaf area meter, the unit was centimeter square"
+lma_dry_mass_gm,numeric,gram,"the dry weight of five leaves separated from the subsamples of leaves and twigs which were used to measured the filed moisture content, the dring period was at least 48 hours at 65 degree celsius"
+number_of_leaflet,numeric,,five leaves used for each sample
+leaf1_length_cm,numeric,centimeter  ,the length of the first leaf
+leaf2_length_cm,numeric,centimeter,the length of the second leaf
+leaf3_length_cm,numeric,centimeter,the length of the third leaf
+leaf4_length_cm,numeric,centimeter,the length of the fourth leaf
+leaf5_length_cm,numeric,centimeter,the lnegth of the fifth leaf

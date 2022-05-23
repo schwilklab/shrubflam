@@ -1,0 +1,20 @@
+variables,type,unit,description
+sample_id,character,,unique id for each sample
+species_id,character,,unique id for each species
+date,character,,burning date
+trials,numeric,,sequencial number of trials
+trial_time,character,,the time when the sample put on the grill for pre heating
+rh,numeric,percentage,"measured by Nielsen Kellerman,Kestrel-3000 weather meter"
+windspeed,numeric,miles per hour,"measured by Nielsen Kellerman,Kestrel-3000 weather meter"
+air_temp_f,numeric,fahrenheit,"measured by Nielsen Kellerman,Kestrel-3000 weather meter"
+mass_pre,numeric,gram,weight of 70 cm samples right before burning
+mass_post,numeric,gram,weight of 70 cm samples after burn
+temp_d1_pre,numeric,degree celsius,"Disk one, measured by Fluke 572-2 IR Thermometer, measured right before ignition period"
+temp_d2_pre,numeric,degree celsius,"Disk two, measured by Fluke 572-2 IR Thermometer, measured right before ignition period"
+flame_height,numeric,centimeter,"measured by a scale attached with the barbecue apparatus, visually estimated the maximum height of the flame of each trial"
+flame_dur,numeric,seconds,The burning period after ignition.
+temp_d1_post,numeric,degree celsius,"Disk one, measured by Fluke 572-2 IR Thermometer, measured after flame stopped"
+temp_d2_post,numeric,degree celsius,"Disk two, measured by Fluke 572-2 IR Thermometer, measured after flame stopped"
+vol_burned,numeric,percentage,"estimated visually , percentage of area burned"
+max_temp,numeric,degree celsius,"measured by Fluke 572-2 IR Thermometer,measured during the active flame"
+self_ignition,numeric,binary,"if a sample got ignited during pre heating, we scored them 1, else 0"

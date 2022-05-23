@@ -1,0 +1,12 @@
+sample_id,species_id,fresh_leaf_weight_gm,fresh_stem_weight_gm,dry_leaf_weight_gm,dry_stem_weight_gm,bottom_diameter_cm,top_diameter_cm,maximum_diameter,distance_from_bottom_cm,type
+ED45,1022,369.9,99.8,215.4,59.8,3.6,15.8,,,truncated_cone
+ED46,1036,73.5,100.8,37.8,53.8,0.7,11.5,30,43,two_right_cone
+ED47,2010,7.3,64,2.4,42.1,0.4,22.3,,,truncated_cone
+ED48,2010,14.7,68,4.6,41.2,0.5,25.4,,,truncated_cone
+ED49,2010,19.1,52,6.4,30.2,0.4,19.2,,,truncated_cone
+ED50,2010,5.7,32,1.6,19,0.5,24.1,,,truncated_cone
+ED51,2010,24.7,90.4,7.7,53.3,0.55,22.2,,,truncated_cone
+ED52,2010,14.2,55.1,5.1,34.5,0.6,19.6,,,truncated_cone
+ED53,1021,39.9,54.9,20.4,34.9,0.7,9.8,19.5,39,two_right_cone
+ED54,1036,24.6,71.6,12.6,41.7,0.65,18.7,,,truncated_cone
+ED55,1021,48.7,121.4,25.3,76.9,1.2,21.1,,,truncated_cone

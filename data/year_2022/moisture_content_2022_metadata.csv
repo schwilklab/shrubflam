@@ -1,0 +1,9 @@
+variables,type,unit,description
+sample_id,integer,,each sample has unique sample_id
+species_id,integer,,each species has unique species_id
+field_fresh_mass_gm,numeric,gram,fresh weight of a subsample of leaves and twig with leaves collected from the field during the branch collection
+field_dry_mass_gm,numeric,gram,"dry weight of the subsample of leaves and twig with leaves collected from the field during the branch collectio, drying period was at least 48 hours at 65 degree celsius"
+leaf_fresh_mass_gm,numeric,gram,fresh weight of few leaves separated from the burning samples right before burning
+leaf_dry_mass_gm,numeric,gram,"dry weight of few leaves separated from the burning samples right before burning, the drying period was at least 48 hours at 65 degree celsius"
+canopy_fresh_mass_gm,numeric,gram,fresh weight of few twigs with leaves separated from the burning samples right before burning.
+canopy_dry_mass_gm,numeric,gram,"dry weight of few twigs with leaves separated from the burning samples right before burning, the drying period was at least 48 hours at 65 degree celsius."
