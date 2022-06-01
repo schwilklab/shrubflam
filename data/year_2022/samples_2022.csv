@@ -1,12 +1,36 @@
 ﻿date,lat,long,site,sample_id,species,species_id,notes
+26/05/2022,30.869288,-99.492579,Menard,KD12,Ziziphus obtusifolia,2007,Ziziphus
+26/05/2022,30.869297,-99.492681,Menard,KD11,Rhus microphylla,2006,Rush microphylla
+26/05/2022,30.869176,-99.492604,Menard,KD10,Prosopis glandulosa,1113,Mesquite
+26/05/2022,30.082295,-98.780011,Kendall 2021-7,KD09,Ulmus crassifolia,2022,Cedar elm
+26/05/2022,30.082193,-98.77962,Kendall 2021-7,KD08,Mahonia trifoliolata,1002,Mahonia
+26/05/2022,30.081273,-98.780502,Kendall 2021-7,KD07,Juniperus ashei,1022,
+26/05/2022,30.081313,-98.780358,Kendall 2021-7,KD06,Diospyros texana,1000,
+25/05/2022,30.012558,-98.658996,Kendall 2021-8,KD05,Arbutus xalapensis,1036,Madrone
+25/05/2022,30.013872,-98.659327,Kendall 2021-8,KD04,Senegalia wrightii,2005,Acacia
+25/05/2022,30.011069,-98.662154,Kendall 2021-8,KD03,Unknown spp,3000,Same as KD02
+25/05/2022,30.011019,-98.662149,Kendall 2021-8,KD02,Unknown spp,3000,"Unknown species, need to get the ID of it, probably forestiera"
+25/05/2022,30.011083,-98.662214,Kendall 2021-8,KD01,Frangula caroliniana,2038,Buckthorn
+25/05/2022,29.784157,-99.027087,Bandera 2021-32,BD23,Ulmus crassifolia,2022,Cedar elm
+25/05/2022,29.784541,-99.025665,Bandera 2021-32,BD22,Mahonia trifoliolata,1002,Trifoliolata
+25/05/2022,29.784247,-99.026452,Bandera 2021-32,BD21,Diospyros texana,1000,
+25/05/2022,29.784642,-99.02614,Uvalde 2021-3,BD20,Juniperus ashei,1022,
+24/05/2022,29.449231,-99.627105,Uvalde 2021-3,UV08,Diospyros texana,1000,UV08
+24/05/2022,29.449263,-99.627218,Uvalde 2021-3,UV07,Forestiera pubescens,2010,"Elbowbush, same species id as reticulata"
+24/05/2022,29.44931,-99.62728,Uvalde 2021-3,UV06,Diospyros texana,1000,
+24/05/2022,29.449199,-99.628196,Uvalde 2021-3,UV05,Rhus virens,1036,
+24/05/2022,29.449324,-99.62828,Uvalde 2021-3,UV04,Sophora secundiflora,1021,
+24/05/2022,29.45002,-99.629188,Uvalde 2021-3,UV03,Rhus virens,1036,
+24/05/2022,29.44999,-99.629191,Uvalde 2021-3,UV02,Sophora secundiflora,1021,
+24/05/2022,29.450079,-99.62932,Uvalde 2021-3,UV01,Juniperus ashei,1022,
 15/05/2022,29.751038,-100.530334,Edwards 2020-22,ED55,Sophora secundiflora,1021,
 15/05/2022,29.750995,-100.530088,Edwards 2020-22,ED54,Rhus virens,1036,
 15/05/2022,29.749088,-100.528191,Edwards 2020-22,ED53,Sophora secundiflora,1021,
-14/05/2022,29.751753,-100.530719,Edwards 2020-22,ED52,Forestiera reticulata,2010,ED52
-14/05/2022,29.751656,-100.530508,Edwards 2020-22,ED51,Forestiera reticulata,2010,
-14/05/2022,29.75161,-100.530502,Edwards 2020-22,ED50,Forestiera reticulata,2010,
-14/05/2022,29.751416,-100.530293,Edwards 2020-22,ED49,Forestiera reticulata,2010,
-14/05/2022,29.751599,-100.531101,Edwards 2020-22,ED48,Forestiera reticulata,2010,
-14/05/2022,29.751808,-100.530559,Edwards 2020-22,ED47,Forestiera reticulata,2010,
+14/05/2022,29.751753,-100.530719,Edwards 2020-22,ED52,Forestiera pubescens,2010,ED52
+14/05/2022,29.751656,-100.530508,Edwards 2020-22,ED51,Forestiera pubescens,2010,
+14/05/2022,29.75161,-100.530502,Edwards 2020-22,ED50,Forestiera pubescens,2010,
+14/05/2022,29.751416,-100.530293,Edwards 2020-22,ED49,Forestiera pubescens,2010,
+14/05/2022,29.751599,-100.531101,Edwards 2020-22,ED48,Forestiera pubescens,2010,
+14/05/2022,29.751808,-100.530559,Edwards 2020-22,ED47,Forestiera pubescens,2010,
 14/05/2022,29.751476,-100.53009,Edwards 2020-22,ED46,Rhus virens,1036,
 14/05/2022,29.751463,-100.530168,Edwards 2020-22,ED45,Juniperus ashei,1022,
