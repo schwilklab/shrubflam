@@ -1,0 +1,24 @@
+species,family,common_name,species_id,group,subfamily,leaf_structure,seed_type,foliage_seasonality,Notes,herbivore_defence
+Diospyros texana,Ebenaceae,Texas Persimmon,1000,Diospyros,ebenoideae,simple_alternate,angiosperm,deciduous_evergreen,Found almost in every property,non_armed
+Mahonia trifoliolata,Berberidaceae,Agarita,1002,Mahonia,berberidoideae,palmate_trifoliate,angiosperm,evergreen,Found almost in every property,armed
+Juniperus ashei,Cupressaceae,Mountain Cedar/Ashe Juniper,1022,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Found almost in every property,non_armed
+Juniperus pinchotii,Cupressaceae,Pinchot Juniper,2011,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Only Found in Dickens Park,non_armed
+Sophora secundiflora,Fabaceae,Texas Mountain Laurel,1021,Sophora,papilionoideae,pinnately_compound_alternate,angiosperm,evergreen,Found almost in every property,non_armed
+Mimosa borealis,Fabaceae,Pink Mimosa,1009,Acacia,mimosoideae,pinnately_twice_compound,angiosperm,deciduous,Haven't found in Bandera ,armed
+Rhus virens,Anacardiaceae,Evergreen Sumac,1036,Rhus,anacardioideae,compound_alternate,angiosperm,evergreen,Found almost in every property,non_armed
+Rhus microphylla,Anacardiaceae,Littleleaf Sumac,2006,Rhus,anacardioideae,compound_alternate,angiosperm,deciduous,"Found in Edwards 2020-22, Menard property and Dickens Park",non_armed
+Rhus trilobata,Anacardiaceae,Three Leaf Sumac,2012,Rhus,anacardioideae,palmate_trifoliate,angiosperm,deciduous,Found only in Dickens Park,non_armed
+Arbutus xalapensis,Ericaceae,Texas Madrone,1085,Arbutus,arbutoideae,simple,angiosperm,evergreen,Found in Real 2020-11 and Bandera 2020-30 but only collected from Real 2020-11,non_armed
+Prosopis glandulosa,Fabaceae,Mesquite,1113,Prosopis,caesalpinioideae,pinnately_twice_compound,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park,armed
+Ziziphus obtusifolia,Rhamnaceae,Texas Buckthorn,2007,Ziziphus,ziziphoideae,simple,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park,armed
+Forestiera reticulata,Oleaceae,Netleaf Forestiera,2010,Forestiera,oleeae,simple_opposite,angiosperm,semi_evergreen,Only collected from Edwards 2020-22,non_armed
+Senegalia wrightii,Fabaceae,Wright Acacia,2005,Acacia,mimosoideae,pinnately_twice_compound,angiosperm,semi_evergreen,Treated wrightii and romeriana as same species and found in almost every property except Bandera,armed
+Unknown spp,unknown,unknown,3000,unknown,unknown,unknown,unknown,unknown,"Armed, collected from Kendall 2020-07",armed
+Forestiera pubescens,Oleaceae,Elbow bush,2010,Forestiera,,,,,,non_armed
+Ulmus crassifolia,Ulmaceae,Cedar elm,2022,Elm,,,,,,non_armed
+Frangula caroliniana,Rhamnaceae,Carolina Buckthorn,2038,Buckthorn,,,,,,non_armed
+Ilex vomitoria,,,7000,Ilex,,,,,,non_armed
+Mahonia trifoliolata,,,1000,Mahonia,,,,,,armed
+Calicarpa americana,,,6000,Calicarpa,,,,,,non_armed
+Juniperus virginiana,,,9000,Juniperus,,,,,,non_armed
+Acacia berlandieri,,,4000,Acacia,,,,,,armed
