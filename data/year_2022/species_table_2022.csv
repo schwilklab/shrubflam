@@ -13,12 +13,14 @@ Prosopis glandulosa,Fabaceae,Mesquite,1113,Prosopis,caesalpinioideae,pinnately_t
 Ziziphus obtusifolia,Rhamnaceae,Texas Buckthorn,2007,Ziziphus,ziziphoideae,simple,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park,armed
 Forestiera reticulata,Oleaceae,Netleaf Forestiera,2010,Forestiera,oleeae,simple_opposite,angiosperm,semi_evergreen,Only collected from Edwards 2020-22,non_armed
 Senegalia wrightii,Fabaceae,Wright Acacia,2005,Acacia,mimosoideae,pinnately_twice_compound,angiosperm,semi_evergreen,Treated wrightii and romeriana as same species and found in almost every property except Bandera,armed
-Unknown spp,unknown,unknown,3000,unknown,unknown,unknown,unknown,unknown,"Armed, collected from Kendall 2020-07",armed
-Forestiera pubescens,Oleaceae,Elbow bush,2010,Forestiera,,,,,,non_armed
-Ulmus crassifolia,Ulmaceae,Cedar elm,2022,Elm,,,,,,non_armed
-Frangula caroliniana,Rhamnaceae,Carolina Buckthorn,2038,Buckthorn,,,,,,non_armed
-Ilex vomitoria,,,7000,Ilex,,,,,,non_armed
-Mahonia trifoliolata,,,1000,Mahonia,,,,,,armed
-Calicarpa americana,,,6000,Calicarpa,,,,,,non_armed
-Juniperus virginiana,,,9000,Juniperus,,,,,,non_armed
-Acacia berlandieri,,,4000,Acacia,,,,,,armed
+Unknown spp,Sapotaceae,Coma,3000,Coma,unknown,simple_alternate,angiosperm,evergreen,"Armed, collected from Kendall 2020-07, most likely coma",armed
+Forestiera pubescens,Oleaceae,Elbow bush,2010,Forestiera,oleeae,simple,angiosperm,deciduous,,non_armed
+Ulmus crassifolia,Ulmaceae,Cedar elm,2022,Elm,,simple_alternate,angiosperm,deciduous,,non_armed
+Frangula caroliniana,Rhamnaceae,Carolina Buckthorn,2038,Buckthorn,,simple_alternate,angiosperm,deciduous,,non_armed
+Ilex vomitoria,Aquifoliaceae,Yaupon holly,7000,Ilex,,simple_alternate,angiosperm,evergreen,,non_armed
+Calicarpa americana,Lamiaceae,American beautyberry,6000,Calicarpa,,simple_opposite,angiosperm,deciduous,,non_armed
+Juniperus virginiana,Cupressaceae,Eastern redcedar,9000,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,,non_armed
+Acacia berlandieri,Fabaceae,Guajillo,4000,Acacia,caesalpinioideae,pinnately_cpmpound,angiosperm,deciduous,,armed
+Zanthoxylum fagara,Rutaceae,Colima,8888,Zanthoxylum,,simple,angiosperm,evergreen,,armed
+Coleogyne ramosissima,Rosaceae,Blacbrush,9999,Coleogyne,,inversly_lanceolate_opposite,angiosperm,evergreen,,armed
+Unknown spp2,,,5403,Acacia,,,,,,armed
