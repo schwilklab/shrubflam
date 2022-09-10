@@ -369,7 +369,9 @@ dim(burn_trials_2022)
 alldata_2022 <- samples_2022 %>%
   left_join(leaf_measurements_2022, by = c("sample_id","species_id")) %>%
   left_join(burn_trials_2022, by = c("sample_id", "species_id")) %>%
-  filter( ! species_id %in% c(2006,1085,1009,3000,2022, 2038)) # Dropping those species which has less than three samples!!
+  filter( ! species_id %in% c(2006,1085,1009,3000,2022, 2038), # Dropping those species which has less than three samples!!
+          ! sample_id %in% c("KD07", "UV01")) # KD07 has missing values of flammability measurements and mistakenly, UV01 has ignited with blow torch though 
+# it has self ignition and has existing flame(descriptions on notes in flam_trials_2022,csv.)
 
 dim(alldata_2022)
 
