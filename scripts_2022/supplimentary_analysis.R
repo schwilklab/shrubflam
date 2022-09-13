@@ -149,6 +149,18 @@ pc2_ws <- lm(PC2 ~ windspeed_miles_per_hour, data = final_data)
 summary(pc2_ws) # Significant p = 0.0105 but slope is negative (0.09538), 
 # biologically significant?
 
+pc1_air_temp <- lm(PC1 ~ air_temp_f, data = final_data)
+
+summary(pc1_air_temp) # p - value 0.312
+
+pc2_air_temp <- lm(PC2 ~ air_temp_f, data = final_data)
+
+summary(pc2_air_temp) # p value  0.329
+
+###################################################################################
+# Will test the effect temperature and humidity once again after reading the hobos data
+# during burning
+########################################################################################
 
 ################################################################################
 # Does flammability varies across sites among species?
