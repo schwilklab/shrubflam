@@ -147,7 +147,7 @@ summary(pc1_ws) # p = 0.263
 pc2_ws <- lm(PC2 ~ windspeed_miles_per_hour, data = final_data)
 
 summary(pc2_ws) # Significant p = 0.0105 but slope is negative (0.09538), 
-# biologically significant?
+
 
 pc1_air_temp <- lm(PC1 ~ air_temp_f, data = final_data)
 
@@ -162,16 +162,17 @@ summary(pc2_air_temp) # p value  0.329
 # during burning
 ########################################################################################
 
+
 ################################################################################
-# Does flammability varies across sites among species?
+# Does flammability varies across sites among samples of  species?
 #################################################################################
 
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1022))) # p 0.587 # Juniperus ashei
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1036))) # p 0.108 # Rhus virens
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1000))) # p 0.552 # Diospyros texana
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1002))) # p 0.222 # Mahonia trifoliolata
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1021))) # p 0.0224 # Sophora secundiflora
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1113))) # p 0.199 # Prospis glandulosa
+#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1022))) # p 0.587 # Juniperus ashei
+#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1036))) # p 0.108 # Rhus virens
+#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1000))) # p 0.552 # Diospyros texana
+#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1002))) # p 0.222 # Mahonia trifoliolata
+#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1021))) # p 0.0224 # Sophora secundiflora
+#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1113))) # p 0.199 # Prospis glandulosa
 
 
 
