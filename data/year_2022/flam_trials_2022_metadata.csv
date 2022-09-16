@@ -1,22 +1,24 @@
 variables,type,unit,description
-sample_id,character,,unique id for each sample
-species_id,character,,unique id for each species
-date,character,,burning date
-trials,numeric,,sequencial number of trials
-trial_time,character,,the time when the sample put on the grill for pre heating
-windspeed,numeric,miles per hour,"measured by Nielsen Kellerman,Kestrel-3000 weather meter"
-mass_pre,numeric,gram,weight of 70 cm samples right before burning
-mass_post,numeric,gram,weight of 70 cm samples after burn
-temp_d1_pre,numeric,degree celsius,"Disk one, measured by Fluke 572-2 IR Thermometer, measured right before ignition period"
-temp_d2_pre,numeric,degree celsius,"Disk two, measured by Fluke 572-2 IR Thermometer, measured right before ignition period"
-flame_height,numeric,centimeter,"measured by a scale attached with the barbecue apparatus, visually estimated the maximum height of the flame of each trial"
-flame_dur,numeric,seconds,The burning period after ignition.
-temp_d1_post,numeric,degree celsius,"Disk one, measured by Fluke 572-2 IR Thermometer, measured after flame stopped"
-temp_d2_post,numeric,degree celsius,"Disk two, measured by Fluke 572-2 IR Thermometer, measured after flame stopped"
-vol_burned,numeric,percentage,"estimated visually , percentage of area burned"
-max_temp,numeric,degree celsius,"measured by Fluke 572-2 IR Thermometer,measured during the active flame"
-self_ignition,numeric,binary,"if a sample got ignited during pre heating, we scored them 1, else 0"
-air_temp_f,numeric,farenheit,the air temperature in farenheit during the trials
-rh,numeric,percentage,the humidity in percentage during the trials
-self_ig_dur_sec,numeric,integer,the duration of the flame sustained which is originted from the self ignition
-self_ig_start_time,numeric,integer,"the time the self ignition took to get started, measured from the very moment when the samples put on the grill for preheating"
+sample_id,character,NA,Each sample has it's own unique sample_id for. Usually started with the abbreviation of the name of the property and the sequence of the number of individual species.
+species_id,numeric,integer,"Each species has it's own unique  species_id for each species, random number."
+date,character,character,"Burning date, the date when a particular sample got burned. Converted to date in Rscript."
+trials,numeric,integer,Sequencial number of trial.
+trial_time,character,hour:minute,The time when the sample put on the grill for pre-heating.
+windspeed,numeric,miles per hour,"Measured by Nielsen Kellerman, Kestrel-3000 weather meter. Measure the maximum windspeed right before each trial."
+mass_pre,numeric,gram,Fresh weight of the 70 cm samples right before burning.
+mass_post,numeric,gram,"Weight of the burnt sample after each trial, the trial stopped when the flame is gone, not the combustion."
+temp_d1_pre,numeric,degree celsius,"Disc one, measured by Fluke 572-2 IR Thermometer, measured during the pre-heating."
+temp_d2_pre,numeric,degree celsius,"Disc two, measured by Fluke 572-2 IR Thermometer, measured during the pre-heating."
+flame_height,numeric,centimeter,"Measure by a scale attached with the barbecue apparatus, visually estimated the maximum height of the flame of each trials. A volunteer always monitored the flame height."
+flame_dur,numeric,seconds,The burning period after ignition. Measured the duration of the flame since the very moment when the sample got ignited.
+temp_d1_post,numeric,degree celsius,"Disc one, measured by Fluke 572-2 IR Thermometer, measured after flame stopped."
+temp_d2_post,numeric,degree celsius,"Disc two, measured by Fluke 572-2 IR Thermometer, measured after flame stopped"
+vol_burned,numeric,percentage,"Estimated visually , percentage of area burned. Always at least two person estimated the percentage of area burned to reduce the error."
+max_temp,numeric,degree celsius,Measured by Fluke 572-2 IR Thermometer during the trials when a samples has flame after ignition and pointed at the disc close to the flame. Most of the sample doesn't have max_temperature.
+ignition_delay,numeric,seconds,"The amount of time took for a sample to get ignited after the two minutes pre-heating. Those samples which has self_ignition, the flame is self sustained and didn't have any external ignition source got 0 as ignition delay"
+self_ignition,numeric,binary,"If a sample got ignited during the pre heating, we scored them 1, else 0."
+air_temp_f,numeric,farenheit,The air temperature in farenheit. Measured by Kestrel-3000 weather meter and measured right before each trials.
+rh,numeric,percentage,The humidity in percentage. Measured by Kestrel-3000 weather meter and measure right before each trials.
+self_ig_dur_sec,numeric,seconds,The duration of the flame sustained from the very moment when a sample got ignited during the pre-heating period.
+self_ig_start_time,numeric,seconds,"The time of the self ignition took place during the pre-heating, measured from the very moment when the samples put on the grill for preheating till the moment when a sample got ignited by itself."
+notes,character,NA,Notes taken during trials where necessary.

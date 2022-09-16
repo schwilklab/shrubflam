@@ -1,12 +1,12 @@
-variables,type,unit,description
-sample_id,integer,,each sample has unique sample_id
-species_id,integer,,each sepcies has unique species_id
-lma_fresh_mass_gm,numeric,gram,the fresh weight of five leaves separated from the subsamples of leaves and twigs which were used for field moisture content
-leaf_area_cm2,numeric,centimeter square,"the area of five leaves measured in licor  3100 leaf area meter, the unit was centimeter square"
-lma_dry_mass_gm,numeric,gram,"the dry weight of five leaves separated from the subsamples of leaves and twigs which were used to measured the filed moisture content, the dring period was at least 48 hours at 65 degree celsius"
-number_of_leaflet,numeric,,five leaves used for each sample
-leaf1_length_cm,numeric,centimeter  ,the length of the first leaf
-leaf2_length_cm,numeric,centimeter,the length of the second leaf
-leaf3_length_cm,numeric,centimeter,the length of the third leaf
-leaf4_length_cm,numeric,centimeter,the length of the fourth leaf
-leaf5_length_cm,numeric,centimeter,the lnegth of the fifth leaf
+variables,type,unit,description,notes
+sample_id,character,NA,Each sample has it's own unique sample_id. Usually started with the abbreviation of the name of the property and the sequence of each species collected.,The leaf length of all the species except Senegalia wrightii measured from the starting point of the meter scale and the distance between the starting point and zero is 4 milimeter. That's why 0.04 cm added to the leaf length of all the species expcept Senegalia wrightii.
+species_id,numeric,integer,Each sepcies has it's own unique species_id. Random number.,
+lma_fresh_mass_gm,numeric,gram,The fresh weight of the number of leaves separated from the subsamples of leaves and twigs which were used for field moisture content.,
+leaf_area_cm2,numeric,centimeter square,"The area of the leaves measured in Licor-3100 leaf area meter, the unit was centimeter square.",
+lma_dry_mass_gm,numeric,gram,The dry weight of lma_fresh_mass_gm. The drying period was 48 hours at 65 degree celsius.,
+number_of_leaflet,numeric,integer,Most of the samples have five leaves but species like Senegalia and American beautyberry has more than five and less than five leaves.,
+leaf1_length_cm,numeric,centimeter  ,The length of the first leaf. Measured by meter scale.,
+leaf2_length_cm,numeric,centimeter,The length of the second leaf. Measured by meter scale.,
+leaf3_length_cm,numeric,centimeter,The length of the third leaf. Measured by meter scale.,
+leaf4_length_cm,numeric,centimeter,The length of the fourth leaf. Measured by meter scale.,
+leaf5_length_cm,numeric,centimeter,The length of the fifth leaf. Measured by meter scale.,

@@ -1,9 +1,0 @@
-variables,type,unit,description
-#,numeric,,one minute interval
-Date-Time (CST),character,date,date and time
-Ch: 1 - Temperature   (°C),numeric,degree celsius,temperature in degree celsius at one minute intervals
-Ch: 2 - RH   (%) ,numeric,percentage,humidity as percentage at one minute intervals
-Dew Point   (°C),numeric,degree celsius,dew point at degree celsius at one minute intervals
- Host Connected ,logical,,
-Button Down  ,logical,,
-End of File ,,,

@@ -1,0 +1,9 @@
+variables,type,unit,description
+#,numeric,integer,Number of rows. One minute interval between each rows.
+Date-Time (CST),character,date,Date and time.
+Ch: 1 - Temperature   (°C),numeric,degree celsius,Temperature in degree celsius at one minute intervals.
+Ch: 2 - RH   (%) ,numeric,percentage,Humidity as percentage at one minute intervals.
+Dew Point   (°C),numeric,degree celsius,Dew point at degree celsius at one minute intervals.
+ Host Connected ,logical,NA,NA
+Button Down  ,logical,NA,NA
+End of File ,NA,NA,NA

@@ -1,5 +1,5 @@
 variable,type,unit,descriptions
-sample_id,integer,integer,each sample has unique sample_id
-species_id,integer,integer,each species has unique species_id
-leaf_length_cm,numeric,centimeter,"length of individual branchlets, measured by ruler scale"
-diameter_cm,numeric,centimeter,"diameter of each branchlets , measured by slide calipers"
+sample_id,character,NA,each sample has it's own unique sample_id. Usually started with the abbreviation of the name of the property and the sequence of the each species collected.
+species_id,integer,integer,"each species has it's own unique species_id, random number."
+leaf_length_cm,numeric,centimeter,"Length of individual branchlets, measured by ruler scale."
+diameter_cm,numeric,centimeter,"Diameter of each branchlets , measured by slide calipers. Measured in milimeter but converted to centimeter manually during data entry."

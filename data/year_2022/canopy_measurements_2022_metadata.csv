@@ -1,12 +1,12 @@
 variables,type,unit,description
-sample_id,numeric,integer,each sample has it's unique sample_id
-species_id,numeric,integer,each species has it's unique species_id
-fresh_leaf_weight_gm,numeric,gram,leaf with rachis and petiole were separated from other 70 cm sample and their fresh weigh
-fresh_stem_weight_gm,numeric,gram,"stem of the other 70 cm sample, chopped up into samll pieces and took their fresh weight"
-dry_leaf_weight_gm,numeric,gram,dry weight of the leaves
-dry_stem_weight_gm,numeric,gram,dry weight of the stem
-bottom_diameter_cm,numeric,centimeter,diameter of at the bottom of each sample
-top_diameter_cm,numeric,centimeter,diameter of at the top of each sample
-maximum_diameter_cm,numeric,centimeter,maximum diamter of the sample
-distance_from_bottom_cm,integer,centimeter,distance of the maximum diameter from the bottom
-type,character,character,"three possible shape: truncated cone, two right cone and cylinder"
+sample_id,character,NA,"Each sample has it's own unique sample_id, usually started with the abbreviation of the name of the property and sequence of the number of the species"
+species_id,numeric,integer,"Each species has it's own unique species_id, random number."
+fresh_leaf_weight_gm,numeric,gram,Leaf with rachis and petiole were separated from the unburned sample and took fresh weight.
+fresh_stem_weight_gm,numeric,gram,"Stem of the unburned sample, chopped up into small pieces and took their fresh weight."
+dry_leaf_weight_gm,numeric,gram,Dry weight of fresh_leaf_weight_gm. Drying period was 48 hours inside oven at 65 degree celcius.
+dry_stem_weight_gm,numeric,gram,Dry weight of fresh_stem_weight_gm. Drying period was 48 hours inside oven at 65 degree celcius.
+bottom_diameter_cm,numeric,centimeter,"Diameter of at the bottom of each sample, sample that got burned."
+top_diameter_cm,numeric,centimeter,"Diameter of at the top of each sample, sample that got burned."
+maximum_diameter_cm,numeric,centimeter,"Maximum diamter of the sample, regardless of position, sample that got burned."
+distance_from_bottom_cm,integer,centimeter,"Distance of the maximum diameter from the bottom, sample that got burned."
+type,character,NA,"Three possible shape: truncated cone, sum of two truncated cone and cylinder."

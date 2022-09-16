@@ -1,8 +1,8 @@
 variables,type,unit,descriptions
-date,date,,the date which samples were collected
-lat,numeric,,latitude of the collection site
-long,numeric,,longitude of the collection site
-site,character,,the property from which the sample collected
-sample_id,integer,,each sample has unique id
-species_id,integer,,each species has unique id
-notes,character,,
+date,character,date,The date which samples were collected.Converted as date in Rscript.
+lat,numeric,floating number,Latitude of the collection site.
+long,numeric,floating number,Longitude of the collection site.
+site,character,NA,The name of the property from which the sample was collected. Usually used the same name used by Texas Ecolab but some samples were collected from road side.
+sample_id,character,NA,Each sample has it's own unique sample_id. Usually started with the abbreviation of the name of the property from where a particular sample is collected and the sequence of the species collected.
+species_id,numeric,integer,Each species has it's own unique species_id. Random number.
+notes,character,NA,Notes took for samples where there was a confusion regarding identifying species or location.
