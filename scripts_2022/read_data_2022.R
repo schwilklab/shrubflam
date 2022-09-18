@@ -12,6 +12,7 @@ library(lubridate)
 # Xiulin Gao used 0.921 J/g as the Specific heat of the aluminum alloy of which our
 # discs are made. From the grass experiments we had 52.91g and 53.21g which 
 # are the weight of Disc one and Disc two respectively(Gao and Schwilk, 2021).
+# The gas flow from the Blue Rhino gas cylinder was 20.35 gram per minute.
 
 SPECIFIC_HEAT_AL = 0.921 # in J/g
 
@@ -321,8 +322,9 @@ dim(only_juniperus)
 
 without_juniperus <- leaf_measurements_2022 %>%
   filter(!species_id %in% c("1022","2011", "9000") ) %>% # ashei, pinchotii, virginiana
-  mutate(leaf_mass_per_area = lma_dry_mass_gm/leaf_area_cm2, # lma
-         leaf_area_per_leaflet = leaf_area_cm2/number_of_leaflet) # five leaves per sample
+  mutate(leaf_mass_per_area = lma_dry_mass_gm/leaf_area_cm2, # lma, totla dry mass by total leaf area.
+         leaf_area_per_leaflet = leaf_area_cm2/number_of_leaflet) #  The number of leaflet is not
+# fixed though most of the samples have five leaflet.
 
 
 dim(without_juniperus)
