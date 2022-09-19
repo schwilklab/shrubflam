@@ -4,13 +4,25 @@
 
 # This script is for reading the temperature and humidity for each trial from hobo data loggers and
 # to test whether the temperature and humidity during trials did influence the flammability score or not!!!
-# For reading this script, we just need to run the source files.
 
+# All scripts in source are required to run before running
+# this script.
+
+
+source("../read_data_2022.R") # script that read, clean and merged all the traits data.
+source("../read_hobos_2022.R") # script that reads the thermocouples data logger data during burning.
+source("../flam_pca_2022.R") # script that did the pca analysis.
+
+
+
+
+TZ = "CST6CDT"
 
 library(readr)
 library(dplyr)
 library(lubridate) 
 library(ggplot2)
+library(stringr)
 
 ####################################################################
 # Reading trials data in order to grab the temperatures from hobo
