@@ -1,8 +1,6 @@
----
-title: Shrub-Flammability
----
+# Shrub-Flammability
 
-# Project goals
+## Project goals
 
 -   To test whether the canopy traits is more important than leaf traits
     in shrub flammability or not.
@@ -15,7 +13,7 @@ title: Shrub-Flammability
     chemical defense against herbivore are more flammable than those
     species which have physical defense or not.
 
-# Methods
+## Methods
 
 We have collected 23 shrub species from multiple counties in Texas
 (species description is in species_table_2022.csv). For each sample for
@@ -45,9 +43,9 @@ content.
     sub-samples which was collected from the same plants from where the
     paired branch collected.
 
-# Plant traits and their descriptions
+## Plant traits and their descriptions
 
-## Canopy Traits
+### Canopy Traits
 
 -   Canopy density : The canopy density of the burned sample measured
     during the bench drying period of the burned branch. We assumed that
@@ -95,7 +93,7 @@ content.
     celsius and then calculated the moisture content as percentage in
     dry basis.
 
-## Leaf Traits
+### Leaf Traits
 
 -   Leaf mass per area : We have used five leaves which was separated
     from the sub-samples to measure the LMA. For most of the species we
@@ -134,7 +132,7 @@ sub-sample and took their fresh weight. After 48 hours of drying inside
 oven, we took the dry weight and calculated the field moisture content
 as percentage in dry basis.
 
-# Flammability traits and their descriptions
+## Flammability traits and their descriptions
 
 After 36 hours of drying period, the burning samples put on grill for
 two minutes for pre-heating. Right before the pre-heating period, the
@@ -187,7 +185,7 @@ temperature were greater than 100 degree celsius. The sum of the total
 temperature where the trial temperature were greater than 100 degree
 celsius from the thermo-couples data loggers.
 
-# Data
+## Data
 
 Each data file in data in shrubflam repo has as associated machine
 readable metadata file. If a data file named
@@ -196,14 +194,14 @@ canopy_measurements_metadata.csv. The metadata file describes each
 variables information: name of the variables, the data type, the unit
 and a description how the variables measured.
 
-# Data analysis and scripts
+## Data analysis and scripts
 
 All the data analysis were performed in R with all scripts in
 scripts_2022/. To reproduce the results, only need to run
 ./analysis_2022.R for all model results. Task need to perform before
 running each script is documented at the beginning of each script.
 
-# Hobo data loggers, aluminium discs and gas flow
+## Hobo data loggers, aluminium discs and gas flow
 
 The gas flow from the Blue Rhino gas cylinder was 20.35 gram per minute.
 The position and distance of the data loggers:
@@ -220,7 +218,7 @@ The position and distance of the data loggers:
 Both the position and height of the data loggers and discs displaced
 time to time during some trials due to the massiveness of some samples.
 
-# List of missing data
+## List of missing data
 
 -   Bench drying hobo data : We have bench drying hobo data for 5 trials
     date. The 05_19_2022.csv and 05_20_2022.csv is the weather data of
@@ -232,9 +230,14 @@ time to time during some trials due to the massiveness of some samples.
     missing flammability data and another one is biased.
 
 -   Air temperature : We have 37 missing data for the air temperature of
-    the trials. The air temperature of the first trial date is from the
-    hourly average temperature from
+    the trials from Kestrel 3000 pocket weather meter. The air
+    temperature of the first trial date is from the hourly average
+    temperature from
     https://weatherspark.com/h/d/4735/2022/5/20/Historical-Weather-on-Friday-May-20-2022-in-Lubbock-Texas-United-States\#Figures-Temperature.
 
--   Humidity : We have only few humidity data for few trials. Almost
-    entirely missing for all the trials.
+-   Humidity : We have only few humidity data for few trials from
+    Kestrel 3000 pocket weather meter. Almost entirely missing for all
+    the trials.
+
+However, we have temperature and humidity for 89 trials from hobo data
+loggers.
