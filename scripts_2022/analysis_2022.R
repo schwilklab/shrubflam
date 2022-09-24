@@ -122,6 +122,34 @@ leaf_pc2_model <- afex::lmer(PC2 ~ leaf_mass_per_area + leaf_area_per_leaflet + 
                                leaf_length_per_leaflet*leaf_moisture_content + (1|group), 
                              data = model_data, REML = FALSE)
 
+
+# boundary (singular) fit: see help('isSingular')??????????
+
+# How to avoid isSingular, source: https://rdrr.io/cran/lme4/man/isSingular.html
+
+# There is not yet consensus about how to deal with singularity, or more generally to choose which \
+#random-effects specification (from a range of choices of varying complexity) to use. Some proposals include:
+
+# avoid fitting overly complex models in the first place, i.e. design experiments/restrict models a priori such that the 
+# variance-covariance matrices can be estimated precisely enough to avoid singularity (Matuschek et al 2017)
+
+# use some form of model selection to choose a model that balances predictive accuracy and overfitting/type I error 
+# (Bates et al 2015, Matuschek et al 2017)
+
+# “keep it maximal”, i.e. fit the most complex model consistent with the experimental design, removing only terms required to 
+# allow a non-singular fit (Barr et al. 2013), or removing further terms based on p-values or AIC
+
+# use a partially Bayesian method that produces maximum a posteriori (MAP) estimates using regularizing priors to force the 
+# estimated random-effects variance-covariance matrices away from singularity (Chung et al 2013, blme package)
+
+# use a fully Bayesian method that both regularizes the model via informative priors and gives estimates and credible intervals 
+# for all parameters that average over the uncertainty in the random effects parameters (Gelman and Hill 2006, McElreath 2015; MCMCglmm, rstanarm and brms packages)
+
+
+# Should I go for a simple model ?
+
+
+
 summary(leaf_pc2_model)
 
 leaf_pc2_models <- dredge(leaf_pc2_model)
