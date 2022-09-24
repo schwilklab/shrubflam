@@ -4,15 +4,19 @@
 
 
 library(MuMIn)
+library(partR2) # partR2, an R package that quantifies part R2 for fixed effect predictors based on (generalized) linear mixed-effect model 
+# fits.source: partR2: partitioning R2 in generalized linear mixed models
 
+# All scripts that are in source required to run before running 
+# flam_pca_2022.R script
 
+source("./flam_pca_2022") # The script where I performed the principle component analysis.
 
 # REML IS EQUAL TO FALSE BECAUSE 
 # Faraway (2006) Extending the linear model with R (p. 156):
 # The reason is that REML estimates the random effects by considering linear combinations of the data that remove the fixed effects. 
 # If these fixed effects are changed, the likelihoods of the two models will not be directly comparable # Source .......
-Source : https://stats.stackexchange.com/questions/116770/reml-or-ml-to-compare-two-mixed-effects-models-with-differing-fixed-effects-but
-# I have borrowed that book(Faraway (2006))\ from library and I need to check it out comjpletely.
+# Source : https://stats.stackexchange.com/questions/116770/reml-or-ml-to-compare-two-mixed-effects-models-with-differing-fixed-effects-but.
 
 ####################################################################################################################################
 # scaling the response variables since they measured in different
@@ -27,6 +31,15 @@ model_data <- final_data %>%
               "leaf_mass_per_area", "leaf_area_per_leaflet", "leaf_length_per_leaflet","leaf_moisture_content", "windspeed_miles_per_hour"), list(zscore))
 
 
+
+##################################################################################################################################################
+
+#################################################################################################################################################
+# Removing na of two samples whose windspeed data are missing
+#################################################################################################################################################
+
+options(na.action = "na.fail")
+
 model_data <- model_data %>%
   select(PC1, PC2, group, total_dry_mass_gm , canopy_density_gm_cm3 , leaf_stem_mass_ratio , canopy_moisture_content,
          leaf_mass_per_area , leaf_area_per_leaflet , leaf_length_per_leaflet , leaf_moisture_content, windspeed_miles_per_hour) %>%
@@ -35,96 +48,92 @@ model_data <- model_data %>%
 dim(model_data)
 
 ####################################################################################################################################
-
-options(na.action = "na.fail")
-
-
-canopy_pc1_model <- afex::lmer(PC1 ~ total_dry_mass_gm + leaf_stem_mass_ratio + canopy_density_gm_cm3 + canopy_moisture_content +
-                                  total_dry_mass_gm*leaf_stem_mass_ratio + total_dry_mass_gm*canopy_density_gm_cm3 +
-                                  total_dry_mass_gm*canopy_moisture_content + leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                  leaf_stem_mass_ratio*canopy_moisture_content + canopy_density_gm_cm3*canopy_moisture_content + (1|group), 
-                               data = model_data, REML = FALSE)
-
-summary(canopy_pc1_model) 
-
-canopy_pc1_models <- dredge(canopy_pc1_model)
+# A single model with both leaf and canopy traits without interaction
+###################################################################################################################################
 
 
-best_canopy_pc1_model <- get.models(canopy_pc1_models, subset = TRUE)[[1]]
+model_1_pc1 <- afex::lmer(PC1 ~ total_dry_mass_gm + leaf_stem_mass_ratio + canopy_density_gm_cm3 + canopy_moisture_content +
+                        leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet + 
+                        leaf_moisture_content + (1|group), data = model_data, REML = FALSE)
 
-summary(best_canopy_pc1_model)
+summary(model_1_pc1) 
 
+# total_dry_mass_gm p value < 2e-16 ***
+# leaf_stem_mass_ratio p value 0.00618 * 
+# canopy_density_gm_cm3 p value 0.00153 ** 
 
+plot(model_1_pc1) # Doesn't look like normal
 
+pc1_models <- dredge(model_1_pc1)
 
-leaf_pc1_model <- afex::lmer(PC1 ~ leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
-                               leaf_moisture_content + leaf_mass_per_area*leaf_area_per_leaflet + leaf_mass_per_area*leaf_length_per_leaflet +
-                               leaf_mass_per_area*leaf_moisture_content + leaf_area_per_leaflet*leaf_length_per_leaflet + leaf_area_per_leaflet*leaf_moisture_content +
-                               leaf_length_per_leaflet*leaf_moisture_content + (1|group), data = model_data,
-                             REML = FALSE)
-summary(leaf_pc1_model)
+best_pc1_model <- get.models(pc1_models, subset = TRUE)[[1]] # total_dry_mass_gm, canopy_density_gm_cm3 and leaf_stem_mass_ratio
 
-leaf_pc1_models <- dredge(leaf_pc1_model)
+summary(best_pc1_model)
 
-best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]]
+plot(best_pc1_model) # Doesn't look like normal
 
-best_leaf_pc1_model
+#########################################################################################################################################
+# Getting the inclusive R square value for those variables which are significant.
+#########################################################################################################################################
 
-AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 344.0820 and leaf 463.2763
+inclusive_r2_pc1 <- partR2(model_1_pc1, partvars = c("total_dry_mass_gm", "leaf_stem_mass_ratio", "canopy_density_gm_cm3"), nboot=100)
 
-sjPlot::plot_model(best_canopy_pc1_model,
-                   show.values =TRUE,
-                   show.p = TRUE, se = TRUE,
-                   show.data = TRUE,
-                   vline.color = "red",
-                   intercept = TRUE,
-                   sort.est = TRUE,
-                   ci.lvl = 0.95,
-                   auto.label = TRUE,
-                   title ="Canopy traits effect on flammability (PC1 score)") 
+summary(inclusive_r2_pc1)
 
-canopy_pc2_model <- afex::lmer(PC2 ~ total_dry_mass_gm + leaf_stem_mass_ratio + canopy_density_gm_cm3 + canopy_moisture_content +
-                                 total_dry_mass_gm*leaf_stem_mass_ratio + total_dry_mass_gm*canopy_density_gm_cm3 +
-                                 total_dry_mass_gm*canopy_moisture_content + leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                 leaf_stem_mass_ratio*canopy_moisture_content + canopy_density_gm_cm3*canopy_moisture_content + (1|group),
-                               data = model_data, REML = FALSE)
+#########################################################################################################################################
+# A single model with both leaf and canopy traits without interaction for PC2
+#########################################################################################################################################
 
-summary(canopy_pc2_model) 
+model_2_pc2 <- afex::lmer(PC2 ~ total_dry_mass_gm + leaf_stem_mass_ratio + canopy_density_gm_cm3 + canopy_moisture_content +
+                        leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
+                        leaf_moisture_content + (1|group), data = model_data, REML = FALSE)
 
-canopy_pc2_models <- dredge(canopy_pc2_model)
+summary(model_2_pc2) 
 
 
-best_canopy_pc2_model <- get.models(canopy_pc2_models, subset = TRUE)[[1]]
+# total_dry_mass_gm p value 0.0016 **
+# leaf_stem_mass_ratio p value 0.0341 . and slope -0.28625
 
-summary(best_canopy_pc2_model)
+plot(model_2_pc2)
 
+pc2_models <- dredge(model_2_pc2)
 
-
-leaf_pc2_model <- afex::lmer(PC2 ~ leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
-                               leaf_moisture_content + leaf_mass_per_area*leaf_area_per_leaflet + leaf_mass_per_area*leaf_length_per_leaflet +
-                               leaf_mass_per_area*leaf_moisture_content + leaf_area_per_leaflet*leaf_length_per_leaflet + leaf_area_per_leaflet*leaf_moisture_content +
-                               leaf_length_per_leaflet*leaf_moisture_content + (1|group), 
-                             data = model_data, REML = FALSE)
-
-summary(leaf_pc2_model)
-
-leaf_pc2_models <- dredge(leaf_pc2_model)
-
-best_leaf_pc2_model <- get.models(leaf_pc2_models, subset = TRUE)[[1]]
-
-best_leaf_pc2_model
+best_pc2_model <- get.models(pc2_models, subset = TRUE)[[1]] # total_dry_mass_gm and leaf_stem_mass_ratio
 
 
-AIC(best_canopy_pc2_model, best_leaf_pc2_model) # Canopy 358.2332, leaf 365.7563
+summary(best_pc2_model)
+
+best_pc2_model <- afex::lmer(PC2 ~ total_dry_mass_gm + leaf_stem_mass_ratio +
+                               (1|group), data = model_data, REML = FALSE)
+
+plot(best_pc2_model)
+
+#########################################################################################################################################
+# Getting the inclusive R square value for those variables which are significant.
+#########################################################################################################################################
+
+inclusive_r2_pc2 <- partR2(model_2_pc2, partvars = c("total_dry_mass_gm", "leaf_stem_mass_ratio"), nboot = 100)
+
+summary(inclusive_r2_pc2)
 
 
-windspeed_model <- afex::lmer( PC2 ~ total_dry_mass_gm + windspeed_miles_per_hour +
+#############################################################################################################################
+# Does adding windspeed in the best model for PC2 improve the model? Since PC2 is influenced by wind speed.
+############################################################################################################################
+
+
+windspeed_model <- afex::lmer( PC2 ~ total_dry_mass_gm + leaf_stem_mass_ratio + windspeed_miles_per_hour +
                                  (1|group), data = model_data, REML = FALSE)
 
 
-AIC(best_canopy_pc2_model, windspeed_model) # Canopy 358.2332  , windspeed 355.0866
+AIC(best_pc2_model, windspeed_model) # best_pc2_model 358.5528  , windspeed_model  352.8284, yes , adding windspeed improves the model.
 
-sjPlot::plot_model(best_canopy_pc2_model,
+
+############################################################################################################################################
+# Plotting the models
+###########################################################################################################################################
+
+sjPlot::plot_model(model_1_pc1,
                    show.values =TRUE,
                    show.p = TRUE, se = TRUE,
                    show.data = TRUE,
@@ -133,84 +142,116 @@ sjPlot::plot_model(best_canopy_pc2_model,
                    sort.est = TRUE,
                    ci.lvl = 0.95,
                    auto.label = TRUE,
-                   title ="Canopy traits effect on flammability (PC1 score)") 
+                   title ="Shrub traits effect on flammability (PC1 score)")
 
+sjPlot::plot_model(model_2_pc2,
+                   show.values =TRUE,
+                   show.p = TRUE, se = TRUE,
+                   show.data = TRUE,
+                   vline.color = "red",
+                   intercept = TRUE,
+                   sort.est = TRUE,
+                   ci.lvl = 0.95,
+                   auto.label = TRUE,
+                   title ="Shrub traits effect on flammability (PC2 score)") 
 
+##############################################################################################################################################
+
+##############################################################################################################################################
+# Model of separate canopy traits and leaf traits with interactions for PC1
 #############################################################################################################################################
-# Without most flammable group
+
+canopy_traits_pc1 <- afex::lmer(PC1 ~ total_dry_mass_gm + canopy_density_gm_cm3 +
+                                  leaf_stem_mass_ratio + canopy_moisture_content +
+                                  total_dry_mass_gm*canopy_density_gm_cm3*leaf_stem_mass_ratio*canopy_moisture_content +
+                                  (1|group), data = model_data, REML = FALSE)
+
+
+
+canopy_traits_pc1_models <- dredge(canopy_traits_pc1)
+
+best_canopy_traits_pc1 <- get.models(canopy_traits_pc1_models, subset = TRUE)[[1]]
+
+summary(best_canopy_traits_pc1)
+
+
+best_canopy_traits_pc1 <- afex::lmer(PC1 ~ total_dry_mass_gm + canopy_density_gm_cm3 + leaf_stem_mass_ratio + total_dry_mass_gm*canopy_density_gm_cm3 +
+                                       (1|group), data = model_data, REML = FALSE)
+
+summary(best_canopy_traits_pc1)
+
+
+leaf_traits_pc1 <- afex::lmer(PC1 ~ leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
+                                leaf_moisture_content + leaf_mass_per_area*leaf_area_per_leaflet*leaf_length_per_leaflet*leaf_moisture_content + 
+                                  (1|group), data = model_data, REML = FALSE)
+
+
+
+leaf_traits_pc1_models <- dredge(leaf_traits_pc1)
+
+best_leaf_traits_pc1 <- get.models(leaf_traits_pc1_models, subset = TRUE)[[1]]
+
+summary(best_leaf_traits_pc1) # Null model
+
+
+AIC(best_canopy_traits_pc1, best_leaf_traits_pc1) # canopy 344.0820, leaf 463.2763
+
+##############################################################################################################################################
+# Model of separate canopy traits and leaf traits with interactions for PC2
 #############################################################################################################################################
 
-
-without_juniperus <- model_data %>%
-  filter(group != "Juniperus")
-
-canopy_pc1_model_withoutj <- afex::lmer(PC1 ~ total_dry_mass_gm + leaf_stem_mass_ratio + canopy_density_gm_cm3 + canopy_moisture_content +
-                                 total_dry_mass_gm*leaf_stem_mass_ratio + total_dry_mass_gm*canopy_density_gm_cm3 +
-                                 total_dry_mass_gm*canopy_moisture_content + leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                 leaf_stem_mass_ratio*canopy_moisture_content + canopy_density_gm_cm3*canopy_moisture_content + (1|group), 
-                                 data = without_juniperus, REML = FALSE )
-
-summary(canopy_pc1_model_withoutj) 
-
-canopy_pc1_models_withoutj <- dredge(canopy_pc1_model_withoutj)
-
-
-best_canopy_pc1_model_withoutj <- get.models(canopy_pc1_models_withoutj, subset = TRUE)[[1]]
-
-summary(best_canopy_pc1_model_withoutj)
-
-
-leaf_pc1_model_withoutj <- afex::lmer(PC1 ~ leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
-                               leaf_moisture_content + leaf_mass_per_area*leaf_area_per_leaflet + leaf_mass_per_area*leaf_length_per_leaflet +
-                               leaf_mass_per_area*leaf_moisture_content + leaf_area_per_leaflet*leaf_length_per_leaflet + leaf_area_per_leaflet*leaf_moisture_content +
-                               leaf_length_per_leaflet*leaf_moisture_content + (1|group),
-                               data = without_juniperus, REML = FALSE)
-summary(leaf_pc1_model_withoutj)
-
-leaf_pc1_models_withoutj <- dredge(leaf_pc1_model_withoutj)
-
-best_leaf_pc1_model_withoutj <- get.models(leaf_pc1_models_withoutj, subset = TRUE)[[1]]
-
-best_leaf_pc1_model_withoutj
-
-summary(best_leaf_pc1_model_withoutj)
-
-AIC(best_canopy_pc1_model_withoutj, best_leaf_pc1_model_withoutj) # AIC for canopy 183.5310 and leaf 237.3045
+canopy_traits_pc2 <- afex::lmer(PC2 ~ total_dry_mass_gm + canopy_density_gm_cm3 +
+                                  leaf_stem_mass_ratio + canopy_moisture_content +
+                                  total_dry_mass_gm*canopy_density_gm_cm3*leaf_stem_mass_ratio*canopy_moisture_content +
+                                  (1|group), data = model_data, REML = FALSE)
 
 
 
-canopy_pc2_model_withoutj <- afex::lmer(PC2 ~ total_dry_mass_gm + leaf_stem_mass_ratio + canopy_density_gm_cm3 + canopy_moisture_content +
-                                 total_dry_mass_gm*leaf_stem_mass_ratio + total_dry_mass_gm*canopy_density_gm_cm3 +
-                                 total_dry_mass_gm*canopy_moisture_content + leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                 leaf_stem_mass_ratio*canopy_moisture_content + canopy_density_gm_cm3*canopy_moisture_content + (1|group), 
-                               data = without_juniperus, REML = FALSE)
+canopy_traits_pc2_models <- dredge(canopy_traits_pc2)
 
-summary(canopy_pc2_model_withoutj) 
+best_canopy_traits_pc2 <- get.models(canopy_traits_pc2_models, subset = TRUE)[[1]] 
 
-canopy_pc2_models_withoutj <- dredge(canopy_pc2_model_withoutj)
-
-
-best_canopy_pc2_model_withoutj <- get.models(canopy_pc2_models_withoutj, subset = TRUE)[[1]]
-
-summary(best_canopy_pc2_model_withoutj)
+summary(best_canopy_traits_pc2) # only total_dry_mass_gm 0.000473 ***
 
 
 
-leaf_pc2_model_withoutj <- afex::lmer(PC2 ~ leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
-                               leaf_moisture_content + leaf_mass_per_area*leaf_area_per_leaflet + leaf_mass_per_area*leaf_length_per_leaflet +
-                               leaf_mass_per_area*leaf_moisture_content + leaf_area_per_leaflet*leaf_length_per_leaflet + leaf_area_per_leaflet*leaf_moisture_content +
-                               leaf_length_per_leaflet*leaf_moisture_content + (1|group), data = without_juniperus, REML = FALSE)
+leaf_traits_pc2 <- afex::lmer(PC2 ~ leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
+                                leaf_moisture_content + leaf_mass_per_area*leaf_area_per_leaflet*leaf_length_per_leaflet*leaf_moisture_content + 
+                                (1|group), data = model_data, REML = FALSE)
 
-summary(leaf_pc2_model_withoutj)
+# boundary (singular) fit: see help('isSingular')??????????
 
-leaf_pc2_models_withoutj <- dredge(leaf_pc2_model_withoutj)
+# How to avoid isSingular, source: https://rdrr.io/cran/lme4/man/isSingular.html
 
-best_leaf_pc2_model_withoutj <- get.models(leaf_pc2_models_withoutj, subset = TRUE)[[1]]
+# There is not yet consensus about how to deal with singularity, or more generally to choose which \
+#random-effects specification (from a range of choices of varying complexity) to use. Some proposals include:
+  
+# avoid fitting overly complex models in the first place, i.e. design experiments/restrict models a priori such that the 
+# variance-covariance matrices can be estimated precisely enough to avoid singularity (Matuschek et al 2017)
 
-summary(best_leaf_pc2_model_withoutj)
+# use some form of model selection to choose a model that balances predictive accuracy and overfitting/type I error 
+# (Bates et al 2015, Matuschek et al 2017)
+
+# “keep it maximal”, i.e. fit the most complex model consistent with the experimental design, removing only terms required to 
+# allow a non-singular fit (Barr et al. 2013), or removing further terms based on p-values or AIC
+
+# use a partially Bayesian method that produces maximum a posteriori (MAP) estimates using regularizing priors to force the 
+# estimated random-effects variance-covariance matrices away from singularity (Chung et al 2013, blme package)
+
+# use a fully Bayesian method that both regularizes the model via informative priors and gives estimates and credible intervals 
+# for all parameters that average over the uncertainty in the random effects parameters (Gelman and Hill 2006, McElreath 2015; MCMCglmm, rstanarm and brms packages)
 
 
-AIC(best_canopy_pc2_model_withoutj, best_leaf_pc2_model_withoutj) # Canopy 274.7805, leaf 298.4111
+# Should I go for a simple model ?
+
+leaf_traits_pc2_models <- dredge(leaf_traits_pc2)
+
+best_leaf_traits_pc2 <- get.models(leaf_traits_pc2_models, subset = TRUE)[[1]]
+
+summary(best_leaf_traits_pc2) # Leaf moisture content
 
 
+AIC(best_canopy_traits_pc2, best_leaf_traits_pc2) # canopy 358.2332, leaf 365.7563
 
+
+###############################################################################################################################################
