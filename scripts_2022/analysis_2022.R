@@ -14,6 +14,8 @@ library(MuMIn)
 # Source : https://stats.stackexchange.com/questions/116770/reml-or-ml-to-compare-two-mixed-effects-models-with-differing-fixed-effects-but
 # I have borrowed that book(Faraway (2006))\ from library and I need to check it out completely.
 
+
+
 ####################################################################################################################################
 # scaling the response variables since they measured in different
 # units
@@ -27,6 +29,10 @@ model_data <- final_data %>%
               "leaf_mass_per_area", "leaf_area_per_leaflet", "leaf_length_per_leaflet","leaf_moisture_content", "windspeed_miles_per_hour"), list(zscore))
 
 
+################################################################################################################
+# Removing two samples whose windspeed data is missing
+###################################################################################################################
+
 model_data <- model_data %>%
   select(PC1, PC2, group, total_dry_mass_gm , canopy_density_gm_cm3 , leaf_stem_mass_ratio , canopy_moisture_content,
          leaf_mass_per_area , leaf_area_per_leaflet , leaf_length_per_leaflet , leaf_moisture_content, windspeed_miles_per_hour) %>%
@@ -35,6 +41,27 @@ model_data <- model_data %>%
 dim(model_data)
 
 ####################################################################################################################################
+# Correlation of all morphological traits
+#############################################################################################################################
+
+
+morphological_traits_cor_data <- cor_data %>%
+  select(total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
+         canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
+         leaf_length_per_leaflet, leaf_moisture_content)
+
+
+morphological_traits_cor <- cor(morphological_traits_cor_data, method = "kendall",
+                                use = "pairwise")
+
+corrplot::corrplot(morphological_traits_cor, method = "number")
+
+# morphological_traits_cor
+# Kendall rank correlation coefficient between canopy_moisture_content and 
+# leaf_moisture_content is 0.648013566
+# Kendall rank correlation coefficient between leaf_area_per_leaflet and 
+# leaf_length_per_leaflet is 0.68502852
+
 
 ##################################################################################################################
 # A model of canopy traits with two way interactions for PC1
@@ -49,15 +76,37 @@ canopy_pc1_model <- afex::lmer(PC1 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
                                  leaf_stem_mass_ratio*canopy_moisture_content + canopy_density_gm_cm3*canopy_moisture_content + (1|group), 
                                data = model_data, REML = FALSE)
 
-summary(canopy_pc1_model) 
 
 canopy_pc1_models <- dredge(canopy_pc1_model)
 
 
 best_canopy_pc1_model <- get.models(canopy_pc1_models, subset = TRUE)[[1]]
 
+
+best_canopy_pc1_model <- afex::lmer(PC1 ~  total_dry_mass_gm + canopy_density_gm_cm3 + leaf_stem_mass_ratio + 
+                                       canopy_density_gm_cm3:total_dry_mass_gm + (1|group), data = model_data,
+                                    REML = FALSE)
 summary(best_canopy_pc1_model)
 
+# Correlation of fixed effect between total mass and the interaction
+# between total mass and canopy density is 0.898
+
+###################################################################################################
+# Correlation of canopy traits and flammability traits
+######################################################################################################
+
+canopy_flam_data <- cor_data %>%
+  select(heat_release_j, massconsumed,
+         vol_burned, flame_height, flame_duration, dur_100,
+         peak_temp, degsec_100, ignition_delay, self_ignition,
+         total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
+         canopy_moisture_content)
+
+canopy_flam_cor <- cor(canopy_flam_data, method = "kendall", 
+                           use = "pairwise")
+
+
+corrplot::corrplot(canopy_flam_cor, method = "number", type = "upper")
 
 
 #############################################################################################################################
@@ -69,15 +118,44 @@ leaf_pc1_model <- afex::lmer(PC1 ~ leaf_mass_per_area + leaf_area_per_leaflet + 
                                leaf_mass_per_area*leaf_moisture_content + leaf_area_per_leaflet*leaf_length_per_leaflet + leaf_area_per_leaflet*leaf_moisture_content +
                                leaf_length_per_leaflet*leaf_moisture_content + (1|group), data = model_data,
                              REML = FALSE)
-summary(leaf_pc1_model)
 
 leaf_pc1_models <- dredge(leaf_pc1_model)
 
-best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]]
+best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]] # Null model
 
-best_leaf_pc1_model
+best_leaf_pc1_model <- afex::lmer(PC1 ~ 1 + (1|group),
+                                  data = model_data, REML = FALSE) 
+
+summary(best_leaf_pc1_model)
+
+###########################################################################################################
+# Correlation of leaf  traits and flammability traits
+###########################################################################################################
+
+leaf_flam_data <- cor_data %>%
+  select(heat_release_j, massconsumed,
+         vol_burned, flame_height, flame_duration, dur_100,
+         peak_temp, degsec_100, ignition_delay, self_ignition,
+          leaf_mass_per_area, leaf_area_per_leaflet,
+         leaf_length_per_leaflet, leaf_moisture_content)
+
+leaf_flam_cor <- cor(leaf_flam_data, method = "kendall",
+                     use = "pairwise")
+
+
+corrplot::corrplot(leaf_flam_cor, method = "number", type = "upper")
+
+######################################################################################################
+# Comparison between best canopy model and leaf model
+######################################################################################################
+
 
 AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 344.0820 and leaf 463.2763
+
+######################################################################################################
+# Plotting of best canopy model
+######################################################################################################
+
 
 sjPlot::plot_model(best_canopy_pc1_model,
                    show.values =TRUE,
@@ -88,7 +166,8 @@ sjPlot::plot_model(best_canopy_pc1_model,
                    sort.est = TRUE,
                    ci.lvl = 0.95,
                    auto.label = TRUE,
-                   title ="Canopy traits effect on flammability (PC1 score)") 
+                   title = "Canopy traits effect on flammability (PC1 score)") 
+
 
 #####################################################################################################################################
 # A model with canopy traits with interaction for PC2
@@ -101,12 +180,15 @@ canopy_pc2_model <- afex::lmer(PC2 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
                                  leaf_stem_mass_ratio*canopy_moisture_content + canopy_density_gm_cm3*canopy_moisture_content + (1|group),
                                data = model_data, REML = FALSE)
 
-summary(canopy_pc2_model) 
 
 canopy_pc2_models <- dredge(canopy_pc2_model)
 
 
 best_canopy_pc2_model <- get.models(canopy_pc2_models, subset = TRUE)[[1]]
+
+best_canopy_pc2_model <- afex::lmer(PC2 ~ leaf_stem_mass_ratio + total_dry_mass_gm + 
+                                      leaf_stem_mass_ratio:total_dry_mass_gm + (1 | group),
+                                       data = model_data, REML = FALSE)                                  
 
 summary(best_canopy_pc2_model)
 
@@ -186,7 +268,7 @@ sjPlot::plot_model(best_canopy_pc2_model,
 
 
 #############################################################################################################################################
-# Without most flammable group
+# Without most flammable group, Juniperus.
 #############################################################################################################################################
 
 

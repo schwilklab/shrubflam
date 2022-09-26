@@ -27,6 +27,7 @@ pca_data_2022 <- alldata_2022 %>%
          peak_temp, degsec_100, ignition_delay, self_ignition)
 
 
+
 names(pca_data_2022)[7] <- "Duration over (100\u00B0C)"
 
 dim(pca_data_2022)
@@ -105,6 +106,27 @@ dim(final_data)
 
 ## Will use the final_data to do the rest of the analysis.
 
+########################################################################
+# Creating a separate data set with flammability traits and morphological
+# traits to do the correlation test
+########################################################################
 
 
+cor_data <- alldata_2022 %>%
+  mutate(label=paste(sample_id,species_id,sep = "_")) %>%
+  left_join(hobos_wider_2022, by = "label") %>%
+  select(heat_release_j, massconsumed,
+         vol_burned, flame_height, flame_duration, dur_100,
+         peak_temp, degsec_100, ignition_delay, self_ignition,
+         total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
+         canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
+         leaf_length_per_leaflet, leaf_moisture_content)
+
+
+###############################################################################
+# Cleaning the environment
+###############################################################################
+
+rm("pca_data_2022", "flam_pca_2022", "flam_loadings",
+   "eig_val", "varibales_info")
 
