@@ -2,17 +2,30 @@
 # Shrub Flammability project
 # Dylan Schwilk, Azaj Mahmud
 
+# This script is for selecting the best model for each kind of
+# traits and compare them to see which traits are better.
 
 library(MuMIn)
 
+# MuMIn package for automated model selection through subsetting
+# the maximum model, with optimal constraints for model inclusion.
+# Model parameter and prediction averaging based on model weights 
+# derived from information criteria (AIC).
+# source: https://cran.r-project.org/web/packages/MuMIn/MuMIn.pdf
 
+
+
+# All scripts that are in source() required to run before running 
+# analysis_2022.R script
+
+source("./flam_pca_2022.R") # The Rscript where I performed the principle component analysis.
 
 # REML IS EQUAL TO FALSE BECAUSE 
 # Faraway (2006) Extending the linear model with R (p. 156):
 # The reason is that REML estimates the random effects by considering linear combinations of the data that remove the fixed effects. 
 # If these fixed effects are changed, the likelihoods of the two models will not be directly comparable # Source .......
 # Source : https://stats.stackexchange.com/questions/116770/reml-or-ml-to-compare-two-mixed-effects-models-with-differing-fixed-effects-but
-# I have borrowed that book(Faraway (2006))\ from library and I need to check it out completely.
+
 
 
 
@@ -58,38 +71,12 @@ corrplot::corrplot(morphological_traits_cor, method = "number")
 
 # morphological_traits_cor
 # Kendall rank correlation coefficient between canopy_moisture_content and 
-# leaf_moisture_content is 0.648013566
+# leaf_moisture_content is 0.648013566, not a problem since they will used
+# in two different model.
 # Kendall rank correlation coefficient between leaf_area_per_leaflet and 
 # leaf_length_per_leaflet is 0.68502852
 
 
-##################################################################################################################
-# A model of canopy traits with two way interactions for PC1
-###################################################################################################################
-
-options(na.action = "na.fail")
-
-
-canopy_pc1_model <- afex::lmer(PC1 ~ total_dry_mass_gm + leaf_stem_mass_ratio + canopy_density_gm_cm3 + canopy_moisture_content +
-                                 total_dry_mass_gm*leaf_stem_mass_ratio + total_dry_mass_gm*canopy_density_gm_cm3 +
-                                 total_dry_mass_gm*canopy_moisture_content + leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                 leaf_stem_mass_ratio*canopy_moisture_content + canopy_density_gm_cm3*canopy_moisture_content + (1|group), 
-                               data = model_data, REML = FALSE)
-
-
-canopy_pc1_models <- dredge(canopy_pc1_model)
-
-
-best_canopy_pc1_model <- get.models(canopy_pc1_models, subset = TRUE)[[1]]
-
-
-best_canopy_pc1_model <- afex::lmer(PC1 ~  total_dry_mass_gm + canopy_density_gm_cm3 + leaf_stem_mass_ratio + 
-                                       canopy_density_gm_cm3:total_dry_mass_gm + (1|group), data = model_data,
-                                    REML = FALSE)
-summary(best_canopy_pc1_model)
-
-# Correlation of fixed effect between total mass and the interaction
-# between total mass and canopy density is 0.898
 
 ###################################################################################################
 # Correlation of canopy traits and flammability traits
@@ -103,30 +90,53 @@ canopy_flam_data <- cor_data %>%
          canopy_moisture_content)
 
 canopy_flam_cor <- cor(canopy_flam_data, method = "kendall", 
-                           use = "pairwise")
+                       use = "pairwise")
 
 
 corrplot::corrplot(canopy_flam_cor, method = "number", type = "upper")
 
 
-#############################################################################################################################
-# A model of leaf traits with two way interaction for PC1
-#############################################################################################################################
+##################################################################################################################
+# A global model of canopy traits with two way interactions for PC1
+###################################################################################################################
 
-leaf_pc1_model <- afex::lmer(PC1 ~ leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
-                               leaf_moisture_content + leaf_mass_per_area*leaf_area_per_leaflet + leaf_mass_per_area*leaf_length_per_leaflet +
-                               leaf_mass_per_area*leaf_moisture_content + leaf_area_per_leaflet*leaf_length_per_leaflet + leaf_area_per_leaflet*leaf_moisture_content +
-                               leaf_length_per_leaflet*leaf_moisture_content + (1|group), data = model_data,
-                             REML = FALSE)
+options(na.action = "na.fail")
 
-leaf_pc1_models <- dredge(leaf_pc1_model)
 
-best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]] # Null model
+canopy_pc1_model <- afex::lmer(PC1 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
+                                 canopy_density_gm_cm3 + canopy_moisture_content +
+                                 total_dry_mass_gm*leaf_stem_mass_ratio +
+                                 total_dry_mass_gm*canopy_density_gm_cm3 +
+                                 total_dry_mass_gm*canopy_moisture_content + 
+                                 leaf_stem_mass_ratio*canopy_density_gm_cm3 +
+                                 leaf_stem_mass_ratio*canopy_moisture_content + 
+                                 canopy_density_gm_cm3*canopy_moisture_content + 
+                                 (1|group), data = model_data, REML = FALSE)
 
-best_leaf_pc1_model <- afex::lmer(PC1 ~ 1 + (1|group),
-                                  data = model_data, REML = FALSE) 
 
-summary(best_leaf_pc1_model)
+canopy_pc1_models <- dredge(canopy_pc1_model) # Performs an automated
+
+# model selection with subsets of the supplied global model. source: ?dredge
+
+
+best_canopy_pc1_model <- get.models(canopy_pc1_models, subset = TRUE)[[1]] # returns list and 
+# indexing the first one, top model.
+
+# Generate or extract a list of fitted model objects from a "model.selection" table,
+# object returned by dredge. The argument subset must be explicitely provided. 
+# This is to assure that a potentially long list of models is not fitted unintentionally. 
+# To evaluate all models, set subset to NA or TRUE. source: ?get.models
+
+summary(best_canopy_pc1_model)
+
+best_canopy_pc1_model <- afex::lmer(PC1 ~  total_dry_mass_gm + canopy_density_gm_cm3 + 
+                                      leaf_stem_mass_ratio + 
+                                      canopy_density_gm_cm3:total_dry_mass_gm + 
+                                      (1|group), data = model_data, REML = FALSE)
+summary(best_canopy_pc1_model)
+
+# Correlation of fixed effect between total mass and the interaction
+# between total mass and canopy density is 0.898, is it a problem?
 
 ###########################################################################################################
 # Correlation of leaf  traits and flammability traits
@@ -136,7 +146,7 @@ leaf_flam_data <- cor_data %>%
   select(heat_release_j, massconsumed,
          vol_burned, flame_height, flame_duration, dur_100,
          peak_temp, degsec_100, ignition_delay, self_ignition,
-          leaf_mass_per_area, leaf_area_per_leaflet,
+         leaf_mass_per_area, leaf_area_per_leaflet,
          leaf_length_per_leaflet, leaf_moisture_content)
 
 leaf_flam_cor <- cor(leaf_flam_data, method = "kendall",
@@ -145,19 +155,48 @@ leaf_flam_cor <- cor(leaf_flam_data, method = "kendall",
 
 corrplot::corrplot(leaf_flam_cor, method = "number", type = "upper")
 
+
+#############################################################################################################################
+# A global model of leaf traits with two way interaction for PC1
+# Kendall rank correlation coefficient between leaf_area_per_leaflet and 
+# leaf_length_per_leaflet is 0.68502852 and
+# decided to drop leaf_area_per_leaflet from the model
+# to avoid the high collinearity between two fixed effects.
+# theoretical explanation will be given in thesis/paper.
+#############################################################################################################################
+
+leaf_pc1_model <- afex::lmer(PC1 ~ leaf_mass_per_area +  leaf_length_per_leaflet +
+                               leaf_moisture_content  + leaf_mass_per_area*leaf_length_per_leaflet +
+                               leaf_mass_per_area*leaf_moisture_content + 
+                               leaf_length_per_leaflet*leaf_moisture_content + 
+                               (1|group), data = model_data, REML = FALSE)
+
+leaf_pc1_models <- dredge(leaf_pc1_model)
+
+best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]] # Null model
+
+summary(best_leaf_pc1_model)
+
+best_leaf_pc1_model <- afex::lmer(PC1 ~ 1 + (1|group),
+                                  data = model_data, REML = FALSE) 
+
+summary(best_leaf_pc1_model)
+
+
 ######################################################################################################
-# Comparison between best canopy model and leaf model
+# Comparison between best canopy and leaf model for PC1
 ######################################################################################################
 
 
-AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 344.0820 and leaf 463.2763
+AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 344.0820 
+# and leaf 463.2763
 
 ######################################################################################################
 # Plotting of best canopy model
 ######################################################################################################
 
 
-sjPlot::plot_model(best_canopy_pc1_model,
+sjPlot::plot_model(best_canopy_pc1_model, # Will take this plot in results.R script later
                    show.values =TRUE,
                    show.p = TRUE, se = TRUE,
                    show.data = TRUE,
@@ -170,15 +209,19 @@ sjPlot::plot_model(best_canopy_pc1_model,
 
 
 #####################################################################################################################################
-# A model with canopy traits with interaction for PC2
+# A global model with canopy traits with two way interaction for PC2
 ####################################################################################################################################
 
 
-canopy_pc2_model <- afex::lmer(PC2 ~ total_dry_mass_gm + leaf_stem_mass_ratio + canopy_density_gm_cm3 + canopy_moisture_content +
-                                 total_dry_mass_gm*leaf_stem_mass_ratio + total_dry_mass_gm*canopy_density_gm_cm3 +
-                                 total_dry_mass_gm*canopy_moisture_content + leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                 leaf_stem_mass_ratio*canopy_moisture_content + canopy_density_gm_cm3*canopy_moisture_content + (1|group),
-                               data = model_data, REML = FALSE)
+canopy_pc2_model <- afex::lmer(PC2 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
+                                 canopy_density_gm_cm3 + canopy_moisture_content +
+                                 total_dry_mass_gm*leaf_stem_mass_ratio + 
+                                 total_dry_mass_gm*canopy_density_gm_cm3 +
+                                 total_dry_mass_gm*canopy_moisture_content + 
+                                 leaf_stem_mass_ratio*canopy_density_gm_cm3 +
+                                 leaf_stem_mass_ratio*canopy_moisture_content + 
+                                 canopy_density_gm_cm3*canopy_moisture_content + 
+                                 (1|group), data = model_data, REML = FALSE)
 
 
 canopy_pc2_models <- dredge(canopy_pc2_model)
@@ -186,60 +229,41 @@ canopy_pc2_models <- dredge(canopy_pc2_model)
 
 best_canopy_pc2_model <- get.models(canopy_pc2_models, subset = TRUE)[[1]]
 
+summary(best_canopy_pc2_model)
+
 best_canopy_pc2_model <- afex::lmer(PC2 ~ leaf_stem_mass_ratio + total_dry_mass_gm + 
-                                      leaf_stem_mass_ratio:total_dry_mass_gm + (1 | group),
-                                       data = model_data, REML = FALSE)                                  
+                                      leaf_stem_mass_ratio:total_dry_mass_gm +
+                                      (1 | group), data = model_data, REML = FALSE)                                  
 
 summary(best_canopy_pc2_model)
 
 
 #####################################################################################################
-# A model of leaf traits with interaction for PC2
+# A global model of leaf traits with two way interaction for PC2
 ########################################################################################################
 
 
-leaf_pc2_model <- afex::lmer(PC2 ~ leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
-                               leaf_moisture_content + leaf_mass_per_area*leaf_area_per_leaflet + leaf_mass_per_area*leaf_length_per_leaflet +
-                               leaf_mass_per_area*leaf_moisture_content + leaf_area_per_leaflet*leaf_length_per_leaflet + leaf_area_per_leaflet*leaf_moisture_content +
-                               leaf_length_per_leaflet*leaf_moisture_content + (1|group), 
-                             data = model_data, REML = FALSE)
+leaf_pc2_model <- afex::lmer(PC2 ~ leaf_mass_per_area + leaf_length_per_leaflet +
+                               leaf_moisture_content +  
+                               leaf_mass_per_area*leaf_length_per_leaflet +
+                               leaf_mass_per_area*leaf_moisture_content + 
+                               leaf_length_per_leaflet*leaf_moisture_content + 
+                               (1|group), data = model_data, REML = FALSE)
 
 
-# boundary (singular) fit: see help('isSingular')??????????
-
-# How to avoid isSingular, source: https://rdrr.io/cran/lme4/man/isSingular.html
-
-# There is not yet consensus about how to deal with singularity, or more generally to choose which \
-#random-effects specification (from a range of choices of varying complexity) to use. Some proposals include:
-
-# avoid fitting overly complex models in the first place, i.e. design experiments/restrict models a priori such that the 
-# variance-covariance matrices can be estimated precisely enough to avoid singularity (Matuschek et al 2017)
-
-# use some form of model selection to choose a model that balances predictive accuracy and overfitting/type I error 
-# (Bates et al 2015, Matuschek et al 2017)
-
-# “keep it maximal”, i.e. fit the most complex model consistent with the experimental design, removing only terms required to 
-# allow a non-singular fit (Barr et al. 2013), or removing further terms based on p-values or AIC
-
-# use a partially Bayesian method that produces maximum a posteriori (MAP) estimates using regularizing priors to force the 
-# estimated random-effects variance-covariance matrices away from singularity (Chung et al 2013, blme package)
-
-# use a fully Bayesian method that both regularizes the model via informative priors and gives estimates and credible intervals 
-# for all parameters that average over the uncertainty in the random effects parameters (Gelman and Hill 2006, McElreath 2015; MCMCglmm, rstanarm and brms packages)
-
-
-# Should I go for a simple model ?
-
-
-
-summary(leaf_pc2_model)
 
 leaf_pc2_models <- dredge(leaf_pc2_model)
 
 best_leaf_pc2_model <- get.models(leaf_pc2_models, subset = TRUE)[[1]]
 
-best_leaf_pc2_model
+summary(best_leaf_pc2_model)
 
+best_leaf_pc2_model <- afex::lmer(PC2 ~ leaf_moisture_content + (1 | group),
+                                  data = model_data, REML = FALSE)
+
+###################################################################################################
+# Comparison between best canopy and leaf model for PC2
+###################################################################################################
 
 AIC(best_canopy_pc2_model, best_leaf_pc2_model) # Canopy 358.2332, leaf 365.7563
 
@@ -247,15 +271,23 @@ AIC(best_canopy_pc2_model, best_leaf_pc2_model) # Canopy 358.2332, leaf 365.7563
 # Does adding windspeed with the best model for pc2 improves the model?
 ###############################################################################################
 
-windspeed_model <- afex::lmer( PC2 ~ total_dry_mass_gm + windspeed_miles_per_hour +
+windspeed_model <- afex::lmer( PC2 ~ leaf_stem_mass_ratio + total_dry_mass_gm + 
+                                 leaf_stem_mass_ratio:total_dry_mass_gm +
+                                 windspeed_miles_per_hour +
                                  (1|group), data = model_data, REML = FALSE)
 
 
-AIC(best_canopy_pc2_model, windspeed_model) # Canopy 358.2332  , windspeed 355.0866, Yes, 
-# Adding windspeed improves the model
+AIC(best_canopy_pc2_model, windspeed_model) # Canopy 358.2332 and
+
+# windspeed 355.0866, Yes, 
+# Adding windspeed improves the model.
 
 
-sjPlot::plot_model(best_canopy_pc2_model,
+#####################################################################################################
+# Plotting of best canopy model for PC2
+#####################################################################################################
+
+sjPlot::plot_model(best_canopy_pc2_model, # Will take this plot in results.R script later
                    show.values =TRUE,
                    show.p = TRUE, se = TRUE,
                    show.data = TRUE,
@@ -268,20 +300,29 @@ sjPlot::plot_model(best_canopy_pc2_model,
 
 
 #############################################################################################################################################
-# Without most flammable group, Juniperus.
+# Does canopy traits are more important than leaf traits
+# if we drop the most flammable group, Juniperus from analysis?
 #############################################################################################################################################
 
 
-without_juniperus <- model_data %>%
+without_juniperus <- model_data %>% # creating a new data set without Juniperus group
   filter(group != "Juniperus")
 
-canopy_pc1_model_withoutj <- afex::lmer(PC1 ~ total_dry_mass_gm + leaf_stem_mass_ratio + canopy_density_gm_cm3 + canopy_moisture_content +
-                                          total_dry_mass_gm*leaf_stem_mass_ratio + total_dry_mass_gm*canopy_density_gm_cm3 +
-                                          total_dry_mass_gm*canopy_moisture_content + leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                          leaf_stem_mass_ratio*canopy_moisture_content + canopy_density_gm_cm3*canopy_moisture_content + (1|group), 
-                                        data = without_juniperus, REML = FALSE )
+##########################################################################################################
+# A global model of canopy traits with two way interaction for PC1
+#########################################################################################################
 
-summary(canopy_pc1_model_withoutj) 
+canopy_pc1_model_withoutj <- afex::lmer(PC1 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
+                                          canopy_density_gm_cm3 + canopy_moisture_content +
+                                          total_dry_mass_gm*leaf_stem_mass_ratio + 
+                                          total_dry_mass_gm*canopy_density_gm_cm3 +
+                                          total_dry_mass_gm*canopy_moisture_content + 
+                                          leaf_stem_mass_ratio*canopy_density_gm_cm3 +
+                                          leaf_stem_mass_ratio*canopy_moisture_content +
+                                          canopy_density_gm_cm3*canopy_moisture_content +
+                                          (1|group), data = without_juniperus, REML = FALSE )
+
+
 
 canopy_pc1_models_withoutj <- dredge(canopy_pc1_model_withoutj)
 
@@ -290,55 +331,93 @@ best_canopy_pc1_model_withoutj <- get.models(canopy_pc1_models_withoutj, subset 
 
 summary(best_canopy_pc1_model_withoutj)
 
+best_canopy_pc1_model_withoutj <- afex::lmer(PC1 ~ total_dry_mass_gm + 
+                                               canopy_density_gm_cm3 +
+                                               (1|group), data = without_juniperus, REML = FALSE)
+summary(best_canopy_pc1_model_withoutj) 
 
-leaf_pc1_model_withoutj <- afex::lmer(PC1 ~ leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
-                                        leaf_moisture_content + leaf_mass_per_area*leaf_area_per_leaflet + leaf_mass_per_area*leaf_length_per_leaflet +
-                                        leaf_mass_per_area*leaf_moisture_content + leaf_area_per_leaflet*leaf_length_per_leaflet + leaf_area_per_leaflet*leaf_moisture_content +
-                                        leaf_length_per_leaflet*leaf_moisture_content + (1|group),
-                                      data = without_juniperus, REML = FALSE)
-summary(leaf_pc1_model_withoutj)
+######################################################################################################################
+# A global model with leaf traits with two way interaction for PC1
+######################################################################################################################
+
+leaf_pc1_model_withoutj <- afex::lmer(PC1 ~ leaf_mass_per_area + leaf_length_per_leaflet +
+                                            leaf_moisture_content  + 
+                                            leaf_mass_per_area*leaf_length_per_leaflet +
+                                            leaf_mass_per_area*leaf_moisture_content + 
+                                            leaf_length_per_leaflet*leaf_moisture_content + 
+                                            (1|group), data = without_juniperus, REML = FALSE)
+
 
 leaf_pc1_models_withoutj <- dredge(leaf_pc1_model_withoutj)
 
 best_leaf_pc1_model_withoutj <- get.models(leaf_pc1_models_withoutj, subset = TRUE)[[1]]
 
-best_leaf_pc1_model_withoutj
-
 summary(best_leaf_pc1_model_withoutj)
 
-AIC(best_canopy_pc1_model_withoutj, best_leaf_pc1_model_withoutj) # AIC for canopy 183.5310 and leaf 237.3045
+best_leaf_pc1_model_withoutj <- afex::lmer(PC1 ~ leaf_length_per_leaflet +
+                                             leaf_moisture_content +
+                                             (1|group), data = without_juniperus, REML = FALSE)
+
+#######################################################################################################
+# Comparison of best canopy and leaf model for PC1
+#######################################################################################################
+
+AIC(best_canopy_pc1_model_withoutj, best_leaf_pc1_model_withoutj) # AIC for canopy 183.5310 and 
+# leaf 248.3674
 
 
+###########################################################################################################
+# A global model for canopy traits with two way interaction for PC2
+############################################################################################################
 
-canopy_pc2_model_withoutj <- afex::lmer(PC2 ~ total_dry_mass_gm + leaf_stem_mass_ratio + canopy_density_gm_cm3 + canopy_moisture_content +
-                                          total_dry_mass_gm*leaf_stem_mass_ratio + total_dry_mass_gm*canopy_density_gm_cm3 +
-                                          total_dry_mass_gm*canopy_moisture_content + leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                          leaf_stem_mass_ratio*canopy_moisture_content + canopy_density_gm_cm3*canopy_moisture_content + (1|group), 
-                                        data = without_juniperus, REML = FALSE)
+canopy_pc2_model_withoutj <- afex::lmer(PC2 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
+                                          canopy_density_gm_cm3 + canopy_moisture_content +
+                                          total_dry_mass_gm*leaf_stem_mass_ratio + 
+                                          total_dry_mass_gm*canopy_density_gm_cm3 +
+                                          total_dry_mass_gm*canopy_moisture_content + 
+                                          leaf_stem_mass_ratio*canopy_density_gm_cm3 +
+                                          leaf_stem_mass_ratio*canopy_moisture_content + 
+                                          canopy_density_gm_cm3*canopy_moisture_content + 
+                                          (1|group), data = without_juniperus, REML = FALSE)
 
-summary(canopy_pc2_model_withoutj) 
+
 
 canopy_pc2_models_withoutj <- dredge(canopy_pc2_model_withoutj)
 
 
 best_canopy_pc2_model_withoutj <- get.models(canopy_pc2_models_withoutj, subset = TRUE)[[1]]
 
-summary(best_canopy_pc2_model_withoutj)
+summary(best_canopy_pc2_model_withoutj) # Lots of stuff!!!!!
 
 
+####################################################################################################
+# A global model of leaf traits with two way interaction for PC2
+####################################################################################################
 
-leaf_pc2_model_withoutj <- afex::lmer(PC2 ~ leaf_mass_per_area + leaf_area_per_leaflet + leaf_length_per_leaflet +
-                                        leaf_moisture_content + leaf_mass_per_area*leaf_area_per_leaflet + leaf_mass_per_area*leaf_length_per_leaflet +
-                                        leaf_mass_per_area*leaf_moisture_content + leaf_area_per_leaflet*leaf_length_per_leaflet + leaf_area_per_leaflet*leaf_moisture_content +
-                                        leaf_length_per_leaflet*leaf_moisture_content + (1|group), data = without_juniperus, REML = FALSE)
+leaf_pc2_model_withoutj <- afex::lmer(PC2 ~ leaf_mass_per_area +  
+                                        leaf_length_per_leaflet +
+                                        leaf_moisture_content + 
+                                        leaf_mass_per_area*leaf_length_per_leaflet +
+                                        leaf_mass_per_area*leaf_moisture_content + 
+                                        leaf_length_per_leaflet*leaf_moisture_content + 
+                                        (1|group), data = without_juniperus, REML = FALSE)
 
-summary(leaf_pc2_model_withoutj)
 
 leaf_pc2_models_withoutj <- dredge(leaf_pc2_model_withoutj)
 
-best_leaf_pc2_model_withoutj <- get.models(leaf_pc2_models_withoutj, subset = TRUE)[[1]]
+best_leaf_pc2_model_withoutj <- get.models(leaf_pc2_models_withoutj, subset = TRUE)[[1]] # Null model
 
 summary(best_leaf_pc2_model_withoutj)
 
+###########################################################################################################
+# Comparison of best canopy and leaf model for PC2
+###########################################################################################################
 
-AIC(best_canopy_pc2_model_withoutj, best_leaf_pc2_model_withoutj) # Canopy 274.7805, leaf 298.4111
+
+AIC(best_canopy_pc2_model_withoutj, best_leaf_pc2_model_withoutj) # Canopy 274.7805 and
+#leaf 298.4111
+
+# Yes, the hypothesis(canopy traits are more important than leaf traits) holds true even after
+# removing the most flammable group, Juniperus from the analysis.
+
+#########################################################################################################
