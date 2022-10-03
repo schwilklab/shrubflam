@@ -6,6 +6,7 @@
 # traits and compare them to see which traits are better.
 
 library(MuMIn)
+library(corrplot)
 
 # MuMIn package for automated model selection through subsetting
 # the maximum model, with optimal constraints for model inclusion.
