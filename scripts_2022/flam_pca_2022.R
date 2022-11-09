@@ -128,5 +128,5 @@ cor_data <- alldata_2022 %>%
 ###############################################################################
 
 rm("pca_data_2022", "flam_pca_2022", "flam_loadings",
-   "eig_val", "varibales_info")
+   "eig_val", "variables_info")
 
