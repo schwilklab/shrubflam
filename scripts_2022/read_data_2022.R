@@ -74,13 +74,14 @@ dim(samples_2022)
 # Moisture measurements
 ###############################################################################
 
-# Field moisture content which is measured from the separate sub-samples from same 
-# plants of each sample during collection. Both twig and leaf were collected in the
-# sub-samples.The leaf and canopy moisture content are sub samples of few leaves and twig with few 
+# Field moisture content which is measured from the separate samples from same 
+# plants during collection. Both twig and leaf were collected in the
+# samples.The leaf and canopy moisture content are sub samples of few leaves and twig with few 
 # leaves separated from the burning samples right before burning. All the moisture content
 # measurements calculated based on dry mass as percentage.
 
-# Field moisture content from the first field trip was biased since the paper towel were heavily soaked.
+# Field moisture content from the first field trip was biased since the paper towel were
+# heavily soaked.
 
 moisture_measurements_2022 <- moisture_measurements_2022%>%
   mutate(field_moisture_content = ((field_fresh_mass_gm - field_dry_mass_gm)/field_dry_mass_gm)*100,
@@ -92,8 +93,6 @@ moisture_measurements_2022 <- moisture_measurements_2022%>%
 # of burning samples.
 
 dim(moisture_measurements_2022)
-
-
 
 
 #####################################################################################
@@ -112,17 +111,14 @@ samples_2022 <- left_join(samples_2022, moisture_measurements_2022,
                           by = c("sample_id", "species_id")) %>%
   left_join(select(burn_trials_2022, sample_id, mass_pre)) %>%
   mutate(field_moisture_content = ifelse(site == "Edwards 2020-22", NA, field_moisture_content)) # Replacing field moisture content
-# value of the first field trip with NA since sub_samples for measuring the Field moisture content from the first field trip was biased since the paper towel were heavily soaked.
+# value of the first field trip with NA since samples for measuring the Field moisture content from the first field trip was biased since the paper towel were heavily soaked.
 
   
-  
-
 class(samples_2022$sample_id)
 
 class(samples_2022$mass_pre)
 
 dim(samples_2022)
-
 
 
 any(is.na(moisture_measurements_2022$canopy_moisture_content))
@@ -131,7 +127,7 @@ any(is.na(moisture_measurements_2022$leaf_moisture_content))
 
 any(is.na(moisture_measurements_2022$field_moisture_content)) # TRUE, since few of the
 # samples don't have their field moisture content because didn't measure the field moisture content
-# for those sub-samples which were leaked or found that the paper towel
+# for those samples which were leaked or found that the paper towel
 # are heavily soaked (except the first first field trip).
 
 
@@ -158,7 +154,7 @@ dim(samples_2022)
 # Canopy measurements
 #############################################################################
 
-# Calculating the leaf stem ratio of the unburned samples in terms of dry weight.
+# Calculating the leaf stem mass ratio of the unburned samples in terms of dry weight.
 # Calculating the canopy volume based on their apparent shape(truncated cone,
 # two truncated cone and cylinder).
 
@@ -178,22 +174,46 @@ names(cylindrical_shaped)
 
 dim(cylindrical_shaped) # only two
 
+
+##################################################################################################################
+# Only the sample id DC39, a ziziphus sample which is showing really high density, decided to calculate it's
+# canopy density alone
+###################################################################################################################
+
+ziziphus_CD39 <- canopy_measurements_2022 %>%
+  filter( sample_id == "DC39") %>%
+  mutate(bottom_radius = bottom_diameter_cm/2, # Calculating the radius out of diameter
+         top_radius = top_diameter_cm/2,
+         max_radius = maximum_diameter/2) %>%
+  mutate(canopy_volume_cm3 =  (1/3)*pi*distance_from_bottom_cm*(bottom_radius^2 + bottom_radius*max_radius + max_radius^2) + # volume of two truncated cone
+           (1/3)*pi*(70-distance_from_bottom_cm)*(top_radius^2 + top_radius*max_radius + max_radius^2)) %>%
+  mutate(total_mass_gm_paired_branch = dry_leaf_weight_gm + dry_stem_weight_gm, # total dry mass of unburned samples
+         leaf_stem_mass_ratio = dry_leaf_weight_gm/dry_stem_weight_gm) %>%
+  select(sample_id,species_id, total_mass_gm_paired_branch, leaf_stem_mass_ratio, canopy_volume_cm3)
+
+
+####################################################################################################################
+# Sample those have either truncated cone or combination of two truncated cone
+#####################################################################################################################
+
 canopy_measurements_2022 <- canopy_measurements_2022 %>%
   filter(type != "cylinder") %>%
+  filter(sample_id != "DC39") %>%
   mutate(distance_from_bottom_cm = ifelse(sample_id == "UV44", 42, distance_from_bottom_cm)) %>% # Forget to put the value of distance_from_the_bottom_cm
   #for sample_id UV44 in excel file.
   mutate(type = ifelse(type == "two_right_cone", "two_truncated_cone", type))  %>% # changing the name from two_right_cone to two_truncated_cone.
   mutate(bottom_radius = bottom_diameter_cm/2, # Calculating the radius out of diameter
          top_radius = top_diameter_cm/2,
          max_radius = maximum_diameter/2) %>%
-  mutate(canopy_volume_cm3 = ifelse(type == "truncated_cone", 1/3*pi*70*(bottom_radius^2 + bottom_radius*top_radius + top_radius^2), # volume of truncated cone 1/3*pi*h(r1^2 + r1*r2 + r2^2)
-                                        1/3*pi*distance_from_bottom_cm*(bottom_radius^2 + bottom_radius*max_radius + max_radius^2) + # volume of two truncated cone
-                                          1/3*pi*(70-distance_from_bottom_cm)*(top_radius^2 + top_radius*max_radius + max_radius^2))) %>%
+  mutate(canopy_volume_cm3 = ifelse(type == "truncated_cone", (1/3)*pi*70*(bottom_radius^2 + bottom_radius*top_radius + top_radius^2), # volume of truncated cone 1/3*pi*h(r1^2 + r1*r2 + r2^2)
+                                        (1/3)*pi*distance_from_bottom_cm*(bottom_radius^2 + bottom_radius*max_radius + max_radius^2) + # volume of two truncated cone
+                                          (1/3)*pi*(70-distance_from_bottom_cm)*(top_radius^2 + top_radius*max_radius + max_radius^2))) %>%
   select(- bottom_radius, -top_radius, - max_radius) %>%
   rbind(cylindrical_shaped) %>% # binded with cylindrical shaped, Is that ok?
   mutate(total_mass_gm_paired_branch = dry_leaf_weight_gm + dry_stem_weight_gm, # total dry mass of unburned samples
          leaf_stem_mass_ratio = dry_leaf_weight_gm/dry_stem_weight_gm) %>%
-  select(sample_id,species_id, total_mass_gm_paired_branch, leaf_stem_mass_ratio, canopy_volume_cm3)
+  select(sample_id,species_id, total_mass_gm_paired_branch, leaf_stem_mass_ratio, canopy_volume_cm3) %>%
+  rbind(ziziphus_CD39) # binded by ziziphus DC39
   
 dim(canopy_measurements_2022)
 
@@ -349,6 +369,16 @@ any(is.na(leaf_measurements_2022$leaf_area_per_leaflet))
 
 any(is.na(leaf_measurements_2022$leaf_mass_per_area))
 
+#senegalia_outlier <- leaf_measurements_2022 %>%
+#filter(species_id == 2005)
+
+#View(senegalia_outlier), The sample KD18 is showing exceptionally
+# high LMA value, the reason is the number of leaflet (70) and they are tiny,
+# something went wrong with them during leaf area measurements, decided to drop
+# the sample.
+
+
+
 ############################################################################################################
 # Measurements of burning trials
 # Calculating the temperature difference of disks and massconsumed during burning
@@ -368,6 +398,7 @@ dim(burn_trials_2022)
 ####################################################################################
 # Merging all data
 ####################################################################################
+
 alldata_2022 <- samples_2022 %>%
   left_join(leaf_measurements_2022, by = c("sample_id","species_id")) %>%
   left_join(burn_trials_2022, by = c("sample_id", "species_id")) %>%
@@ -393,9 +424,11 @@ any(is.na(alldata_2022$canopy_moisture_content))
 
 any(is.na(alldata_2022$leaf_moisture_content))
 
+
 ######################################################################################
 # Cleaning up work space, only keeping the alldata_2022
 ######################################################################################
+
 rm(samples_2022, canopy_measurements_2022,leaf_measurements_2022, moisture_measurements_2022,
    burn_trials_2022, juniperus_leaf_area_2022, species_table_2022)
 

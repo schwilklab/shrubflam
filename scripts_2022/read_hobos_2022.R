@@ -218,8 +218,8 @@ dim(hobo_temp_sum) # 137*3 = 411
 # sure it has equal number of observations of alldata_2022.
 ########################################################################
 
-hobos_wider_2022 <- hobo_temp_sum%>%
-  group_by(label)%>%
+hobos_wider_2022 <- hobo_temp_sum %>%
+  group_by(label) %>%
   summarise(dur_100=mean(dur_100),
             peak_temp=max(peak_temp),
             degsec_100=max(degsec_100))
@@ -232,7 +232,7 @@ dim(hobos_wider_2022)
 #####################################################################
 
 hobo_plots <- alldata_2022 %>%
-  mutate(label = paste(sample_id, species_id, sep = "_"))%>%
+  mutate(label = paste(sample_id, species_id, sep = "_")) %>%
   right_join(hobo_temp_sum, by = "label") %>%
   filter( sample_id != "NA")
 
@@ -281,6 +281,7 @@ ggplot(hobo_plots,aes(specific_epithet, peak_temp, color = specific_epithet))+
        y=expression("Peak temperature " ( degree*C)))
 
 
+ 
 
 ########################################################################
 # Cleaning the environment

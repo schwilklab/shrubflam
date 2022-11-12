@@ -7,98 +7,162 @@
 # this script.
 
 library(car)
-source("../read_data_2022.R") # script that read, clean and merged all the traits data.
-source("../read_hobos_2022.R") # script that reads the thermocouples data logger data during burning.
+library(corrplot)
+
 source("../flam_pca_2022.R") # script that did the pca analysis.
+source("../analysis_2022.R") # script that did the model selection
 
 
 
 # Rscript for analysing to test whether the experimental design has
-# effect on flammability or not!!
+# effect on flammability or not!! The correlation matrix of flammability
+# traits and morphological traits
+
+#########################################################################
+# Checking whether each species has at least three samples or not
+##########################################################################
+
+three_samples_check <- final_data %>%
+  select(species_id, specific_epithet, windspeed_miles_per_hour,
+         total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
+         canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
+         leaf_length_per_leaflet, leaf_moisture_content, PC1, PC2) %>%
+  na.omit()
+
+dim(three_samples_check)
+
+xtabs(~species_id, three_samples_check) # Yes, each species at 
+# least three samples.
+
+########################################################################
+# Creating a separate data set with flammability traits and morphological
+# traits to create the correlation matrix
+########################################################################
+
+
+cor_data <- alldata_2022 %>%
+  filter(! sample_id %in% c("KD18", "DK34", "KD15", "UV04",
+                            "DK30")) %>%
+  mutate(label=paste(sample_id,species_id,sep = "_")) %>%
+  left_join(hobos_wider_2022, by = "label") %>%
+  select(heat_release_j, massconsumed, windspeed_miles_per_hour,
+         vol_burned, flame_height, flame_duration, dur_100,
+         peak_temp, degsec_100, ignition_delay, self_ignition,
+         total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
+         canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
+         leaf_length_per_leaflet, leaf_moisture_content) %>%
+  na.omit()
+
+dim(cor_data)
+
+####################################################################################################################################
+# Correlation of all morphological traits
+#############################################################################################################################
+
+
+morphological_traits_cor_data <- cor_data %>%
+  select(total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
+         canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
+         leaf_length_per_leaflet, leaf_moisture_content)
+
+
+morphological_traits_cor <- cor(morphological_traits_cor_data, method = "kendall",
+                                use = "pairwise")
+
+corrplot::corrplot(morphological_traits_cor, method = "number")
+
+# morphological_traits_cor
+# Kendall rank correlation coefficient between canopy_moisture_content and 
+# leaf_moisture_content is 0.64, not a problem since they will be used
+# in two different model.
+# Kendall rank correlation coefficient between leaf_area_per_leaflet and 
+# leaf_length_per_leaflet is 0.67
+
+
+
+###################################################################################################
+# Correlation of canopy traits and flammability traits
+######################################################################################################
+
+canopy_flam_data <- cor_data %>%
+  select(heat_release_j, massconsumed,
+         vol_burned, flame_height, flame_duration, dur_100,
+         peak_temp, degsec_100, ignition_delay,
+         leaf_stem_mass_ratio)
+
+canopy_flam_cor <- cor(canopy_flam_data, method = "kendall", 
+                       use = "pairwise")
+
+
+corrplot::corrplot(canopy_flam_cor, method = "number", type = "upper")
+
+###########################################################################################################
+# Correlation of leaf  traits and flammability traits
+###########################################################################################################
+
+leaf_flam_data <- cor_data %>%
+  select(heat_release_j, massconsumed,
+         vol_burned, flame_height, flame_duration, dur_100,
+         peak_temp, degsec_100, ignition_delay, self_ignition,
+         leaf_mass_per_area, leaf_area_per_leaflet,
+         leaf_length_per_leaflet, leaf_moisture_content)
+
+leaf_flam_cor <- cor(leaf_flam_data, method = "kendall",
+                     use = "pairwise")
+
+
+corrplot::corrplot(leaf_flam_cor, method = "number", type = "upper")
 
 #################################################################################
 # Does disks temperature influenced self_ignition?
 #################################################################################
 
-final_data$average_disk_temp <- (final_data$temp_d1_pre + final_data$temp_d2_pre)/2
+model_data$average_disk_temp <- (model_data$temp_d1_pre + model_data$temp_d2_pre)/2
 
-
-# Disk one
-
-self_ig_disc_one <- glm(self_ignition ~ temp_d1_pre, data = final_data,
-                        family = binomial(link = "cloglog"))
-
-summary(self_ig_disc_one) # Didn't influence. p = 0.755
-
-
-self_ig_disc_two <- glm(self_ignition ~ temp_d2_pre, data = final_data,
-                        family = binomial(link = "cloglog"))
-
-summary(self_ig_disc_two) # Didn't influence. p = 0.196
 
 
 self_ig_disc_av <- glm(self_ignition ~ average_disk_temp,
-                       data = final_data, family = binomial(link = "cloglog"))
+                       data = model_data, family = binomial(link = "cloglog"))
 
-summary(self_ig_disc_av) # p = 0.538
+summary(self_ig_disc_av) # p = 0.435
 
 
 ################################################################################
 # Does disk temperature influence flammability?
 ################################################################################
 
-pc1_disc1 <- afex::lmer(PC1 ~ temp_d1_pre +(1|group), data = final_data) # Within species
 
-summary(pc1_disc1) # Didn't influence. p =  0.133
+pc1_disc_avg <- afex::lmer(degsec_100 ~ average_disk_temp + (1|group),
+                           data = model_data, REML = FALSE)
 
-pc1_d1_lm <- lm(PC1 ~ temp_d1_pre, data = final_data)
+summary(pc1_disc_avg) # p value 0.705
 
-summary(pc1_d1_lm)  # p value = 0.11
+pc1_av_lm <- lm(degsec_100 ~ average_disk_temp, 
+                data = model_data) 
 
-
-pc1_disc2 <- afex::lmer(PC1 ~ temp_d2_pre + (1|group), data = final_data) # within species
-
-summary(pc1_disc2) #  p = 0.970
-
-pc1_d2_lm <- lm(PC1 ~ temp_d2_pre, data = final_data)
-
-summary(pc1_d2_lm) # p value = 0.877
-
-pc1_disc_avg <- afex::lmer(PC1 ~ average_disk_temp + (1|group), data = final_data)
-
-summary(pc1_disc_avg) # p value 0.344
-
-pc1_av_lm <- lm(PC1 ~ average_disk_temp, data = final_data) 
-
-summary(pc1_av_lm) # p value = 0.281
+summary(pc1_av_lm) # p value = 0.539
 
 
 
-pc2_disc1 <- afex::lmer(PC2 ~ temp_d1_pre +(1|group), data = final_data) # within species
+pc2_disc_avg <- afex::lmer(flame_height ~ average_disk_temp + (1|group),
+                           data = model_data, REML = FALSE)
 
-summary(pc2_disc1) # p value = 0.355
+summary(pc2_disc_avg) # p value 0.276
 
-pc2_d1_lm <- lm(PC2 ~ temp_d1_pre, data = final_data)
+pc2_av_lm <- lm(flame_height ~ average_disk_temp, data = model_data)
 
-summary(pc2_d1_lm) # p value = 0.729
+summary(pc2_av_lm) # p value = 0.623
 
 
-pc2_disc2 <- afex::lmer(PC2 ~ temp_d2_pre + (1|group), data = final_data) # within species
+################################################################################################
+# Does weather during burning influence flammability? Wind speed, particularly flame
+# height
+#################################################################################################
 
-summary(pc2_disc2) # p value = 0.585
 
-pc2_d2_lm <- lm(PC2 ~ temp_d2_pre, data = final_data) 
+ws <- lm(flame_height ~ windspeed_miles_per_hour, data = model_data)
 
-summary(pc2_d2_lm) # p = 0.732
-
-pc2_disc_avg <- afex::lmer(PC2 ~ average_disk_temp + (1|group), data = final_data)
-
-summary(pc2_disc_avg) # p value 0.355
-
-pc2_av_lm <- lm(PC2 ~ average_disk_temp, data = final_data)
-
-summary(pc2_av_lm) # p value = 0.668
-
+summary(ws) # slope = -30.93, p = 0.075.
 
 ##############################################################################
 # Does different method influence the flammability ?
@@ -127,52 +191,21 @@ subgroup <- final_data %>%
 
 method1_mod <- lme4::lmer(PC1 ~ method + (1|species_id), data = subgroup , REML = TRUE)
 
-Anova(method1_mod, test.statistic = "F") # p value 0.7598
+Anova(method1_mod, test.statistic = "F") # p value 0.573
 
-# Does PC2 influenced by methods?
-
-method2_mod <- lme4::lmer(PC2 ~ method + (1|species_id), data = subgroup, REML = TRUE)
-
-Anova(method2_mod) # p value  0.2908
-
-################################################################################################
-# Does weather during burning influence flammability? Wind speed.
-#################################################################################################
-
-pc1_ws <- lm(PC1 ~ windspeed_miles_per_hour, data = final_data)
-
-summary(pc1_ws) # p = 0.263
-
-
-pc2_ws <- lm(PC2 ~ windspeed_miles_per_hour, data = final_data)
-
-summary(pc2_ws) # Significant p = 0.0105 but slope is negative (0.09538), 
-
-
-pc1_air_temp <- lm(PC1 ~ air_temp_f, data = final_data)
-
-summary(pc1_air_temp) # p - value 0.312
-
-pc2_air_temp <- lm(PC2 ~ air_temp_f, data = final_data)
-
-summary(pc2_air_temp) # p value  0.329
-
-###################################################################################
-# Will test the effect temperature and humidity once again after reading the hobos data
-# during burning
-########################################################################################
 
 
 ################################################################################
 # Does flammability varies across sites among samples of  species?
 #################################################################################
 
-#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1022))) # p 0.587 # Juniperus ashei
-#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1036))) # p 0.108 # Rhus virens
-#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1000))) # p 0.552 # Diospyros texana
-#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1002))) # p 0.222 # Mahonia trifoliolata
-#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1021))) # p 0.0224 # Sophora secundiflora
-#summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1113))) # p 0.199 # Prospis glandulosa
+summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1022))) # p 0.59 # Juniperus ashei
+summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1036))) # p 0.226 # Rhus virens
+summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1000))) # 554 # Diospyros texana
+summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1002))) # p 0.522 # Mahonia trifoliolata
+summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1021))) # p 0.0.037  # Sophora secundiflora
+summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1113))) # p 0.709 # Prospis glandulosa
 
 
 
+################################################################################################

@@ -3,6 +3,8 @@
 # Shrub Flammability
 # Summer 2022
 
+library(ggplot2)
+
 # All scripts in source are required to run before running
 # this script.
 
@@ -11,8 +13,82 @@ source("../read_hobos_2022.R") # script that reads the thermocouples data logger
 source("../flam_pca_2022.R") # script that did the pca analysis.
 
 ###############################################################################################
-# Exploratory figures
+# Exploratory figures, the measurements vs species 
 ###############################################################################################
+
+dim(alldata_2022)
+
+ggplot(alldata_2022, aes(specific_epithet, total_dry_mass_gm)) +
+  geom_point() +
+  theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
+
+ggplot(alldata_2022, aes(specific_epithet, leaf_stem_mass_ratio)) +
+  geom_point() +
+  theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
+
+ggplot(alldata_2022, aes(specific_epithet, canopy_density_gm_cm3)) +
+  geom_point() +
+  theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold")) # Removing
+# the outliers of canopy_density_gm_cm3 of Pinchottii, since I measured
+# the canopy_volume manually.
+
+pinchottii_density <- alldata_2022 %>%
+  filter(species_id == 2011) %>%
+  select(sample_id, canopy_density_gm_cm3)
+
+#View(pinchottii_density) # DK34
+
+ashei_density <- alldata_2022 %>%
+  filter(species_id == 1022) %>%
+  select(sample_id, canopy_density_gm_cm3)
+
+#View(ashei_density) #KD15
+
+secundiflora_density <- alldata_2022 %>%
+  filter(species_id == 1021) %>%
+  select(sample_id, canopy_density_gm_cm3)
+
+#View(secundiflora_density) # UV04
+
+ggplot(alldata_2022, aes(specific_epithet, canopy_moisture_content)) +
+  geom_point() +
+  theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
+
+
+
+ggplot(alldata_2022, aes(specific_epithet, leaf_mass_per_area)) + # LMA is
+  #really high for one of the wrightii, need to check, this is impossible,
+  # definitely I messed it up, the number of leaflet is 70!!! and the 
+  # leaflets are tiny. Dropping the sample.
+  geom_point() +
+  theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
+
+# One senegalia is showing exceptionally high LMA, removing it
+# One pinchottii is showing really high compared to other sample,
+# I did measure their leaf area manually, that's why droping
+# the sample
+
+pinchotti_lma <- alldata_2022 %>%
+  filter( species_id == 2011) %>%
+  select(sample_id, leaf_mass_per_area)
+
+#View(pinchotti_lma) 
+#DK30
+
+ggplot(alldata_2022, aes(specific_epithet, leaf_area_per_leaflet)) +
+  geom_point() +
+  theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
+
+
+ggplot(alldata_2022, aes(specific_epithet, leaf_length_per_leaflet)) +
+  geom_point() +
+  theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
+
+
+ggplot(alldata_2022, aes(specific_epithet, leaf_moisture_content)) +
+  geom_point() +
+  theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
+
 
 ###############################################################################################
 # Does leaf_stem_mass_ratio influence flammability?
@@ -23,6 +99,8 @@ ggplot(final_data, aes(leaf_stem_mass_ratio, PC1, color = specific_epithet)) +
   geom_smooth(method = 'lm', se = FALSE) +
   xlab( "Leaf stem mass ratio (dry basis)" ) +
   ylab( "Flammability score (PC1)") 
+
+dim(final_data)
 
 ggplot(final_data, aes(leaf_stem_mass_ratio, PC2, color = specific_epithet)) +
   geom_point() +
@@ -53,6 +131,7 @@ ggplot(final_data, aes(canopy_density_gm_cm3, PC2, color = specific_epithet)) +
 ##########################################################################################
 # Does total mass influence flammability?
 ###########################################################################################
+
 ggplot(final_data, aes(total_dry_mass_gm, PC1, color = specific_epithet)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
@@ -127,10 +206,9 @@ ggplot(final_data, aes(leaf_mass_per_area, PC1, color = specific_epithet)) +
   ylab("Flammability score (PC1)")
 
 
-ggplot(final_data, aes(leaf_mass_per_area, PC2, color = specific_epithet)) +
+ggplot(model_data, aes(leaf_mass_per_area, PC1, color = group)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  xlim(0, 0.05) +
   xlab(expression(paste("Leaf mass per area (", g/cm^2, ")"))) +
   ylab("Flammability score (PC2)")
 
@@ -156,8 +234,8 @@ ggplot(final_data, aes(leaf_length_per_leaflet, PC2, color = specific_epithet)) 
 
 ggplot(final_data, aes(leaf_area_per_leaflet, PC1, color = specific_epithet)) +
   geom_point() +
+  xlim(0,10) +
   geom_smooth(method = "lm", se = FALSE) +
-  xlim(0, 10) +
   xlab(expression(paste("Leaf area per leaflet (",cm^2,") "))) +
   ylab("Flammability score (PC1)")
 
@@ -270,6 +348,9 @@ ggplot(final_data, aes(windspeed_miles_per_hour, PC2)) +
   xlab(expression(paste("Windspeed (", miles/hour,") "))) +
   ylab("Flammability score(PC2)")
   
+
+
+
 
 ##############################################################################################
 # Will test the influence of temperature and humidity on flammability from hobos data later.
