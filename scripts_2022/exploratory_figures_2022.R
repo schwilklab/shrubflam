@@ -98,7 +98,7 @@ ggplot(final_data, aes(leaf_stem_mass_ratio, degsec_100, color = specific_epithe
   geom_point() +
   geom_smooth(method = 'lm', se = FALSE) +
   xlab( "Leaf stem mass ratio (dry basis)" ) +
-  ylab( "Flammability score (PC1)") 
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) 
 
 dim(final_data)
 
@@ -117,7 +117,7 @@ ggplot(final_data, aes(canopy_density_gm_cm3, degsec_100, color = specific_epith
   geom_point() +
   geom_smooth(method = "lm", se = FALSE ) +
   xlab(expression(paste("Canopy density (", g / cm^3, ")"))) +
-  ylab("Flammability score (PC1)")
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) ))
 
 #ggplot(final_data, aes(canopy_density_gm_cm3, PC2, color = specific_epithet)) +
   #geom_point() +
@@ -135,7 +135,7 @@ ggplot(final_data, aes(total_dry_mass_gm, degsec_100, color = specific_epithet))
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Total dry mass (dry basis)") +
-  ylab("Flammability score (PC1)")
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) ))
 
 #ggplot(final_data, aes(total_dry_mass_gm, PC2, color = specific_epithet)) +
   #geom_point() +
@@ -151,7 +151,7 @@ ggplot(final_data, aes(field_moisture_content, degsec_100)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Field moisture content (%)") +
-  ylab("Flammability score (PC1)")
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) ))
 
 #ggplot(final_data, aes(field_moisture_content, PC2)) +
   #geom_point() +
@@ -167,7 +167,7 @@ ggplot(final_data, aes(leaf_moisture_content, degsec_100, color = specific_epith
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Leaf moisture content (%)") +
-  ylab("Flammability score (PC1)")
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) ))
 
 #ggplot(final_data, aes(leaf_moisture_content, PC2, color = specific_epithet)) +
   #geom_point() +
@@ -183,7 +183,7 @@ ggplot(final_data, aes(canopy_moisture_content, degsec_100, color = specific_epi
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Canopy moisture content (%)") +
-  ylab("Flammability score (PC1)")
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) ))
   
 #ggplot(final_data, aes(canopy_moisture_content, PC2, color = specific_epithet)) +
   #geom_point() +
@@ -201,14 +201,14 @@ ggplot(final_data, aes(leaf_mass_per_area, degsec_100, color = specific_epithet)
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf mass per area (", g/cm^2,")"))) +
-  ylab("Flammability score (PC1)")
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) ))
 
 
 ggplot(model_data, aes(leaf_mass_per_area, degsec_100, color = group)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf mass per area (", g/cm^2, ")"))) +
-  ylab("Flammability score (PC2)")
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) ))
 
 ########################################################################################
 # Does leaf length per leaflet influence flammability?
@@ -218,7 +218,7 @@ ggplot(final_data, aes(leaf_length_per_leaflet, degsec_100, color = specific_epi
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf length per leaflet (",cm^2,")"))) +
-  ylab("Flammability score (PC1)")
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) ))
 
 #ggplot(final_data, aes(leaf_length_per_leaflet, PC2, color = specific_epithet)) +
   #geom_point() +
@@ -234,7 +234,7 @@ ggplot(final_data, aes(leaf_area_per_leaflet, degsec_100, color = specific_epith
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf area per leaflet (",cm^2,") "))) +
-  ylab("Flammability score (PC1)")
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) ))
 
 #ggplot(final_data, aes(leaf_area_per_leaflet, PC2, color = specific_epithet)) +
   #geom_point() +

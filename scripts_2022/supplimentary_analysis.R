@@ -27,8 +27,7 @@ three_samples_check <- final_data %>%
          total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
          canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
          leaf_length_per_leaflet, leaf_moisture_content, PC1, PC2, degsec_100,
-         flame_height, temp_d1_pre, temp_d2_pre, self_ignition) %>%
-  na.omit()
+         flame_height, temp_d1_pre, temp_d2_pre, self_ignition)
 
 dim(three_samples_check)
 
@@ -51,8 +50,7 @@ cor_data <- alldata_2022 %>%
          peak_temp, degsec_100, ignition_delay, self_ignition,
          total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
          canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
-         leaf_length_per_leaflet, leaf_moisture_content) %>%
-  na.omit()
+         leaf_length_per_leaflet, leaf_moisture_content)
 
 dim(cor_data)
 
@@ -125,7 +123,7 @@ three_samples_check$average_disk_temp <- (three_samples_check$temp_d1_pre + thre
 self_ig_disc_av <- glm(self_ignition ~ average_disk_temp,
                        data = three_samples_check, family = binomial(link = "cloglog"))
 
-summary(self_ig_disc_av) # p = 0.435
+summary(self_ig_disc_av) # p = 0.491
 
 
 ################################################################################
@@ -136,24 +134,24 @@ summary(self_ig_disc_av) # p = 0.435
 pc1_disc_avg <- afex::lmer(degsec_100 ~ average_disk_temp + (1|group),
                            data = three_samples_check, REML = FALSE)
 
-summary(pc1_disc_avg) # p value 0.705
+summary(pc1_disc_avg) # p value 0.762
 
 pc1_av_lm <- lm(degsec_100 ~ average_disk_temp, 
                 data = three_samples_check) 
 
-summary(pc1_av_lm) # p value = 0.539
+summary(pc1_av_lm) # p value = 0.505
 
 
 
 pc2_disc_avg <- afex::lmer(flame_height ~ average_disk_temp + (1|group),
                            data = three_samples_check, REML = FALSE)
 
-summary(pc2_disc_avg) # p value 0.675
+summary(pc2_disc_avg) # p value 0.748
 
 pc2_av_lm <- lm(flame_height ~ average_disk_temp, 
                 data = three_samples_check)
 
-summary(pc2_av_lm) # p value = 0.536
+summary(pc2_av_lm) # p value = 0.530
 
 
 ################################################################################################
@@ -161,6 +159,8 @@ summary(pc2_av_lm) # p value = 0.536
 # height
 #################################################################################################
 
+three_samples_check <- three_samples_check %>%
+  na.omit()
 
 ws <- lm(flame_height ~ windspeed_miles_per_hour, 
          data = three_samples_check)
@@ -217,3 +217,4 @@ summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1113))) # p 0.70
 
 
 ################################################################################################
+
