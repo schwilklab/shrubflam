@@ -23,10 +23,11 @@ source("../analysis_2022.R") # script that did the model selection
 ##########################################################################
 
 three_samples_check <- final_data %>%
-  select(species_id, specific_epithet, windspeed_miles_per_hour,
+  select(species_id, group, specific_epithet, windspeed_miles_per_hour,
          total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
          canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
-         leaf_length_per_leaflet, leaf_moisture_content, PC1, PC2) %>%
+         leaf_length_per_leaflet, leaf_moisture_content, PC1, PC2, degsec_100,
+         flame_height, temp_d1_pre, temp_d2_pre, self_ignition) %>%
   na.omit()
 
 dim(three_samples_check)
@@ -117,12 +118,12 @@ corrplot::corrplot(leaf_flam_cor, method = "number", type = "upper")
 # Does disks temperature influenced self_ignition?
 #################################################################################
 
-model_data$average_disk_temp <- (model_data$temp_d1_pre + model_data$temp_d2_pre)/2
+three_samples_check$average_disk_temp <- (three_samples_check$temp_d1_pre + three_samples_check$temp_d2_pre)/2
 
 
 
 self_ig_disc_av <- glm(self_ignition ~ average_disk_temp,
-                       data = model_data, family = binomial(link = "cloglog"))
+                       data = three_samples_check, family = binomial(link = "cloglog"))
 
 summary(self_ig_disc_av) # p = 0.435
 
@@ -133,25 +134,26 @@ summary(self_ig_disc_av) # p = 0.435
 
 
 pc1_disc_avg <- afex::lmer(degsec_100 ~ average_disk_temp + (1|group),
-                           data = model_data, REML = FALSE)
+                           data = three_samples_check, REML = FALSE)
 
 summary(pc1_disc_avg) # p value 0.705
 
 pc1_av_lm <- lm(degsec_100 ~ average_disk_temp, 
-                data = model_data) 
+                data = three_samples_check) 
 
 summary(pc1_av_lm) # p value = 0.539
 
 
 
 pc2_disc_avg <- afex::lmer(flame_height ~ average_disk_temp + (1|group),
-                           data = model_data, REML = FALSE)
+                           data = three_samples_check, REML = FALSE)
 
-summary(pc2_disc_avg) # p value 0.276
+summary(pc2_disc_avg) # p value 0.675
 
-pc2_av_lm <- lm(flame_height ~ average_disk_temp, data = model_data)
+pc2_av_lm <- lm(flame_height ~ average_disk_temp, 
+                data = three_samples_check)
 
-summary(pc2_av_lm) # p value = 0.623
+summary(pc2_av_lm) # p value = 0.536
 
 
 ################################################################################################
@@ -160,9 +162,15 @@ summary(pc2_av_lm) # p value = 0.623
 #################################################################################################
 
 
-ws <- lm(flame_height ~ windspeed_miles_per_hour, data = model_data)
+ws <- lm(flame_height ~ windspeed_miles_per_hour, 
+         data = three_samples_check)
 
-summary(ws) # slope = -30.93, p = 0.075.
+summary(ws) # p 0.895
+
+ws_degsec <- lm(degsec_100 ~ windspeed_miles_per_hour , 
+                data = three_samples_check)
+
+summary(ws_degsec) # p is 0.362
 
 ##############################################################################
 # Does different method influence the flammability ?
@@ -187,11 +195,11 @@ subgroup <- final_data %>%
   mutate(method = ifelse(burn_date == "2022-06-21", "method1","method2"))
 
 
-# Does PC1 influenced by methods?
+# Does temperature integration influenced by methods?
 
-method1_mod <- lme4::lmer(PC1 ~ method + (1|species_id), data = subgroup , REML = TRUE)
+method1_mod <- lme4::lmer(degsec_100 ~ method + (1|species_id), data = subgroup , REML = TRUE)
 
-Anova(method1_mod, test.statistic = "F") # p value 0.573
+Anova(method1_mod, test.statistic = "F") # p value 0.457
 
 
 

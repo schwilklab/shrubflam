@@ -5,6 +5,7 @@
 # This script is for selecting the best model for each kind of
 # traits and compare them to see which traits are better.
 
+
 library(MuMIn)
 
 # MuMIn package for automated model selection through subsetting
@@ -49,7 +50,7 @@ model_data <- final_data %>%
 model_data <- model_data %>%
   select(PC1, PC2, degsec_100, flame_height, temp_d1_pre, species_id, temp_d2_pre, self_ignition,
          group, total_dry_mass_gm , canopy_density_gm_cm3 , leaf_stem_mass_ratio , canopy_moisture_content,
-         leaf_mass_per_area , leaf_area_per_leaflet , leaf_length_per_leaflet , leaf_moisture_content, windspeed_miles_per_hour) %>%
+         leaf_mass_per_area , leaf_area_per_leaflet , leaf_length_per_leaflet , leaf_moisture_content) %>%
   na.omit()
 
 dim(model_data)
@@ -65,7 +66,6 @@ options(na.action = "na.fail")
 
 
 canopy_pc1_model <- afex::lmer(degsec_100 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
-                                 windspeed_miles_per_hour +
                                  canopy_density_gm_cm3 + canopy_moisture_content +
                                  total_dry_mass_gm*leaf_stem_mass_ratio +
                                  total_dry_mass_gm*canopy_density_gm_cm3 +
@@ -106,7 +106,7 @@ summary(best_canopy_pc1_model)
 
 
 leaf_pc1_model <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_length_per_leaflet +
-                               windspeed_miles_per_hour + leaf_moisture_content  + 
+                               leaf_moisture_content  + 
                                leaf_mass_per_area*leaf_length_per_leaflet +
                                leaf_mass_per_area*leaf_moisture_content + 
                                leaf_length_per_leaflet*leaf_moisture_content + 
@@ -124,8 +124,8 @@ summary(best_leaf_pc1_model) # Leaf mass per area is the best model
 ######################################################################################################
 
 
-AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 2588.22
-# and leaf 2693.50
+AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 2649.693
+# and leaf 2756.840
 
 
 ####################################################################################
@@ -147,65 +147,8 @@ best_leaf_canopy_model <- get.models(leaf_canopy_models, subset = TRUE)[[1]]
 summary(best_leaf_canopy_model)  # Leaf_mass_per_area,
 # total_dry_mass_gm, the interaction between leaf_mass_per_area and total_dry_mass
  
-AIC(best_canopy_pc1_model, best_leaf_canopy_model) # best leaf_canopy_model 2585.52
-# and best_canopy_model 2588.22
-
-#####################################################################################################################################
-# A global model with canopy traits with two way interaction for flame height
-####################################################################################################################################
-
-
-canopy_pc2_model <- afex::lmer(flame_height ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
-                                 windspeed_miles_per_hour +
-                                 canopy_density_gm_cm3 + canopy_moisture_content +
-                                 total_dry_mass_gm*leaf_stem_mass_ratio + 
-                                 total_dry_mass_gm*canopy_density_gm_cm3 +
-                                 total_dry_mass_gm*canopy_moisture_content + 
-                                 leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                 leaf_stem_mass_ratio*canopy_moisture_content + 
-                                 canopy_density_gm_cm3*canopy_moisture_content + 
-                                 (1|group), data = model_data, REML = FALSE)
-
-
-canopy_pc2_models <- dredge(canopy_pc2_model)
-
-
-best_canopy_pc2_model <- get.models(canopy_pc2_models, subset = TRUE)[[1]]
-
-summary(best_canopy_pc2_model) # Canopy density (negative effect)\
-# and total mass without interaction.
-
-
-#####################################################################################################
-# A global model of leaf traits with two way interaction for PC2
-########################################################################################################
-
-
-leaf_pc2_model <- afex::lmer(flame_height ~ leaf_mass_per_area + leaf_length_per_leaflet +
-                               leaf_moisture_content +  
-                               windspeed_miles_per_hour +
-                               leaf_mass_per_area*leaf_length_per_leaflet +
-                               leaf_mass_per_area*leaf_moisture_content + 
-                               leaf_length_per_leaflet*leaf_moisture_content + 
-                               (1|group), data = model_data, REML = FALSE)
-
-
-
-leaf_pc2_models <- dredge(leaf_pc2_model)
-
-best_leaf_pc2_model <- get.models(leaf_pc2_models, subset = TRUE)[[1]]
-
-summary(best_leaf_pc2_model)
-
-# Leaf moisture content and wind speed without interaction is the best and
-# both of them has negative effect.
-
-###################################################################################################
-# Comparison between best canopy and leaf model for PC2
-###################################################################################################
-
-AIC(best_canopy_pc2_model, best_leaf_pc2_model)  # canopy 1604.465 and leaf 1609.884
-
+AIC(best_canopy_pc1_model, best_leaf_canopy_model) # best leaf_canopy_model 2649.693
+# and best_canopy_model 2647.234
 
 
 #############################################################################################################################################
@@ -223,7 +166,6 @@ without_juniperus <- model_data %>% # creating a new data set without Juniperus 
 
 canopy_pc1_model_withoutj <- afex::lmer(degsec_100 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
                                           canopy_density_gm_cm3 + canopy_moisture_content +
-                                          windspeed_miles_per_hour +
                                           total_dry_mass_gm*leaf_stem_mass_ratio + 
                                           total_dry_mass_gm*canopy_density_gm_cm3 +
                                           total_dry_mass_gm*canopy_moisture_content + 
@@ -248,7 +190,7 @@ summary(best_canopy_pc1_model_withoutj) # Total_mass and canopy density without 
 
 
 leaf_pc1_model_withoutj <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_length_per_leaflet +
-                                            leaf_moisture_content  + windspeed_miles_per_hour +
+                                            leaf_moisture_content   +
                                             leaf_mass_per_area*leaf_length_per_leaflet +
                                             leaf_mass_per_area*leaf_moisture_content + 
                                             leaf_length_per_leaflet*leaf_moisture_content + 
@@ -259,85 +201,14 @@ leaf_pc1_models_withoutj <- dredge(leaf_pc1_model_withoutj)
 
 best_leaf_pc1_model_withoutj <- get.models(leaf_pc1_models_withoutj, subset = TRUE)[[1]]
 
-summary(best_leaf_pc1_model_withoutj) 
+summary(best_leaf_pc1_model_withoutj)  # Null model
 
 #######################################################################################################
 # Comparison of best canopy and leaf model for heat release
 #######################################################################################################
 
-AIC(best_canopy_pc1_model_withoutj, best_leaf_pc1_model_withoutj) # Canopy 1931.15
-# and leaf 1961.37
-
-
-###########################################################################################################
-# A global model for canopy traits without two way interaction for flame height since
-# adding interaction among the variables is doing over fitting the model (fitSigular).
-############################################################################################################
-
-canopy_pc2_model_withoutj <- afex::lmer(flame_height ~ total_dry_mass_gm + leaf_stem_mass_ratio +
-                                          windspeed_miles_per_hour +
-                                          canopy_density_gm_cm3 + canopy_moisture_content +
-                                          #total_dry_mass_gm*leaf_stem_mass_ratio + 
-                                          #total_dry_mass_gm*canopy_density_gm_cm3 +
-                                          #total_dry_mass_gm*canopy_moisture_content + 
-                                          #leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                          #leaf_stem_mass_ratio*canopy_moisture_content + 
-                                          #canopy_density_gm_cm3*canopy_moisture_content + 
-                                          (1|group), data = without_juniperus, REML = FALSE)
-
-
-
-canopy_pc2_models_withoutj <- dredge(canopy_pc2_model_withoutj)
-
-
-best_canopy_pc2_model_withoutj <- get.models(canopy_pc2_models_withoutj, subset = TRUE)[[1]]
-
-summary(best_canopy_pc2_model_withoutj) # Windspeed and total dry mass without interaction
-# wind speed has negative effect.
-
-
-####################################################################################################
-# A global model of leaf traits with two way interaction for flame height
-####################################################################################################
-
-leaf_pc2_model_withoutj <- afex::lmer(flame_height ~ leaf_mass_per_area +  windspeed_miles_per_hour + 
-                                        leaf_length_per_leaflet +
-                                        leaf_moisture_content + 
-                                        leaf_mass_per_area*leaf_length_per_leaflet +
-                                        leaf_mass_per_area*leaf_moisture_content + 
-                                        leaf_length_per_leaflet*leaf_moisture_content + 
-                                        (1|group), data = without_juniperus, REML = FALSE)
-
-
-leaf_pc2_models_withoutj <- dredge(leaf_pc2_model_withoutj)
-
-best_leaf_pc2_model_withoutj <- get.models(leaf_pc2_models_withoutj, subset = TRUE)[[1]] # Null model
-
-summary(best_leaf_pc2_model_withoutj) # only windspeed!!!
-
-###########################################################################################################
-# Comparison of best canopy and leaf model for PC2
-###########################################################################################################
-
-
-AIC(best_canopy_pc2_model_withoutj, best_leaf_pc2_model_withoutj) # Canopy 1286.30
-# and leaf 1300.43.
-
-###############################################################################################
-# Combination of leaf and canopy for flame height
-###############################################################################################
-
-canopy_leaf_model_withoutj_pc2 <- afex::lmer(flame_height ~ total_dry_mass_gm + 
-                                           windspeed_miles_per_hour +
-                                           total_dry_mass_gm*windspeed_miles_per_hour +
-                                          (1|group), data = without_juniperus, REML = FALSE)
-
-canopy_leaf_models_withoutj_pc2 <- dredge(canopy_leaf_model_withoutj_pc2)
-
-best_canopy_leaf_model_withoutj_pc2 <- get.models(canopy_leaf_models_withoutj_pc2, subset = TRUE)[[1]]
-
-summary(best_canopy_leaf_model_withoutj_pc2) # The canopy model for flame height
-
+AIC(best_canopy_pc1_model_withoutj, best_leaf_pc1_model_withoutj) # Canopy 1969.167
+# and leaf 1999.703
 
 
 # Yes, the hypothesis(canopy traits are more important than leaf traits) holds true when we

@@ -94,7 +94,7 @@ ggplot(alldata_2022, aes(specific_epithet, leaf_moisture_content)) +
 # Does leaf_stem_mass_ratio influence flammability?
 ################################################################################################
 
-ggplot(final_data, aes(leaf_stem_mass_ratio, PC1, color = specific_epithet)) +
+ggplot(final_data, aes(leaf_stem_mass_ratio, degsec_100, color = specific_epithet)) +
   geom_point() +
   geom_smooth(method = 'lm', se = FALSE) +
   xlab( "Leaf stem mass ratio (dry basis)" ) +
@@ -102,95 +102,94 @@ ggplot(final_data, aes(leaf_stem_mass_ratio, PC1, color = specific_epithet)) +
 
 dim(final_data)
 
-ggplot(final_data, aes(leaf_stem_mass_ratio, PC2, color = specific_epithet)) +
-  geom_point() +
-  geom_smooth(method = 'lm', se = FALSE) + 
-  xlab("Leaf stem mass ratio (dry basis)") +
-  ylab(" Flammability score (PC2)")
+#ggplot(final_data, aes(leaf_stem_mass_ratio, PC2, color = specific_epithet)) +
+  #geom_point() +
+  #geom_smooth(method = 'lm', se = FALSE) + 
+  #xlab("Leaf stem mass ratio (dry basis)") +
+  #ylab(" Flammability score (PC2)")
 
 ################################################################################################
 # Does canopy density influence flammability?
 ################################################################################################
 
 
-ggplot(final_data, aes(canopy_density_gm_cm3, PC1, color = specific_epithet)) +
+ggplot(final_data, aes(canopy_density_gm_cm3, degsec_100, color = specific_epithet)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE ) +
-  xlim(0,0.015) +
   xlab(expression(paste("Canopy density (", g / cm^3, ")"))) +
   ylab("Flammability score (PC1)")
 
-ggplot(final_data, aes(canopy_density_gm_cm3, PC2, color = specific_epithet)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE ) +
-  xlim(0,0.015) +
-  xlab(expression(paste("Canopy density (", g / cm^3, ")"))) +
-  ylab("Flammability score (PC2)")
+#ggplot(final_data, aes(canopy_density_gm_cm3, PC2, color = specific_epithet)) +
+  #geom_point() +
+  #geom_smooth(method = "lm", se = FALSE ) +
+  #xlim(0,0.015) +
+  #xlab(expression(paste("Canopy density (", g / cm^3, ")"))) +
+  #ylab("Flammability score (PC2)")
 
 
 ##########################################################################################
 # Does total mass influence flammability?
 ###########################################################################################
 
-ggplot(final_data, aes(total_dry_mass_gm, PC1, color = specific_epithet)) +
+ggplot(final_data, aes(total_dry_mass_gm, degsec_100, color = specific_epithet)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Total dry mass (dry basis)") +
   ylab("Flammability score (PC1)")
 
-ggplot(final_data, aes(total_dry_mass_gm, PC2, color = specific_epithet)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  xlab("Total dry mass (dry basis)") +
-  ylab("Flammability score (PC2)")
+#ggplot(final_data, aes(total_dry_mass_gm, PC2, color = specific_epithet)) +
+  #geom_point() +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #xlab("Total dry mass (dry basis)") +
+  #ylab("Flammability score (PC2)")
 
 ############################################################################################
 # Does field moisture influence flammability?
 #############################################################################################
 
-ggplot(final_data, aes(field_moisture_content, PC1)) +
+ggplot(final_data, aes(field_moisture_content, degsec_100)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Field moisture content (%)") +
   ylab("Flammability score (PC1)")
 
-ggplot(final_data, aes(field_moisture_content, PC2)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  xlab("Field moisture content (%)") +
-  ylab("Flammability score (PC2)")
+#ggplot(final_data, aes(field_moisture_content, PC2)) +
+  #geom_point() +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #xlab("Field moisture content (%)") +
+  #ylab("Flammability score (PC2)")
 
 #############################################################################################
 # Does leaf moisture influence flammability?
 #############################################################################################
 
-ggplot(final_data, aes(leaf_moisture_content, PC1, color = specific_epithet)) +
+ggplot(final_data, aes(leaf_moisture_content, degsec_100, color = specific_epithet)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Leaf moisture content (%)") +
   ylab("Flammability score (PC1)")
 
-ggplot(final_data, aes(leaf_moisture_content, PC2, color = specific_epithet)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  xlab("Leaf moisture content (%)") +
-  ylab("Flammability score (PC2)")
+#ggplot(final_data, aes(leaf_moisture_content, PC2, color = specific_epithet)) +
+  #geom_point() +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #xlab("Leaf moisture content (%)") +
+  #ylab("Flammability score (PC2)")
 
 ################################################################################################
 # Does canopy moisture influence flammability?
 ################################################################################################
 
-ggplot(final_data, aes(canopy_moisture_content, PC1, color = specific_epithet)) +
+ggplot(final_data, aes(canopy_moisture_content, degsec_100, color = specific_epithet)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Canopy moisture content (%)") +
   ylab("Flammability score (PC1)")
   
-ggplot(final_data, aes(canopy_moisture_content, PC2, color = specific_epithet)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  xlab("Canopy moisture content (%)") +
-  ylab("Flammability score (PC2)")
+#ggplot(final_data, aes(canopy_moisture_content, PC2, color = specific_epithet)) +
+  #geom_point() +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #xlab("Canopy moisture content (%)") +
+  #ylab("Flammability score (PC2)")
 
 
 ######################################################################################
@@ -198,15 +197,14 @@ ggplot(final_data, aes(canopy_moisture_content, PC2, color = specific_epithet)) 
 ######################################################################################
 
 
-ggplot(final_data, aes(leaf_mass_per_area, PC1, color = specific_epithet)) +
+ggplot(final_data, aes(leaf_mass_per_area, degsec_100, color = specific_epithet)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  xlim(0, 0.05) +
-  xlab(expression(paste("Leaf mass per area (", g/cm^2, ")"))) +
+  xlab(expression(paste("Leaf mass per area (", g/cm^2,")"))) +
   ylab("Flammability score (PC1)")
 
 
-ggplot(model_data, aes(leaf_mass_per_area, PC1, color = group)) +
+ggplot(model_data, aes(leaf_mass_per_area, degsec_100, color = group)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf mass per area (", g/cm^2, ")"))) +
@@ -216,35 +214,34 @@ ggplot(model_data, aes(leaf_mass_per_area, PC1, color = group)) +
 # Does leaf length per leaflet influence flammability?
 ########################################################################################
 
-ggplot(final_data, aes(leaf_length_per_leaflet, PC1, color = specific_epithet)) +
+ggplot(final_data, aes(leaf_length_per_leaflet, degsec_100, color = specific_epithet)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf length per leaflet (",cm^2,")"))) +
   ylab("Flammability score (PC1)")
 
-ggplot(final_data, aes(leaf_length_per_leaflet, PC2, color = specific_epithet)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  xlab("Leaf length per leaflet (cm)") +
-  ylab("Flammability score (PC2)")
+#ggplot(final_data, aes(leaf_length_per_leaflet, PC2, color = specific_epithet)) +
+  #geom_point() +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #xlab("Leaf length per leaflet (cm)") +
+  #ylab("Flammability score (PC2)")
 
 ##########################################################################################
 # Does leaf area influence flammability?
 ##########################################################################################
 
-ggplot(final_data, aes(leaf_area_per_leaflet, PC1, color = specific_epithet)) +
+ggplot(final_data, aes(leaf_area_per_leaflet, degsec_100, color = specific_epithet)) +
   geom_point() +
-  xlim(0,10) +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf area per leaflet (",cm^2,") "))) +
   ylab("Flammability score (PC1)")
 
-ggplot(final_data, aes(leaf_area_per_leaflet, PC2, color = specific_epithet)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  xlim(0, 10) +
-  xlab(expression(paste("Leaf area per leaflet (",cm^2,") "))) +
-  ylab("Flammability score (PC2)")
+#ggplot(final_data, aes(leaf_area_per_leaflet, PC2, color = specific_epithet)) +
+  #geom_point() +
+  #geom_smooth(method = "lm", se = FALSE) +
+  #xlim(0, 10) +
+  #xlab(expression(paste("Leaf area per leaflet (",cm^2,") "))) +
+  #ylab("Flammability score (PC2)")
 
 ############################################################################################
 # Does leaf moisture content influence self ignition?
@@ -324,7 +321,6 @@ ggplot(final_data, aes(temp_d2_pre, ignition_delay)) +
 
 
 
-
 ################################################################################################
 # Does weather during burning influence flammability? Wind speed.
 #################################################################################################
@@ -336,20 +332,11 @@ ggplot(final_data, aes(windspeed_miles_per_hour, self_ignition)) +
   xlab(expression(paste("Windspeed (", miles/hour,")"))) +
   ylab("Probability of self ignition (%)")
 
-ggplot(final_data, aes(windspeed_miles_per_hour, PC1)) +
+ggplot(final_data, aes(windspeed_miles_per_hour, degsec_100)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) + 
   xlab(expression(paste("Windspeed (", miles/hour,") "))) +
   ylab("Flammability score(PC1)")
-
-ggplot(final_data, aes(windspeed_miles_per_hour, PC2)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) + 
-  xlab(expression(paste("Windspeed (", miles/hour,") "))) +
-  ylab("Flammability score(PC2)")
-  
-
-
 
 
 ##############################################################################################

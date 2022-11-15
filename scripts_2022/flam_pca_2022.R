@@ -47,7 +47,7 @@ flam_pca_2022 <- prcomp(pca_data_2022[,-1],
                    scale=TRUE)
 
 
-summary(flam_pca_2022)
+summary(flam_pca_2022) # standard deviation for PC2 is 0.94029
 
 flam_loadings <- flam_pca_2022$rotation[ ,1:2] 
 
@@ -62,7 +62,7 @@ biplot(flam_pca_2022)
 eig_val <- get_eigenvalue(flam_pca_2022) 
 
 
-eig_val
+eig_val # eignevalue for PC2 is 0.88414214
 
 variables_info <- get_pca_var(flam_pca_2022) # Variables information
 
