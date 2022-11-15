@@ -44,7 +44,7 @@ model_data <- final_data %>%
 
 
 ################################################################################################################
-# Removing two samples whose wind speed data is missing.
+# Making sure that variables with missing value is out from the analysis
 ###################################################################################################################
 
 model_data <- model_data %>%

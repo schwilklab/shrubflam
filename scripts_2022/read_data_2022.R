@@ -424,6 +424,42 @@ any(is.na(alldata_2022$canopy_moisture_content))
 
 any(is.na(alldata_2022$leaf_moisture_content))
 
+##################################################################################
+# The flame height is in mili meter but I changed the unit to cm
+# manually during data entry but for some samples the unit remain
+# unchanged, I was in rush to push the data into github, A big mistake
+# Fixing them one by one from the data sheet
+#######################################################################
+
+
+alldata_2022 <- alldata_2022 %>%
+  mutate(flame_height = ifelse( sample_id == "DC29", 115, flame_height)) # It is 115 actually, not 150
+
+alldata_2022 <- alldata_2022 %>%
+  mutate(flame_height = ifelse( sample_id == "DK49", 35, flame_height))
+
+
+alldata_2022 <- alldata_2022 %>%
+  mutate(flame_height = ifelse( sample_id == "DV05", 150, flame_height))
+
+alldata_2022 <- alldata_2022 %>%
+  mutate(flame_height = ifelse( sample_id == "DV06", 130, flame_height))
+
+
+##########################################################################
+# All the flame height is in mili meter from 08/14/2022 date
+##########################################################################
+
+alldata_2022$burn_date <- as.character(alldata_2022$burn_date) # Changing the date to character
+
+
+alldata_2022 <- alldata_2022 %>%
+  mutate( flame_height = ifelse(burn_date == "2022-08-14", flame_height/10, flame_height))
+
+
+alldata_2022$burn_date <- as.Date(alldata_2022$burn_date) # Now as Date
+
+
 
 ######################################################################################
 # Cleaning up work space, only keeping the alldata_2022
