@@ -37,6 +37,16 @@ burn_trials_2022 <- read_csv("../data/year_2022/flam_trials_2022.csv")
 juniperus_leaf_area_2022 <- read_csv("../data/year_2022/juniperus_leaf_area_2022.csv")
 species_table_2022 <- read_csv("../data/year_2022/species_table_2022.csv")
 
+## DWS: I recommend a simpler naming scheme int he future as I describe in our
+## lab resources and in the R course: Name data files by observations. So
+## "species_table_2022" is redundant. First why are there multiple data files
+## of species? That is a nightmare for data maintenance. One table for the
+## entire project is all you should have. You will create errors trying to
+## maintain multiple copies of everything. Second, the files should be called
+## "species.csv"). Also, it has an id variable called "group" which appears to
+## be "genus" and is being maintained as separate data rather than being pulled
+## from the name. Data should include full name with authority somewhere and
+## citation for id.
 
 ###############################################################################
 ## Calculations and cleaning

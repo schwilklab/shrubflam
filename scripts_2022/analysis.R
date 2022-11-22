@@ -2,6 +2,10 @@
 # Shrub Flammability project
 # Dylan Schwilk, Azaj Mahmud
 
+
+## DWS: Consider line lengths and wrap comments. You don't follow the style
+## guide that I suggest.
+
 # This script is for selecting the best model for each kind of
 # traits and compare them to see which traits are better.
 
@@ -80,6 +84,9 @@ canopy_pc1_model <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ra
                                  (1|taxon), data = model_data, REML = FALSE)
 
 
+## DWS: What is "group"? Looks like it is genus. Why is this not called
+## "genus"? Why are you ruling out random slopes?
+
 canopy_pc1_models <- dredge(canopy_pc1_model) # Performs an automated
 
 # model selection with subsets of the supplied global model. source: ?dredge
@@ -87,10 +94,21 @@ canopy_pc1_models <- dredge(canopy_pc1_model) # Performs an automated
 
 best_canopy_pc1_model <- get.models(canopy_pc1_models, subset = TRUE)[[1]] # returns list and 
 # indexing the first one, top model.
-# Generate or extract a list of fitted model objects from a "model.selection" table,
-# object returned by dredge. The argument subset must be explicit ly provided. 
-# This is to assure that a potentially long list of models is not fitted unintentionally. 
-# To evaluate all models, set subset to NA or TRUE. source: ?get.models
+
+## DWS: But we need the model table to compare. Is the best model good? are
+## models close in AICc? I looked at model table and your slection cannot
+## select among top models, they are equivalent.
+
+canopy_mod_table <- model.sel(canopy_pc1_models)
+canopy_mod_table[1:8,]
+
+## DWS: So top four models pretty close.
+
+# Generate or extract a list of fitted model objects from a "model.selection"
+# table, object returned by dredge. The argument subset must be explicitely
+# provided. This is to assure that a potentially long list of models is not
+# fitted unintentionally. To evaluate all models, set subset to NA or TRUE.
+# source: ?get.models
 
 summary(best_canopy_pc1_model)
 
@@ -116,9 +134,19 @@ leaf_pc1_model <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_length_per_l
                                leaf_length_per_leaflet*leaf_moisture_content + 
                                (1|taxon), data = model_data, REML = FALSE)
 
+## DWS: Your use of "*" above does not make sense to me. It looks like you are
+## already specifying the main effects?
+
 leaf_pc1_models <- dredge(leaf_pc1_model)
 
 best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]] 
+
+leaf_mod_table <- model.sel(leaf_pc1_models)
+leaf_mod_table[1:8,]
+
+
+best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]] # Null model
+
 
 summary(best_leaf_pc1_model) # Leaf mass per area is the best model 
 
@@ -176,7 +204,7 @@ canopy_pc1_model_withoutj <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_ste
                                           canopy_density_gm_cm3*canopy_moisture_content +
                                           (1|taxon), data = without_juniperus, REML = FALSE )
 
-
+## DWS: Why "*"?
 
 canopy_pc1_models_withoutj <- dredge(canopy_pc1_model_withoutj)
 
