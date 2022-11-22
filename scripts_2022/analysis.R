@@ -35,27 +35,30 @@ source("./flam_pca_2022.R") # The Rscript where I performed the principle compon
 
 
 
-####################################################################################################################################
+##################################################################################
 # scaling the response variables since they measured in different
 # units
-####################################################################################################################################
+##################################################################################
 
 zscore <- function(x) (x -mean(x, na.rm=TRUE))/ sd(x, na.rm = TRUE)
 
 
 model_data <- final_data %>%
-  mutate_at(c("total_dry_mass_g", "canopy_density_gm_cm3", "leaf_stem_mass_ratio", "canopy_moisture_content",
-              "leaf_mass_per_area", "leaf_area_per_leaflet", "leaf_length_per_leaflet","leaf_moisture_content", "windspeed_miles_per_hour"), list(zscore))
+  mutate_at(c("total_dry_mass_g", "canopy_density_gm_cm3", "leaf_stem_mass_ratio",
+              "canopy_moisture_content","leaf_mass_per_area", 
+              "leaf_area_per_leaflet", "leaf_length_per_leaflet",
+              "leaf_moisture_content", "windspeed_miles_per_hour"), list(zscore))
 
 
-################################################################################################################
+####################################################################################
 # Making sure that variables with missing value is out from the analysis
-###################################################################################################################
+###################################################################################
 
 model_data <- model_data %>%
   select(PC1, PC2, degsec_100, flame_height, temp_d1_pre, species_id, temp_d2_pre, self_ignition,
-         taxon, total_dry_mass_g , canopy_density_gm_cm3 , leaf_stem_mass_ratio , canopy_moisture_content,
-         leaf_mass_per_area , leaf_area_per_leaflet , leaf_length_per_leaflet , leaf_moisture_content,
+         genus, total_dry_mass_g , canopy_density_gm_cm3 , leaf_stem_mass_ratio , 
+         canopy_moisture_content, leaf_mass_per_area , leaf_area_per_leaflet , 
+         leaf_length_per_leaflet , leaf_moisture_content,
          sample_id) %>%
   na.omit()
 
@@ -64,10 +67,10 @@ dim(model_data)
 model_data$degsec_100 <- log(model_data$degsec_100) # log transformation of response variable
 
 
-##################################################################################################################
-# A global model of canopy traits with two way interactions for cumulative temperature
-# over 100 degree Celsius
-###################################################################################################################
+#################################################################################
+# A global model of canopy traits with two way interactions for 
+# temperature integration.
+##################################################################################
 
 
 options(na.action = "na.fail")
@@ -81,7 +84,7 @@ canopy_pc1_model <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ra
                                  leaf_stem_mass_ratio*canopy_density_gm_cm3 +
                                  leaf_stem_mass_ratio*canopy_moisture_content + 
                                  canopy_density_gm_cm3*canopy_moisture_content + 
-                                 (1|taxon), data = model_data, REML = FALSE)
+                                 (1|genus), data = model_data, REML = FALSE)
 
 
 ## DWS: What is "group"? Looks like it is genus. Why is this not called
@@ -115,9 +118,10 @@ summary(best_canopy_pc1_model)
 # total mass and canopy density without interaction
 # is the best model.
 
+sjPlot::tab_model(best_canopy_pc1_model)
 
-#############################################################################################################################
-#############################################################################################################################
+##################################################################################
+##################################################################################
 # A global model of leaf traits with two way interaction for heat release
 # Kendall rank correlation coefficient between leaf_area_per_leaflet and 
 # leaf_length_per_leaflet is 0.67 and
@@ -132,7 +136,7 @@ leaf_pc1_model <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_length_per_l
                                leaf_mass_per_area*leaf_length_per_leaflet +
                                leaf_mass_per_area*leaf_moisture_content + 
                                leaf_length_per_leaflet*leaf_moisture_content + 
-                               (1|taxon), data = model_data, REML = FALSE)
+                               (1|genus), data = model_data, REML = FALSE)
 
 ## DWS: Your use of "*" above does not make sense to me. It looks like you are
 ## already specifying the main effects?
@@ -145,32 +149,33 @@ leaf_mod_table <- model.sel(leaf_pc1_models)
 leaf_mod_table[1:8,]
 
 
-best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]] # Null model
+best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]] 
 
 
 summary(best_leaf_pc1_model) # Leaf mass per area is the best model 
 
 
+sjPlot::tab_model(best_leaf_pc1_model)
 
-######################################################################################################
-# Comparison between best canopy and leaf model for PC1
-######################################################################################################
+#################################################################################
+# Comparison between best canopy and leaf model for temperature integration
+#################################################################################
 
 
 AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy -2.43
 # and leaf 79.57
 
 
-####################################################################################
+#################################################################################
 # Combinations of best canopy model and best leaf model
-####################################################################################
+#################################################################################
 
 leaf_canopy_model <- afex::lmer(degsec_100 ~ total_dry_mass_g + canopy_density_gm_cm3 + 
                                   leaf_mass_per_area + 
                                   total_dry_mass_g*canopy_density_gm_cm3 +
                                   total_dry_mass_g*leaf_mass_per_area +
                                   canopy_density_gm_cm3*leaf_mass_per_area + 
-                                  (1|taxon), data = model_data, REML = FALSE)
+                                  (1|genus), data = model_data, REML = FALSE)
 
 
 leaf_canopy_models <- dredge(leaf_canopy_model)
@@ -181,18 +186,19 @@ summary(best_leaf_canopy_model)  # total_dry_mass and canopy density
 # without interaction
 
 
-#############################################################################################################################################
+##################################################################################
 # Does canopy traits are more important than leaf traits
-# if we drop the most flammable group, Juniperus from analysis?
-#############################################################################################################################################
+# if we drop the most flammable genus, Juniperus from analysis?
+##################################################################################
 
 
 without_juniperus <- model_data %>% # creating a new data set without Juniperus group
-  filter(taxon != "Juniperus")
+  filter(genus != "Juniperus")
 
-########################################################################################################
-# A global model of canopy traits with two way interaction for heat release
-#########################################################################################################
+##################################################################################
+# A global model of canopy traits with two way interaction for 
+# temperature integration
+##################################################################################
 
 canopy_pc1_model_withoutj <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                           canopy_density_gm_cm3 + canopy_moisture_content +
@@ -202,7 +208,7 @@ canopy_pc1_model_withoutj <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_ste
                                           leaf_stem_mass_ratio*canopy_density_gm_cm3 +
                                           leaf_stem_mass_ratio*canopy_moisture_content +
                                           canopy_density_gm_cm3*canopy_moisture_content +
-                                          (1|taxon), data = without_juniperus, REML = FALSE )
+                                          (1|genus), data = without_juniperus, REML = FALSE )
 
 ## DWS: Why "*"?
 
@@ -214,9 +220,9 @@ best_canopy_pc1_model_withoutj <- get.models(canopy_pc1_models_withoutj, subset 
 summary(best_canopy_pc1_model_withoutj) # Total_mass and canopy density without interaction
 
 
-######################################################################################################################
+##################################################################################
 # A global model with leaf traits with two way interaction for heat release
-######################################################################################################################
+##################################################################################
 
 
 leaf_pc1_model_withoutj <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_length_per_leaflet +
@@ -224,7 +230,7 @@ leaf_pc1_model_withoutj <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_len
                                             leaf_mass_per_area*leaf_length_per_leaflet +
                                             leaf_mass_per_area*leaf_moisture_content + 
                                             leaf_length_per_leaflet*leaf_moisture_content + 
-                                            (1|taxon), data = without_juniperus, REML = FALSE)
+                                            (1|genus), data = without_juniperus, REML = FALSE)
 
 
 leaf_pc1_models_withoutj <- dredge(leaf_pc1_model_withoutj)
@@ -239,8 +245,4 @@ summary(best_leaf_pc1_model_withoutj)  # Null model
 
 AIC(best_canopy_pc1_model_withoutj, best_leaf_pc1_model_withoutj) # Canopy -28.61
 # and leaf -5.76
-
-
-# Yes, the hypothesis(canopy traits are more important than leaf traits) holds true when we
-# remove the most flammable group, Juniperus from the analysis.
 

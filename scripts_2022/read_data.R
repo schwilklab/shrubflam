@@ -475,8 +475,8 @@ alldata_2022$burn_date <- as.Date(alldata_2022$burn_date) # Now as Date
 
 alldata_2022 <- alldata_2022 %>%
   rename(total_dry_mass_g = total_dry_mass_gm,
-         taxon = group) %>%
-  mutate(taxon = ifelse(species == "Rhus trilobata", "Rhus_t", taxon))
+         genus = group) %>%
+  mutate(genus = ifelse(species == "Rhus trilobata", "Rhus_t", genus))
 
 ######################################################################################
 # Cleaning up work space, only keeping the alldata_2022

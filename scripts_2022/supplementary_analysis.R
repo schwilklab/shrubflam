@@ -23,7 +23,7 @@ source("../analysis_2022.R") # script that did the model selection
 ##########################################################################
 
 three_samples_check <- final_data %>%
-  select(species_id, taxon, windspeed_miles_per_hour,
+  select(species_id, genus, windspeed_miles_per_hour,
          total_dry_mass_g, canopy_density_gm_cm3, leaf_stem_mass_ratio,
          canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
          leaf_length_per_leaflet, leaf_moisture_content, PC1, PC2, degsec_100,
@@ -132,7 +132,7 @@ summary(self_ig_disc_av) # p = 0.491
 ################################################################################
 
 
-pc1_disc_avg <- afex::lmer(degsec_100 ~ average_disk_temp + (1|taxon),
+pc1_disc_avg <- afex::lmer(degsec_100 ~ average_disk_temp + (1|genus),
                            data = three_samples_check, REML = FALSE)
 
 summary(pc1_disc_avg) # p value 0.762
@@ -144,7 +144,7 @@ summary(pc1_av_lm) # p value = 0.505
 
 
 
-pc2_disc_avg <- afex::lmer(flame_height ~ average_disk_temp + (1|taxon),
+pc2_disc_avg <- afex::lmer(flame_height ~ average_disk_temp + (1|genus),
                            data = three_samples_check, REML = FALSE)
 
 summary(pc2_disc_avg) # p value 0.757
@@ -200,7 +200,8 @@ subgroup <- final_data %>%
 
 # Does temperature integration influenced by methods?
 
-method1_mod <- lme4::lmer(degsec_100 ~ method + (1|species_id), data = subgroup , REML = TRUE)
+method1_mod <- lme4::lmer(degsec_100 ~ method + (1|species_id), data = subgroup ,
+                          REML = TRUE)
 
 Anova(method1_mod, test.statistic = "F") # p value 0.457
 

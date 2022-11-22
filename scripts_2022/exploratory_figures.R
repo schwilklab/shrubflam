@@ -223,7 +223,7 @@ ggplot(model_data, aes(leaf_mass_per_area, degsec_100,
 names(final_data)
 
 ggplot(final_data, aes(leaf_length_per_leaflet, degsec_100,
-                       color = taxon)) +
+                       color = genus)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf length per leaflet (",cm^2,")"))) +

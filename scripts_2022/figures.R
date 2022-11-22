@@ -13,7 +13,8 @@ source("../analysis_2022.R") # The script that performed model selection
 
 
 
-best_degsec_canopy_mod_mixed <- afex::mixed(degsec_100 ~ total_dry_mass_g + canopy_density_gm_cm3 + (1 | taxon), 
+best_degsec_canopy_mod_mixed <- afex::mixed(degsec_100 ~ total_dry_mass_g + canopy_density_gm_cm3 + 
+                                              (1 | genus), 
                                             data = model_data, method = "KR")
 
 anova(best_degsec_canopy_mod_mixed)
@@ -24,7 +25,7 @@ anova(best_degsec_canopy_mod_mixed)
 
 
 best_degsec_canopy_plot_data <- final_data %>% 
-  select(total_dry_mass_g, canopy_density_gm_cm3, degsec_100, taxon)
+  select(total_dry_mass_g, canopy_density_gm_cm3, degsec_100, genus)
 
 
 ##########################################################################################################################################
@@ -41,7 +42,7 @@ best_degsec_canopy_plot_data$predicted_degsec_100 <- predict(best_canopy_pc1_mod
 
 predicted_degsec_canopy_plot_data <- best_degsec_canopy_plot_data %>%
   select(predicted_degsec_100, total_dry_mass_g, canopy_density_gm_cm3, 
-         degsec_100, taxon)
+         degsec_100, genus)
 
 #########################################################################################################################################
 # Summarising the fixed effects by group and making sure that the name of the mean value after summarising them are same as best_degsec_
@@ -49,7 +50,7 @@ predicted_degsec_canopy_plot_data <- best_degsec_canopy_plot_data %>%
 # the plot
 #########################################################################################################################################
 
-degsec_by_group <- final_data %>% group_by(taxon) %>%
+degsec_by_group <- final_data %>% group_by(genus) %>%
   summarize(total_dry_mass_g = mean(total_dry_mass_g), 
             canopy_density_gm_cm3 = mean(canopy_density_gm_cm3),
             degsec_100 = mean(degsec_100))
@@ -59,12 +60,13 @@ degsec_by_group <- final_data %>% group_by(taxon) %>%
 # Plotting the predicted vs unscaled total mass and adding layer by summarized data
 #########################################################################################################################################
 
-ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, degsec_100, color = taxon)) +
+ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, degsec_100, 
+                                         color = genus)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_degsec_canopy_plot_data) + 
   geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
   geom_point(data = degsec_by_group, size = 4.5 , alpha = 1, shape = 16,
-             aes(color = taxon)) +
+             aes(color = genus)) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
   xlab("Total mass (g)")  + 
   theme(legend.key.width = unit(0.5, "lines"),
@@ -78,12 +80,13 @@ ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, degsec_100, color = t
 # Canopy density_gm_cm3 vs temperature integration
 ################################################################################################
 
-ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, color = taxon)) +
+ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, 
+                                         color = genus)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_degsec_canopy_plot_data) + 
   geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
   geom_point(data = degsec_by_group, size = 4.5 , alpha = 1, shape = 16,
-             aes(color = taxon)) +
+             aes(color = genus)) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
   xlab(expression(paste("Canopy density (", g / cm^3, ")"))) +
   theme(legend.key.width = unit(0.5, "lines"),
@@ -93,19 +96,15 @@ ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, colo
         axis.title = element_text(size = 14),
         legend.text = element_text(face = "italic"))
 
-###########################################################################################################################################
-# Will do the same plot for leaf stem mass ratio following the same procedures and steps like total mass
-############################################################################################################################################
-
 
 ##############################################################################################################################################
 # Now the leaf traits, create the best leaf traits model for temperature integration once again from analysis_2022.R
 ##############################################################################################################################################
 
-best_degsec_leaf_mod <- afex::lmer(degsec_100 ~ leaf_mass_per_area + (1|taxon),
+best_degsec_leaf_mod <- afex::lmer(degsec_100 ~ leaf_mass_per_area + (1|genus),
                                data = model_data, REML = FALSE) 
 
-best_degsec_leaf_mixed <- afex::mixed(degsec_100 ~ leaf_mass_per_area + (1|taxon),
+best_degsec_leaf_mixed <- afex::mixed(degsec_100 ~ leaf_mass_per_area + (1|genus),
                                       data = model_data, method = "KR")
 anova(best_degsec_leaf_mixed)
 
@@ -114,7 +113,7 @@ anova(best_degsec_leaf_mixed)
 ################################################################################################################################################
 
 best_degsec_leaf_plot_data <- final_data %>% 
-  select(leaf_mass_per_area, degsec_100, taxon)
+  select(leaf_mass_per_area, degsec_100, genus)
 
 
 ##########################################################################################################################################
@@ -130,7 +129,7 @@ best_degsec_leaf_plot_data$predicted_degsec_100 <- predict(best_leaf_pc1_model,
 #########################################################################################################################################
 
 predicted_degsec_leaf_plot_data <- best_degsec_leaf_plot_data %>%
-  select(predicted_degsec_100, leaf_mass_per_area, degsec_100, taxon)
+  select(predicted_degsec_100, leaf_mass_per_area, degsec_100, genus)
 
 #########################################################################################################################################
 # Summarising the fixed effects by group and making sure that the name of the mean value after summarising them are same as best_degsec_
@@ -139,17 +138,18 @@ predicted_degsec_leaf_plot_data <- best_degsec_leaf_plot_data %>%
 #########################################################################################################################################
 
 degsec_leaf_by_group <- final_data %>% 
-  group_by(taxon) %>%
+  group_by(genus) %>%
   summarize(leaf_mass_per_area = mean(leaf_mass_per_area),
             degsec_100 = mean(degsec_100))
 
 
-ggplot(best_degsec_leaf_plot_data, aes(leaf_mass_per_area, degsec_100, color = taxon)) +
+ggplot(best_degsec_leaf_plot_data, aes(leaf_mass_per_area, degsec_100, 
+                                       color = genus)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_degsec_leaf_plot_data) + 
   geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
   geom_point(data = degsec_leaf_by_group, size = 4.5 , alpha = 1, shape = 16,
-             aes(color = taxon)) +
+             aes(color = genus)) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
   xlab(expression(paste("Leaf mass per area (", g/cm^2, ")"))) +
   theme(legend.key.width = unit(0.5, "lines"),
