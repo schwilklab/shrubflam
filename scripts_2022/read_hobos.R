@@ -119,7 +119,7 @@ any(is.na(flam_mid$flam.mid))
 any(is.na(flam_mid$time)) 
 
 flam.mid <- separate(flam_mid,time, into = c("date","time"),
-                              sep = " ")
+                     sep = " ")
 
 
 unique(flam.mid$date)
@@ -250,7 +250,7 @@ any(is.na(hobo_plots$peak_temp))
 # Plot for the summary
 ########################################################################
 
-ggplot(hobo_plots,aes(specific_epithet, dur_100, color = specific_epithet))+
+ggplot(hobo_plots,aes(species, dur_100, color = species))+
   geom_jitter(width = 0)+
   facet_grid(.~position)+
   theme_bw()+
@@ -261,7 +261,7 @@ ggplot(hobo_plots,aes(specific_epithet, dur_100, color = specific_epithet))+
        y=expression(paste("Duration over ",100^degree*C, " in (s)")))
 
 
-ggplot(hobo_plots,aes(specific_epithet, degsec_100, color = specific_epithet))+
+ggplot(hobo_plots,aes(species, degsec_100, color = species))+
   geom_jitter(width = 0)+
   facet_grid(.~position)+
   theme_bw()+
@@ -270,7 +270,7 @@ ggplot(hobo_plots,aes(specific_epithet, degsec_100, color = specific_epithet))+
                                    face = "italic"))+
   labs(x="Display name")
 
-ggplot(hobo_plots,aes(specific_epithet, peak_temp, color = specific_epithet))+
+ggplot(hobo_plots,aes(species, peak_temp, color = species))+
   geom_jitter(width = 0)+
   facet_grid(.~position)+
   theme_bw()+ 
@@ -281,7 +281,7 @@ ggplot(hobo_plots,aes(specific_epithet, peak_temp, color = specific_epithet))+
        y=expression("Peak temperature " ( degree*C)))
 
 
- 
+
 
 ########################################################################
 # Cleaning the environment
@@ -290,7 +290,4 @@ ggplot(hobo_plots,aes(specific_epithet, peak_temp, color = specific_epithet))+
 rm("concat_hobo_files", "get_trial_label", "read_hobo_file",
    "hobos_long","hobo_plots", "flam.right","flam.mid","flam.left",
    "flam_right","flam_mid","flam_left")
-
-
-
 

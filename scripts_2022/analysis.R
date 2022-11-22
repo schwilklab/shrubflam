@@ -21,6 +21,7 @@ library(MuMIn)
 
 source("./flam_pca_2022.R") # The Rscript where I performed the principle component analysis.
 
+
 # REML IS EQUAL TO FALSE BECAUSE 
 # Faraway (2006) Extending the linear model with R (p. 156):
 # The reason is that REML estimates the random effects by considering linear combinations of the data that remove the fixed effects. 
@@ -39,7 +40,7 @@ zscore <- function(x) (x -mean(x, na.rm=TRUE))/ sd(x, na.rm = TRUE)
 
 
 model_data <- final_data %>%
-  mutate_at(c("total_dry_mass_gm", "canopy_density_gm_cm3", "leaf_stem_mass_ratio", "canopy_moisture_content",
+  mutate_at(c("total_dry_mass_g", "canopy_density_gm_cm3", "leaf_stem_mass_ratio", "canopy_moisture_content",
               "leaf_mass_per_area", "leaf_area_per_leaflet", "leaf_length_per_leaflet","leaf_moisture_content", "windspeed_miles_per_hour"), list(zscore))
 
 
@@ -49,11 +50,14 @@ model_data <- final_data %>%
 
 model_data <- model_data %>%
   select(PC1, PC2, degsec_100, flame_height, temp_d1_pre, species_id, temp_d2_pre, self_ignition,
-         group, total_dry_mass_gm , canopy_density_gm_cm3 , leaf_stem_mass_ratio , canopy_moisture_content,
-         leaf_mass_per_area , leaf_area_per_leaflet , leaf_length_per_leaflet , leaf_moisture_content) %>%
+         taxon, total_dry_mass_g , canopy_density_gm_cm3 , leaf_stem_mass_ratio , canopy_moisture_content,
+         leaf_mass_per_area , leaf_area_per_leaflet , leaf_length_per_leaflet , leaf_moisture_content,
+         sample_id) %>%
   na.omit()
 
 dim(model_data)
+
+model_data$degsec_100 <- log(model_data$degsec_100) # log transformation of response variable
 
 
 ##################################################################################################################
@@ -65,15 +69,15 @@ dim(model_data)
 options(na.action = "na.fail")
 
 
-canopy_pc1_model <- afex::lmer(degsec_100 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
+canopy_pc1_model <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                  canopy_density_gm_cm3 + canopy_moisture_content +
-                                 total_dry_mass_gm*leaf_stem_mass_ratio +
-                                 total_dry_mass_gm*canopy_density_gm_cm3 +
-                                 total_dry_mass_gm*canopy_moisture_content + 
+                                 total_dry_mass_g*leaf_stem_mass_ratio +
+                                 total_dry_mass_g*canopy_density_gm_cm3 +
+                                 total_dry_mass_g*canopy_moisture_content + 
                                  leaf_stem_mass_ratio*canopy_density_gm_cm3 +
                                  leaf_stem_mass_ratio*canopy_moisture_content + 
                                  canopy_density_gm_cm3*canopy_moisture_content + 
-                                 (1|group), data = model_data, REML = FALSE)
+                                 (1|taxon), data = model_data, REML = FALSE)
 
 
 canopy_pc1_models <- dredge(canopy_pc1_model) # Performs an automated
@@ -90,7 +94,7 @@ best_canopy_pc1_model <- get.models(canopy_pc1_models, subset = TRUE)[[1]] # ret
 
 summary(best_canopy_pc1_model)
 
-# total mass, leaf stem mass ratio  and interaction between them
+# total mass and canopy density without interaction
 # is the best model.
 
 
@@ -110,7 +114,7 @@ leaf_pc1_model <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_length_per_l
                                leaf_mass_per_area*leaf_length_per_leaflet +
                                leaf_mass_per_area*leaf_moisture_content + 
                                leaf_length_per_leaflet*leaf_moisture_content + 
-                               (1|group), data = model_data, REML = FALSE)
+                               (1|taxon), data = model_data, REML = FALSE)
 
 leaf_pc1_models <- dredge(leaf_pc1_model)
 
@@ -119,36 +123,34 @@ best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]]
 summary(best_leaf_pc1_model) # Leaf mass per area is the best model 
 
 
+
 ######################################################################################################
 # Comparison between best canopy and leaf model for PC1
 ######################################################################################################
 
 
-AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 2649.693
-# and leaf 2756.840
+AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy -2.43
+# and leaf 79.57
 
 
 ####################################################################################
 # Combinations of best canopy model and best leaf model
 ####################################################################################
 
-leaf_canopy_model <- afex::lmer(degsec_100 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
+leaf_canopy_model <- afex::lmer(degsec_100 ~ total_dry_mass_g + canopy_density_gm_cm3 + 
                                   leaf_mass_per_area + 
-                                  total_dry_mass_gm*leaf_stem_mass_ratio +
-                                  total_dry_mass_gm*leaf_mass_per_area +
-                                  leaf_stem_mass_ratio*leaf_mass_per_area + 
-                                  (1|group), data = model_data, REML = FALSE)
+                                  total_dry_mass_g*canopy_density_gm_cm3 +
+                                  total_dry_mass_g*leaf_mass_per_area +
+                                  canopy_density_gm_cm3*leaf_mass_per_area + 
+                                  (1|taxon), data = model_data, REML = FALSE)
 
 
 leaf_canopy_models <- dredge(leaf_canopy_model)
 
 best_leaf_canopy_model <- get.models(leaf_canopy_models, subset = TRUE)[[1]]
 
-summary(best_leaf_canopy_model)  # Leaf_mass_per_area,
-# total_dry_mass_gm, the interaction between leaf_mass_per_area and total_dry_mass
- 
-AIC(best_canopy_pc1_model, best_leaf_canopy_model) # best leaf_canopy_model 2649.693
-# and best_canopy_model 2647.234
+summary(best_leaf_canopy_model)  # total_dry_mass and canopy density 
+# without interaction
 
 
 #############################################################################################################################################
@@ -158,21 +160,21 @@ AIC(best_canopy_pc1_model, best_leaf_canopy_model) # best leaf_canopy_model 2649
 
 
 without_juniperus <- model_data %>% # creating a new data set without Juniperus group
-  filter(group != "Juniperus")
+  filter(taxon != "Juniperus")
 
 ########################################################################################################
 # A global model of canopy traits with two way interaction for heat release
 #########################################################################################################
 
-canopy_pc1_model_withoutj <- afex::lmer(degsec_100 ~ total_dry_mass_gm + leaf_stem_mass_ratio + 
+canopy_pc1_model_withoutj <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                           canopy_density_gm_cm3 + canopy_moisture_content +
-                                          total_dry_mass_gm*leaf_stem_mass_ratio + 
-                                          total_dry_mass_gm*canopy_density_gm_cm3 +
-                                          total_dry_mass_gm*canopy_moisture_content + 
+                                          total_dry_mass_g*leaf_stem_mass_ratio + 
+                                          total_dry_mass_g*canopy_density_gm_cm3 +
+                                          total_dry_mass_g*canopy_moisture_content + 
                                           leaf_stem_mass_ratio*canopy_density_gm_cm3 +
                                           leaf_stem_mass_ratio*canopy_moisture_content +
                                           canopy_density_gm_cm3*canopy_moisture_content +
-                                          (1|group), data = without_juniperus, REML = FALSE )
+                                          (1|taxon), data = without_juniperus, REML = FALSE )
 
 
 
@@ -194,7 +196,7 @@ leaf_pc1_model_withoutj <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_len
                                             leaf_mass_per_area*leaf_length_per_leaflet +
                                             leaf_mass_per_area*leaf_moisture_content + 
                                             leaf_length_per_leaflet*leaf_moisture_content + 
-                                            (1|group), data = without_juniperus, REML = FALSE)
+                                            (1|taxon), data = without_juniperus, REML = FALSE)
 
 
 leaf_pc1_models_withoutj <- dredge(leaf_pc1_model_withoutj)
@@ -207,8 +209,8 @@ summary(best_leaf_pc1_model_withoutj)  # Null model
 # Comparison of best canopy and leaf model for heat release
 #######################################################################################################
 
-AIC(best_canopy_pc1_model_withoutj, best_leaf_pc1_model_withoutj) # Canopy 1969.167
-# and leaf 1999.703
+AIC(best_canopy_pc1_model_withoutj, best_leaf_pc1_model_withoutj) # Canopy -28.61
+# and leaf -5.76
 
 
 # Yes, the hypothesis(canopy traits are more important than leaf traits) holds true when we

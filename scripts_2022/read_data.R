@@ -61,8 +61,8 @@ any(is.na(samples_2022))
 
 ###############################################################################
 
-samples_2022 <- tidyr::separate(samples_2022, species, into = c("genus","specific_epithet"),
-                           sep = " ")
+#samples_2022 <- tidyr::separate(samples_2022, species, into = c("genus","specific_epithet"),
+                           #sep = " ")
 
 class(samples_2022$species_id)
 
@@ -459,7 +459,14 @@ alldata_2022 <- alldata_2022 %>%
 
 alldata_2022$burn_date <- as.Date(alldata_2022$burn_date) # Now as Date
 
+#####################################################################################
+# Changing the variable names
+#####################################################################################
 
+alldata_2022 <- alldata_2022 %>%
+  rename(total_dry_mass_g = total_dry_mass_gm,
+         taxon = group) %>%
+  mutate(taxon = ifelse(species == "Rhus trilobata", "Rhus_t", taxon))
 
 ######################################################################################
 # Cleaning up work space, only keeping the alldata_2022

@@ -18,15 +18,16 @@ source("../flam_pca_2022.R") # script that did the pca analysis.
 
 dim(alldata_2022)
 
-ggplot(alldata_2022, aes(specific_epithet, total_dry_mass_gm)) +
+ggplot(alldata_2022, aes(species, total_dry_mass_g)) +
   geom_point() +
   theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
 
-ggplot(alldata_2022, aes(specific_epithet, leaf_stem_mass_ratio)) +
+
+ggplot(alldata_2022, aes(species, leaf_stem_mass_ratio)) +
   geom_point() +
   theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
 
-ggplot(alldata_2022, aes(specific_epithet, canopy_density_gm_cm3)) +
+ggplot(alldata_2022, aes(species, canopy_density_gm_cm3)) +
   geom_point() +
   theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold")) # Removing
 # the outliers of canopy_density_gm_cm3 of Pinchottii, since I measured
@@ -50,13 +51,13 @@ secundiflora_density <- alldata_2022 %>%
 
 #View(secundiflora_density) # UV04
 
-ggplot(alldata_2022, aes(specific_epithet, canopy_moisture_content)) +
+ggplot(alldata_2022, aes(species, canopy_moisture_content)) +
   geom_point() +
   theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
 
 
 
-ggplot(alldata_2022, aes(specific_epithet, leaf_mass_per_area)) + # LMA is
+ggplot(alldata_2022, aes(species, leaf_mass_per_area)) + # LMA is
   #really high for one of the wrightii, need to check, this is impossible,
   # definitely I messed it up, the number of leaflet is 70!!! and the 
   # leaflets are tiny. Dropping the sample.
@@ -75,17 +76,17 @@ pinchotti_lma <- alldata_2022 %>%
 #View(pinchotti_lma) 
 #DK30
 
-ggplot(alldata_2022, aes(specific_epithet, leaf_area_per_leaflet)) +
+ggplot(alldata_2022, aes(species, leaf_area_per_leaflet)) +
   geom_point() +
   theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
 
 
-ggplot(alldata_2022, aes(specific_epithet, leaf_length_per_leaflet)) +
+ggplot(alldata_2022, aes(species, leaf_length_per_leaflet)) +
   geom_point() +
   theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
 
 
-ggplot(alldata_2022, aes(specific_epithet, leaf_moisture_content)) +
+ggplot(alldata_2022, aes(species, leaf_moisture_content)) +
   geom_point() +
   theme(axis.text.x = element_text( angle = 45, hjust = 1, face = "bold"))
 
@@ -94,7 +95,8 @@ ggplot(alldata_2022, aes(specific_epithet, leaf_moisture_content)) +
 # Does leaf_stem_mass_ratio influence flammability?
 ################################################################################################
 
-ggplot(final_data, aes(leaf_stem_mass_ratio, degsec_100, color = specific_epithet)) +
+ggplot(final_data, aes(leaf_stem_mass_ratio, degsec_100,
+                       color = species)) +
   geom_point() +
   geom_smooth(method = 'lm', se = FALSE) +
   xlab( "Leaf stem mass ratio (dry basis)" ) +
@@ -113,7 +115,8 @@ dim(final_data)
 ################################################################################################
 
 
-ggplot(final_data, aes(canopy_density_gm_cm3, degsec_100, color = specific_epithet)) +
+ggplot(final_data, aes(canopy_density_gm_cm3, degsec_100, 
+                       color = species)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE ) +
   xlab(expression(paste("Canopy density (", g / cm^3, ")"))) +
@@ -131,7 +134,8 @@ ggplot(final_data, aes(canopy_density_gm_cm3, degsec_100, color = specific_epith
 # Does total mass influence flammability?
 ###########################################################################################
 
-ggplot(final_data, aes(total_dry_mass_gm, degsec_100, color = specific_epithet)) +
+ggplot(final_data, aes(total_dry_mass_g, degsec_100, 
+                  color = species)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Total dry mass (dry basis)") +
@@ -163,7 +167,8 @@ ggplot(final_data, aes(field_moisture_content, degsec_100)) +
 # Does leaf moisture influence flammability?
 #############################################################################################
 
-ggplot(final_data, aes(leaf_moisture_content, degsec_100, color = specific_epithet)) +
+ggplot(final_data, aes(leaf_moisture_content, degsec_100,
+                       color = species)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Leaf moisture content (%)") +
@@ -179,7 +184,8 @@ ggplot(final_data, aes(leaf_moisture_content, degsec_100, color = specific_epith
 # Does canopy moisture influence flammability?
 ################################################################################################
 
-ggplot(final_data, aes(canopy_moisture_content, degsec_100, color = specific_epithet)) +
+ggplot(final_data, aes(canopy_moisture_content, degsec_100,
+                       color = species)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab("Canopy moisture content (%)") +
@@ -197,14 +203,15 @@ ggplot(final_data, aes(canopy_moisture_content, degsec_100, color = specific_epi
 ######################################################################################
 
 
-ggplot(final_data, aes(leaf_mass_per_area, degsec_100, color = specific_epithet)) +
+ggplot(final_data, aes(leaf_mass_per_area, degsec_100, color = species)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf mass per area (", g/cm^2,")"))) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) ))
 
 
-ggplot(model_data, aes(leaf_mass_per_area, degsec_100, color = group)) +
+ggplot(model_data, aes(leaf_mass_per_area, degsec_100, 
+                       color = taxon)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf mass per area (", g/cm^2, ")"))) +
@@ -213,8 +220,10 @@ ggplot(model_data, aes(leaf_mass_per_area, degsec_100, color = group)) +
 ########################################################################################
 # Does leaf length per leaflet influence flammability?
 ########################################################################################
+names(final_data)
 
-ggplot(final_data, aes(leaf_length_per_leaflet, degsec_100, color = specific_epithet)) +
+ggplot(final_data, aes(leaf_length_per_leaflet, degsec_100,
+                       color = taxon)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf length per leaflet (",cm^2,")"))) +
@@ -230,7 +239,8 @@ ggplot(final_data, aes(leaf_length_per_leaflet, degsec_100, color = specific_epi
 # Does leaf area influence flammability?
 ##########################################################################################
 
-ggplot(final_data, aes(leaf_area_per_leaflet, degsec_100, color = specific_epithet)) +
+ggplot(final_data, aes(leaf_area_per_leaflet, degsec_100, 
+                       color = species)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf area per leaflet (",cm^2,") "))) +

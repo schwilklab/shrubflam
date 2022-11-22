@@ -87,6 +87,7 @@ var_contr_by_cos2 <- fviz_pca_var(flam_pca_2022,col.var = "cos2",
         plot.title = element_blank())
 
 
+var_contr_by_cos2
 
 ####################################################################
 ## Contributions of variables in Principle components

@@ -23,8 +23,8 @@ source("../analysis_2022.R") # script that did the model selection
 ##########################################################################
 
 three_samples_check <- final_data %>%
-  select(species_id, group, specific_epithet, windspeed_miles_per_hour,
-         total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
+  select(species_id, taxon, windspeed_miles_per_hour,
+         total_dry_mass_g, canopy_density_gm_cm3, leaf_stem_mass_ratio,
          canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
          leaf_length_per_leaflet, leaf_moisture_content, PC1, PC2, degsec_100,
          flame_height, temp_d1_pre, temp_d2_pre, self_ignition)
@@ -48,7 +48,7 @@ cor_data <- alldata_2022 %>%
   select(heat_release_j, massconsumed, windspeed_miles_per_hour,
          vol_burned, flame_height, flame_duration, dur_100,
          peak_temp, degsec_100, ignition_delay, self_ignition,
-         total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
+         total_dry_mass_g, canopy_density_gm_cm3, leaf_stem_mass_ratio,
          canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
          leaf_length_per_leaflet, leaf_moisture_content)
 
@@ -60,7 +60,7 @@ dim(cor_data)
 
 
 morphological_traits_cor_data <- cor_data %>%
-  select(total_dry_mass_gm, canopy_density_gm_cm3, leaf_stem_mass_ratio,
+  select(total_dry_mass_g, canopy_density_gm_cm3, leaf_stem_mass_ratio,
          canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
          leaf_length_per_leaflet, leaf_moisture_content)
 
@@ -87,7 +87,8 @@ canopy_flam_data <- cor_data %>%
   select(heat_release_j, massconsumed,
          vol_burned, flame_height, flame_duration, dur_100,
          peak_temp, degsec_100, ignition_delay,
-         leaf_stem_mass_ratio)
+         leaf_stem_mass_ratio, canopy_density_gm_cm3, total_dry_mass_g,
+         canopy_moisture_content)
 
 canopy_flam_cor <- cor(canopy_flam_data, method = "kendall", 
                        use = "pairwise")
@@ -131,7 +132,7 @@ summary(self_ig_disc_av) # p = 0.491
 ################################################################################
 
 
-pc1_disc_avg <- afex::lmer(degsec_100 ~ average_disk_temp + (1|group),
+pc1_disc_avg <- afex::lmer(degsec_100 ~ average_disk_temp + (1|taxon),
                            data = three_samples_check, REML = FALSE)
 
 summary(pc1_disc_avg) # p value 0.762
@@ -143,10 +144,10 @@ summary(pc1_av_lm) # p value = 0.505
 
 
 
-pc2_disc_avg <- afex::lmer(flame_height ~ average_disk_temp + (1|group),
+pc2_disc_avg <- afex::lmer(flame_height ~ average_disk_temp + (1|taxon),
                            data = three_samples_check, REML = FALSE)
 
-summary(pc2_disc_avg) # p value 0.748
+summary(pc2_disc_avg) # p value 0.757
 
 pc2_av_lm <- lm(flame_height ~ average_disk_temp, 
                 data = three_samples_check)
@@ -162,6 +163,8 @@ summary(pc2_av_lm) # p value = 0.530
 three_samples_check <- three_samples_check %>%
   na.omit()
 
+three_samples_check$degsec_100 <- log(three_samples_check$degsec_100)
+
 ws <- lm(flame_height ~ windspeed_miles_per_hour, 
          data = three_samples_check)
 
@@ -170,7 +173,7 @@ summary(ws) # p 0.895
 ws_degsec <- lm(degsec_100 ~ windspeed_miles_per_hour , 
                 data = three_samples_check)
 
-summary(ws_degsec) # p is 0.362
+summary(ws_degsec) # p is 0.241
 
 ##############################################################################
 # Does different method influence the flammability ?
