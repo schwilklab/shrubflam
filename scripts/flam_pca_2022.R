@@ -28,9 +28,11 @@ pca_data_2022 <- alldata_2022 %>%
   left_join(hobos_wider_2022, by = "label") %>%
   select(label, heat_release_j, massconsumed,
          vol_burned, flame_height, flame_duration, dur_100,
-         peak_temp, degsec_100, ignition_delay) # Dropping the self_ignition
-# since it is a binary variable.
-
+         peak_temp, degsec_100, ignition_delay,
+         canopy_density_gm_cm3, leaf_length_per_leaflet) %>% # Dropping the self_ignition # since it is a binary variable.
+  filter(canopy_density_gm_cm3 < 0.05,
+         leaf_length_per_leaflet < 10) %>%
+  select(- canopy_density_gm_cm3, - leaf_length_per_leaflet)
 
 
 names(pca_data_2022)[7] <- "Duration over (100\u00B0C)"
@@ -118,12 +120,35 @@ final_data <- alldata_2022 %>%
   filter( ! sample_id %in% c("KD18", "DK34", "KD15", "UV04",
                              "DK30")) %>%
   mutate(label=paste(sample_id,species_id,sep = "_")) %>%
-  left_join(select(pca_data_2022, label, PC1, PC2, degsec_100), by = "label") 
+  left_join(select(pca_data_2022, label, PC1, PC2, degsec_100), by = "label") %>%
+  filter(canopy_density_gm_cm3 < 0.05,
+         leaf_length_per_leaflet < 10) # Removing the outliers
+  
 
 dim(final_data)
 
 
 ## Will use the final_data to do the rest of the analysis regarding mixed effect model.
+
+##################################################################################
+# Changing the name of the random variable
+##################################################################################
+
+final_data <- final_data %>%
+  mutate(genus = ifelse(genus == "Diospyros", "Diospyros texana", genus),
+         genus = ifelse(genus == "Sophora", "Sophora secundiflora", genus),
+         genus = ifelse(genus == "Acacia", "Senegalia spp", genus),
+         genus = ifelse(genus == "Mahonia","Mahonia trifoliolata", genus),
+         genus = ifelse(genus == "Rhus", "Rhus virens", genus),
+         genus = ifelse(genus == "Rhus_t", "Rhus trilobata", genus),
+         genus = ifelse(genus == "Ziziphus", "Ziziphus obtusifolia ", genus),
+         genus = ifelse(genus == "Juniperus", "Juniperus spp", genus),
+         genus = ifelse(genus == "Prosopis", "Prosopis glandulosa", genus),
+         genus = ifelse(genus == "Ilex", "Ilex vomitoria", genus),
+         genus = ifelse(genus == "Forestiera", "Forestiera pubescens", genus),
+         genus = ifelse(genus == "Coleogyne", "Coleogyne ramosissima", genus),
+         genus = ifelse(genus == "Zanthoxylum", "Zanthoxylum fagara", genus))
+# Will use the final_data to do the rest of the analysis.
 
 
 ###############################################################################

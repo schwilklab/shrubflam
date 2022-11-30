@@ -17,8 +17,8 @@ library(lubridate)
 # for both as a temporary measure.
 
 SPECIFIC_HEAT_AL = 0.921 # in J/g
-MASS_DISK_1      = 0.53  # g
-MASS_DISK_2      = 0.53  # g
+MASS_DISK_1      = 52.91  # g
+MASS_DISK_2      = 53.21  # g
 
 ###############################################################################
 ## Read all the data files
@@ -200,4 +200,5 @@ dim(samples_more_than_three)# 97 rows, now it's ok since Mimosa
 # samples_more_than_three
 #####################################################################
 
-rm(canopy_measurements, leaf_measurements,leaf_measurement, burn_trials, samples,juniperus_leaf_area)
+rm(canopy_measurements, leaf_measurements,leaf_measurement, burn_trials, 
+   samples,juniperus_leaf_area)

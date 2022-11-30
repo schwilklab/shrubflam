@@ -84,7 +84,7 @@ canopy_pc1_model <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ra
                                  leaf_stem_mass_ratio*canopy_density_gm_cm3 +
                                  leaf_stem_mass_ratio*canopy_moisture_content + 
                                  canopy_density_gm_cm3*canopy_moisture_content + 
-                                 (1|genus), data = model_data, REML = FALSE)
+                                 (1 |genus), data = model_data, REML = FALSE)
 
 
 ## DWS: What is "group"? Looks like it is genus. Why is this not called
@@ -119,6 +119,9 @@ summary(best_canopy_pc1_model)
 # is the best model.
 
 sjPlot::tab_model(best_canopy_pc1_model)
+
+
+
 
 ##################################################################################
 ##################################################################################
@@ -162,8 +165,8 @@ sjPlot::tab_model(best_leaf_pc1_model)
 #################################################################################
 
 
-AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy -2.43
-# and leaf 79.57
+AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 1.817
+# and leaf 74.915
 
 
 #################################################################################
@@ -185,6 +188,9 @@ best_leaf_canopy_model <- get.models(leaf_canopy_models, subset = TRUE)[[1]]
 summary(best_leaf_canopy_model)  # total_dry_mass and canopy density 
 # without interaction
 
+AIC(best_canopy_pc1_model, best_leaf_pc1_model, best_leaf_canopy_model) # canopy 
+# 1.817, leaf 74.915, combination 1.817
+
 
 ##################################################################################
 # Does canopy traits are more important than leaf traits
@@ -193,7 +199,7 @@ summary(best_leaf_canopy_model)  # total_dry_mass and canopy density
 
 
 without_juniperus <- model_data %>% # creating a new data set without Juniperus group
-  filter(genus != "Juniperus")
+  filter(genus != "Juniperus spp")
 
 ##################################################################################
 # A global model of canopy traits with two way interaction for 
@@ -219,6 +225,7 @@ best_canopy_pc1_model_withoutj <- get.models(canopy_pc1_models_withoutj, subset 
 
 summary(best_canopy_pc1_model_withoutj) # Total_mass and canopy density without interaction
 
+sjPlot::tab_model(best_canopy_pc1_model_withoutj)
 
 ##################################################################################
 # A global model with leaf traits with two way interaction for heat release
@@ -237,12 +244,32 @@ leaf_pc1_models_withoutj <- dredge(leaf_pc1_model_withoutj)
 
 best_leaf_pc1_model_withoutj <- get.models(leaf_pc1_models_withoutj, subset = TRUE)[[1]]
 
-summary(best_leaf_pc1_model_withoutj)  # Null model
+summary(best_leaf_pc1_model_withoutj)  # leaf_length_per_leaflet
+
+sjPlot::tab_model(best_leaf_pc1_model_withoutj)
 
 #######################################################################################################
 # Comparison of best canopy and leaf model for heat release
 #######################################################################################################
 
-AIC(best_canopy_pc1_model_withoutj, best_leaf_pc1_model_withoutj) # Canopy -28.61
-# and leaf -5.76
+AIC(best_canopy_pc1_model_withoutj, best_leaf_pc1_model_withoutj) # Canopy -25.10
+# and leaf -4.57
 
+leaf_canopy_model_withoutj <- afex::lmer(degsec_100 ~ total_dry_mass_g + canopy_density_gm_cm3 +
+                                           leaf_length_per_leaflet + 
+                                           total_dry_mass_g*canopy_density_gm_cm3 +
+                                           canopy_density_gm_cm3*leaf_length_per_leaflet +
+                                           total_dry_mass_g*leaf_length_per_leaflet +
+                                           (1 |genus), data = without_juniperus, REML = FALSE)
+
+
+leaf_canopy_model_withoutj_models <- dredge(leaf_canopy_model_withoutj)
+
+best_leaf_canopy_model_withoutj <- get.models(leaf_canopy_model_withoutj_models, 
+                                              subset = TRUE)[[1]]
+
+summary(best_leaf_canopy_model_withoutj) # same as best canopy
+
+
+
+##################################################################################

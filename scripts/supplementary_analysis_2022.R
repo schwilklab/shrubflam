@@ -135,24 +135,23 @@ summary(self_ig_disc_av) # p = 0.491
 pc1_disc_avg <- afex::lmer(degsec_100 ~ average_disk_temp + (1|genus),
                            data = three_samples_check, REML = FALSE)
 
-summary(pc1_disc_avg) # p value 0.762
+summary(pc1_disc_avg) 
 
 pc1_av_lm <- lm(degsec_100 ~ average_disk_temp, 
                 data = three_samples_check) 
 
-summary(pc1_av_lm) # p value = 0.505
-
+summary(pc1_av_lm) 
 
 
 pc2_disc_avg <- afex::lmer(flame_height ~ average_disk_temp + (1|genus),
                            data = three_samples_check, REML = FALSE)
 
-summary(pc2_disc_avg) # p value 0.757
+summary(pc2_disc_avg) # p value 0.365
 
 pc2_av_lm <- lm(flame_height ~ average_disk_temp, 
                 data = three_samples_check)
 
-summary(pc2_av_lm) # p value = 0.530
+summary(pc2_av_lm) 
 
 
 ################################################################################################
@@ -163,17 +162,17 @@ summary(pc2_av_lm) # p value = 0.530
 three_samples_check <- three_samples_check %>%
   na.omit()
 
-three_samples_check$degsec_100 <- log(three_samples_check$degsec_100)
+#three_samples_check$degsec_100 <- log(three_samples_check$degsec_100)
 
 ws <- lm(flame_height ~ windspeed_miles_per_hour, 
          data = three_samples_check)
 
-summary(ws) # p 0.895
+summary(ws) # p 0.846
 
 ws_degsec <- lm(degsec_100 ~ windspeed_miles_per_hour , 
                 data = three_samples_check)
 
-summary(ws_degsec) # p is 0.241
+summary(ws_degsec) # p is 0.329
 
 ##############################################################################
 # Does different method influence the flammability ?

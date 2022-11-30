@@ -211,7 +211,7 @@ ggplot(final_data, aes(leaf_mass_per_area, degsec_100, color = species)) +
 
 
 ggplot(model_data, aes(leaf_mass_per_area, degsec_100, 
-                       color = taxon)) +
+                       color = genus)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   xlab(expression(paste("Leaf mass per area (", g/cm^2, ")"))) +
