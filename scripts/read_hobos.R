@@ -295,5 +295,5 @@ ggplot(hobo_plots,aes(display_name,peak.temp,color=display_name))+
 ########################################################################
 
 rm("concat_hobo_files", "get_trial_label", "read_hobo_file",
-"hobos_long","flam.right","flam.mid","flam.left")
-
+"hobos_long","hobo_plots", "flam.right","flam.mid","flam.left")
+ 

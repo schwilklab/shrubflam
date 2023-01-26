@@ -137,17 +137,18 @@ dim(final_data)
 final_data <- final_data %>%
   mutate(genus = ifelse(genus == "Diospyros", "Diospyros texana", genus),
          genus = ifelse(genus == "Sophora", "Sophora secundiflora", genus),
-         genus = ifelse(genus == "Acacia", "Senegalia spp", genus),
          genus = ifelse(genus == "Mahonia","Mahonia trifoliolata", genus),
          genus = ifelse(genus == "Rhus", "Rhus virens", genus),
          genus = ifelse(genus == "Rhus_t", "Rhus trilobata", genus),
-         genus = ifelse(genus == "Ziziphus", "Ziziphus obtusifolia ", genus),
+         genus = ifelse(genus == "Ziziphus", "Sarcomphalus obtusifolia ", genus),
          genus = ifelse(genus == "Juniperus", "Juniperus spp", genus),
          genus = ifelse(genus == "Prosopis", "Prosopis glandulosa", genus),
          genus = ifelse(genus == "Ilex", "Ilex vomitoria", genus),
          genus = ifelse(genus == "Forestiera", "Forestiera pubescens", genus),
          genus = ifelse(genus == "Coleogyne", "Coleogyne ramosissima", genus),
-         genus = ifelse(genus == "Zanthoxylum", "Zanthoxylum fagara", genus))
+         genus = ifelse(genus == "Zanthoxylum", "Zanthoxylum fagara", genus)) %>%
+  mutate(genus = ifelse(species == "Acacia berlandieri", "Senegalia berlandieri", genus),
+         genus = ifelse(species == "Senegalia wrightii", "Senegalia spp", genus))
 # Will use the final_data to do the rest of the analysis.
 
 

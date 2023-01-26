@@ -35,7 +35,7 @@ leaf_measurements_2022 <- read_csv("../data/year_2022/leaf_measurements_2022.csv
 moisture_measurements_2022 <- read_csv("../data/year_2022/moisture_content_2022.csv")
 burn_trials_2022 <- read_csv("../data/year_2022/flam_trials_2022.csv")
 juniperus_leaf_area_2022 <- read_csv("../data/year_2022/juniperus_leaf_area_2022.csv")
-species_table_2022 <- read_csv("../data/year_2022/species_table_2022.csv")
+species_table_2022 <- read_csv("../data/year_2021/species_table.csv")
 
 ## DWS: I recommend a simpler naming scheme int he future as I describe in our
 ## lab resources and in the R course: Name data files by observations. So
@@ -56,8 +56,10 @@ species_table_2022 <- read_csv("../data/year_2022/species_table_2022.csv")
 ## merging samples data and species data
 ###############################################################################
 
+#species_table_2022$species_id <- as.numeric(species_table_2022$species_id)
+
 samples_2022 <- species_table_2022%>%
-  select(species, species_id, group, herbivore_defence)%>%
+  select(species, species_id, group, herbivore_defense, herbivore_preference)%>%
   right_join(samples_2022, by=c("species","species_id"))%>%
   select(-notes)
 
@@ -405,6 +407,19 @@ burn_trials_2022 <- burn_trials_2022 %>%
 
 dim(burn_trials_2022)
 
+
+####################################################################################
+# Creating a separate dataset which I will use to merge with dataset from 2021
+###################################################################################
+
+herbivore_2022 <- samples_2022 %>%
+  left_join(leaf_measurements_2022, by = c("sample_id","species_id")) %>%
+  left_join(burn_trials_2022, by = c("sample_id", "species_id")) %>%
+  filter(! sample_id %in% c("KD07", "UV01")) %>%  # KD07 has missing values of flammability measurements and mistakenly, UV01 has ignited with blow torch though 
+  # it has self ignition and has existing flame(descriptions on notes in flam_trials_2022,csv.)
+  mutate(air_temp_f = ifelse(sample_id == "UV16", NA, air_temp_f))
+
+
 ####################################################################################
 # Merging all data
 ####################################################################################
@@ -477,7 +492,7 @@ alldata_2022 <- alldata_2022 %>%
   rename(total_dry_mass_g = total_dry_mass_gm,
          genus = group) %>%
   mutate(genus = ifelse(species == "Rhus trilobata", "Rhus_t", genus))
-
+ 
 ######################################################################################
 # Cleaning up work space, only keeping the alldata_2022
 ######################################################################################

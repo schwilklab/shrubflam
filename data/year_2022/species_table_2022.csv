@@ -1,4 +1,4 @@
-species,family,common_name,species_id,group,subfamily,leaf_structure,seed_type,foliage_seasonality,Notes,herbivore_defence
+species,family,common_name,species_id,group,subfamily,leaf_structure,seed_type,foliage_seasonality,notes,herbivore_defence
 Diospyros texana,Ebenaceae,Texas Persimmon,1000,Diospyros,ebenoideae,simple_alternate,angiosperm,deciduous_evergreen,Found almost in every property,non_armed
 Mahonia trifoliolata,Berberidaceae,Agarita,1002,Mahonia,berberidoideae,palmate_trifoliate,angiosperm,evergreen,Found almost in every property,armed
 Juniperus ashei,Cupressaceae,Mountain Cedar/Ashe Juniper,1022,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Found almost in every property,non_armed

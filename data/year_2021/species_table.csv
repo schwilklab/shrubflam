@@ -1,35 +1,36 @@
-species,family,common_name,species_id,group,subfamily,leaf_structure,seed_type,foliage_seasonality,Notes
-Diospyros texana,Ebenaceae,Texas Persimmon,1000,Diospyros,ebenoideae,simple_alternate,angiosperm,deciduous_evergreen,Found almost in every property
-Mahonia trifoliolata,Berberidaceae,Agarita,1002,Mahonia,berberidoideae,palmate_trifoliate,angiosperm,evergreen,Found almost in every property
-Juniperus ashei,Cupressaceae,Mountain Cedar/Ashe Juniper,1022,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Found almost in every property
-Juniperus pinchottii,Cupressaceae,Pinchot Juniper,2011,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Only Found in Dickens Park
-Sophora secundiflora,Fabaceae,Texas Mountain Laurel,1021,Sophora,papilionoideae,pinnately_compound_alternate,angiosperm,evergreen,Found almost in every property
-Mimosa borealis,Fabaceae,Pink Mimosa,1009,Acacia,mimosoideae,pinnately_twice_compound,angiosperm,deciduous,Haven't found in Bandera 
-Quercus laceyi,Fagaceae,Lacey Oak,1059,Deciduous oak,quercoideae,simple_alternate,angiosperm,deciduous_semi_evergreen,Only collected from Edwards property
-Quercus buckleyi,Fagaceae,Texas Red Oak,1078,oak,quercoideae,simple_alternate,angiosperm,deciduous,Haven't seen in Edwards property
-Quercus fusiformis,Fagaceae,Plateau Live Oak,2000,Evergreen oak,quercoideae,simple_alternate,angiosperm,evergreen,Only collected from Edwards property
-Quercus virginiana,Fagaceae,Virginia Live Oak,QS,Evergreen oak,quercoideae,simple_alternate,angiosperm,evergreen,Just collected only one sample from Edwards 2020-22 property and won't collect anymore.
-Rhus virens,Anacardiaceae,Evergreen Sumac,1036,Rhus,anacardioideae,compound_alternate,angiosperm,evergreen,Found almost in every property
-Rhus microphylla,Anacardiaceae,Littleleaf Sumac,2006,Rhus,anacardioideae,compound_alternate,angiosperm,deciduous,"Found in Edwards 2020-22, Menard property and Dickens Park"
-Rhus trilobata,Anacardiaceae,Three Leaf Sumac,2012,Rhus,anacardioideae,palmate_trifoliate,angiosperm,deciduous,Found only in Dickens Park
-Arbutus xalapensis,Ericaceae,Texas Madrone,1085,Arbutus,arbutoideae,simple,angiosperm,evergreen,Found in Real 2020-11 and Bandera 2020-30 but only collected from Real 2020-11
-Prosopis glandulosa,Fabaceae,Mesquite,1113,Prosopis,caesalpinioideae,pinnately_twice_compound,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park
-Condalia hookeri,Rhamnaceae,Bluewood,2003,Condalia,rhamnoideae,simple_alternate,angiosperm,evergreen,Found almost in every property
-Cotinus obovatus,Anacardiaceae,American Smoke Tree,1094,Cotinus,rhoideae,simple,angiosperm,deciduous,Only found in Bandera 2020-29
-Cercis canadensis,Fabaceae,Texas Redbud,2009,Cercis,caesalpinioideae,simple,angiosperm,deciduous,Only found in Bandera 2020-29
-Ziziphus obtusifolia,Rhamnaceae,Texas Buckthorn,2007,Ziziphus,ziziphoideae,simple,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park
-Forestiera reticulata,Oleaceae,Netleaf Forestiera,2010,Forestiera,oleeae,simple_opposite,angiosperm,semi_evergreen,Only collected from Edwards 2020-22
-Pinus remota,Pinaceae,Remote Pinyon,2001,Pinus,pinoideae,needlelike,gymnosperm,evergreen,Only collected from Edwards property
-Senegalia wrightii,Fabaceae,Wright Acacia,2005,Acacia,mimosoideae,pinnately_twice_compound,angiosperm,semi_evergreen,Treated wrightii and romeriana as same species and found in almost every property except Bandera
-Prunus serotina,Rosaceae,Escarpment Black Cherry,1070,Prunus,unknown,simple,angiosperm,deciduous_evergreen,Only one sample collected from Edwards 2020-23 property and won't collect any more
-Yucca rupicola,Agavaceae,Twist Leaf Yucca,1100,Prunus,agave,twisted,angiosperm,evergreen,Only one sample collected from Real 2020-11 property and won't collect anymore.
-Unknown spp,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,Collected from Edwards 2020-22
-Ulmus crassifolia,Ulmaceae,Cedar elm,2022,Ulmus,,,,,
-Frangula caroliniana,Rhamnaceae,Carolina Buckthorn,2038,Frangula,,,,,
-Ilex vomitoria,Aquifoliaceae,Yaupon holly,7000,Ilex,,,,,
-Calicarpa americana,Lamiaceae,American beautyberry,6000,Calicarpa,,,,,
-Juniperus virginiana,Cupressaceae,Eastern redcedar,9000,Juniperus,,,,,
-Acacia berlandieri,Fabaceae,Guajillo,4000,Acacia,,,,,
-Zanthoxylum fagara,Rutaceae,Colima,8888,Zanthoxylum,,,,,
-Coleogyne ramosissima,Rosaceae,Blacbrush,9999,Coleogyne,,,,,
-Unknown spp,Sapotaceae,coma,3000,Unknown,,,,,
+species,family,common_name,herbivore_defense,herbivore_preference,species_id,group,subfamily,leaf_structure,seed_type,foliage_seasonality,notes
+Diospyros texana,Ebenaceae,Texas Persimmon,non_armed,least,1000,Diospyros,ebenoideae,simple_alternate,angiosperm,deciduous_evergreen,Found almost in every property
+Mahonia trifoliolata,Berberidaceae,Agarita,armed,NA,1002,Mahonia,berberidoideae,palmate_trifoliate,angiosperm,evergreen,Found almost in every property
+Juniperus ashei,Cupressaceae,Mountain Cedar/Ashe Juniper,non_armed,least,1022,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Found almost in every property
+Juniperus pinchotii,Cupressaceae,Pinchot Juniper,non_armed,least,2011,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Only Found in Dickens Park
+Sophora secundiflora,Fabaceae,Texas Mountain Laurel,non_armed,least,1021,Sophora,papilionoideae,pinnately_compound_alternate,angiosperm,evergreen,Found almost in every property
+Mimosa borealis,Fabaceae,Pink Mimosa,armed,moderate_low,1009,Acacia,mimosoideae,pinnately_twice_compound,angiosperm,deciduous,Haven't found in Bandera 
+Quercus laceyi,Fagaceae,Lacey Oak,non_armed,moderate_low,1059,Quercus,quercoideae,simple_alternate,angiosperm,deciduous_semi_evergreen,Only collected from Edwards property
+Quercus buckleyi,Fagaceae,Texas Red Oak,non_armed,NA,1078,Quercus,quercoideae,simple_alternate,angiosperm,deciduous,Haven't seen in Edwards property
+Quercus fusiformis,Fagaceae,Plateau Live Oak,non_armed,moderate_low,2000,Quercus,quercoideae,simple_alternate,angiosperm,evergreen,Only collected from Edwards property
+Quercus virginiana,Fagaceae,Virginia Live Oak,non_armed,moderate_low,2000,Quercus,quercoideae,simple_alternate,angiosperm,evergreen,Just collected only one sample from Edwards 2020-22 property and won't collect anymore.
+Rhus virens,Anacardiaceae,Evergreen Sumac,non_armed,moderate_low,1036,Rhus,anacardioideae,compound_alternate,angiosperm,evergreen,Found almost in every property
+Rhus microphylla,Anacardiaceae,Littleleaf Sumac,non_armed,moderate_low,2006,Rhus,anacardioideae,compound_alternate,angiosperm,deciduous,"Found in Edwards 2020-22, Menard property and Dickens Park"
+Rhus trilobata,Anacardiaceae,Three Leaf Sumac,non_armed,moderate_low,2012,Rhus,anacardioideae,palmate_trifoliate,angiosperm,deciduous,Found only in Dickens Park
+Arbutus xalapensis,Ericaceae,Texas Madrone,non_armed,NA,1085,Arbutus,arbutoideae,simple,angiosperm,evergreen,Found in Real 2020-11 and Bandera 2020-30 but only collected from Real 2020-11
+Prosopis glandulosa,Fabaceae,Mesquite,armed,least,1113,Prosopis,caesalpinioideae,pinnately_twice_compound,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park
+Condalia hookeri,Rhamnaceae,Bluewood,armed,NA,2003,Condalia,rhamnoideae,simple_alternate,angiosperm,evergreen,Found almost in every property
+Cotinus obovatus,Anacardiaceae,American Smoke Tree,non_armed,NA,1094,Cotinus,rhoideae,simple,angiosperm,deciduous,Only found in Bandera 2020-29
+Cercis canadensis,Fabaceae,Texas Redbud,non_armed,moderate_low,2009,Cercis,caesalpinioideae,simple,angiosperm,deciduous,Only found in Bandera 2020-29
+Ziziphus obtusifolia,Rhamnaceae,Texas Buckthorn,armed,NA,2007,Ziziphus,ziziphoideae,simple,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park
+Forestiera reticulata,Oleaceae,Netleaf Forestiera,non_armed,moderate_low,2010,Forestiera,oleeae,simple_opposite,angiosperm,semi_evergreen,Only collected from Edwards 2020-22
+Pinus remota,Pinaceae,Remote Pinyon,non_armed,NA,2001,Pinus,pinoideae,needlelike,gymnosperm,evergreen,Only collected from Edwards property
+Senegalia wrightii,Fabaceae,Wright Acacia,armed,moderate_low,2005,Acacia,mimosoideae,pinnately_twice_compound,angiosperm,semi_evergreen,Treated wrightii and romeriana as same species and found in almost every property except Bandera
+Prunus serotina,Rosaceae,Escarpment Black Cherry,non_armed,NA,1070,Prunus,unknown,simple,angiosperm,deciduous_evergreen,Only one sample collected from Edwards 2020-23 property and won't collect any more
+Yucca rupicola,Agavaceae,Twist Leaf Yucca,non_armed,NA,1100,Prunus,agave,twisted,angiosperm,evergreen,Only one sample collected from Real 2020-11 property and won't collect anymore.
+Unknown spp,unknown,unknown,NA,NA,5000000,unknown,unknown,unknown,unknown,unknown,Collected from Edwards 2020-22
+Ulmus crassifolia,Ulmaceae,Cedar elm,non_armed,NA,2022,Ulmus,,,,,
+Frangula caroliniana,Rhamnaceae,Carolina Buckthorn,non_armed,NA,2038,Frangula,,,,,
+Ilex vomitoria,Aquifoliaceae,Yaupon holly,non_armed,NA,7000,Ilex,,,,,
+Calicarpa americana,Lamiaceae,American beautyberry,non_armed,NA,6000,Calicarpa,,,,,
+Juniperus virginiana,Cupressaceae,Eastern redcedar,non_armed,least,9000,Juniperus,,,,,
+Acacia berlandieri,Fabaceae,Guajillo,armed,NA,4000,Acacia,,,,,
+Zanthoxylum fagara,Rutaceae,Colima,armed,moderate_low,8888,Zanthoxylum,,,,,
+Coleogyne ramosissima,Rosaceae,Blacbrush,armed,moderate_low,9999,Coleogyne,,,,,
+Unknown spp,Sapotaceae,coma,armed,NA,3000,Unknown,,,,,
+Forestiera pubescens,Oleaceae,Forestiera,non_armed,moderate_low,2010,Forestiera,,,,,

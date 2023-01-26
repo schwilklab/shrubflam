@@ -47,19 +47,19 @@ model_data <- final_data %>%
   mutate_at(c("total_dry_mass_g", "canopy_density_gm_cm3", "leaf_stem_mass_ratio",
               "canopy_moisture_content","leaf_mass_per_area", 
               "leaf_area_per_leaflet", "leaf_length_per_leaflet",
-              "leaf_moisture_content", "windspeed_miles_per_hour"), list(zscore))
+              "leaf_moisture_content"), list(zscore))
 
-
+names(model_data)
 ####################################################################################
 # Making sure that variables with missing value is out from the analysis
 ###################################################################################
 
 model_data <- model_data %>%
-  select(PC1, PC2, degsec_100, flame_height, temp_d1_pre, species_id, temp_d2_pre, self_ignition,
-         genus, total_dry_mass_g , canopy_density_gm_cm3 , leaf_stem_mass_ratio , 
-         canopy_moisture_content, leaf_mass_per_area , leaf_area_per_leaflet , 
-         leaf_length_per_leaflet , leaf_moisture_content,
-         sample_id) %>%
+  select(degsec_100, species_id, ignition_delay, genus, species, total_dry_mass_g , 
+         canopy_density_gm_cm3 , leaf_stem_mass_ratio , 
+         canopy_moisture_content, leaf_mass_per_area , 
+         leaf_area_per_leaflet , leaf_length_per_leaflet , 
+         leaf_moisture_content, sample_id) %>%
   na.omit()
 
 dim(model_data)
@@ -78,13 +78,13 @@ options(na.action = "na.fail")
 
 canopy_pc1_model <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                  canopy_density_gm_cm3 + canopy_moisture_content +
-                                 total_dry_mass_g*leaf_stem_mass_ratio +
-                                 total_dry_mass_g*canopy_density_gm_cm3 +
-                                 total_dry_mass_g*canopy_moisture_content + 
-                                 leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                 leaf_stem_mass_ratio*canopy_moisture_content + 
-                                 canopy_density_gm_cm3*canopy_moisture_content + 
-                                 (1 |genus), data = model_data, REML = FALSE)
+                                 total_dry_mass_g:leaf_stem_mass_ratio +
+                                 total_dry_mass_g:canopy_density_gm_cm3 +
+                                 total_dry_mass_g:canopy_moisture_content + 
+                                 leaf_stem_mass_ratio:canopy_density_gm_cm3 +
+                                 leaf_stem_mass_ratio:canopy_moisture_content + 
+                                 canopy_density_gm_cm3:canopy_moisture_content + 
+                                 (1 | genus), data = model_data, REML = FALSE)
 
 
 ## DWS: What is "group"? Looks like it is genus. Why is this not called
@@ -118,7 +118,9 @@ summary(best_canopy_pc1_model)
 # total mass and canopy density without interaction
 # is the best model.
 
-sjPlot::tab_model(best_canopy_pc1_model)
+#sjPlot::tab_model(best_canopy_pc1_model)
+
+
 
 
 
@@ -136,10 +138,10 @@ sjPlot::tab_model(best_canopy_pc1_model)
 
 leaf_pc1_model <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_length_per_leaflet +
                                leaf_moisture_content  + 
-                               leaf_mass_per_area*leaf_length_per_leaflet +
-                               leaf_mass_per_area*leaf_moisture_content + 
-                               leaf_length_per_leaflet*leaf_moisture_content + 
-                               (1|genus), data = model_data, REML = FALSE)
+                               leaf_mass_per_area:leaf_length_per_leaflet +
+                               leaf_mass_per_area:leaf_moisture_content + 
+                               leaf_length_per_leaflet:leaf_moisture_content + 
+                               (1| genus), data = model_data, REML = FALSE)
 
 ## DWS: Your use of "*" above does not make sense to me. It looks like you are
 ## already specifying the main effects?
@@ -158,7 +160,7 @@ best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]]
 summary(best_leaf_pc1_model) # Leaf mass per area is the best model 
 
 
-sjPlot::tab_model(best_leaf_pc1_model)
+#sjPlot::tab_model(best_leaf_pc1_model)
 
 #################################################################################
 # Comparison between best canopy and leaf model for temperature integration
@@ -175,9 +177,9 @@ AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 1.817
 
 leaf_canopy_model <- afex::lmer(degsec_100 ~ total_dry_mass_g + canopy_density_gm_cm3 + 
                                   leaf_mass_per_area + 
-                                  total_dry_mass_g*canopy_density_gm_cm3 +
-                                  total_dry_mass_g*leaf_mass_per_area +
-                                  canopy_density_gm_cm3*leaf_mass_per_area + 
+                                  total_dry_mass_g:canopy_density_gm_cm3 +
+                                  total_dry_mass_g:leaf_mass_per_area +
+                                  canopy_density_gm_cm3:leaf_mass_per_area + 
                                   (1|genus), data = model_data, REML = FALSE)
 
 
@@ -190,6 +192,7 @@ summary(best_leaf_canopy_model)  # total_dry_mass and canopy density
 
 AIC(best_canopy_pc1_model, best_leaf_pc1_model, best_leaf_canopy_model) # canopy 
 # 1.817, leaf 74.915, combination 1.817
+
 
 
 ##################################################################################
@@ -208,12 +211,12 @@ without_juniperus <- model_data %>% # creating a new data set without Juniperus 
 
 canopy_pc1_model_withoutj <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                           canopy_density_gm_cm3 + canopy_moisture_content +
-                                          total_dry_mass_g*leaf_stem_mass_ratio + 
-                                          total_dry_mass_g*canopy_density_gm_cm3 +
-                                          total_dry_mass_g*canopy_moisture_content + 
-                                          leaf_stem_mass_ratio*canopy_density_gm_cm3 +
-                                          leaf_stem_mass_ratio*canopy_moisture_content +
-                                          canopy_density_gm_cm3*canopy_moisture_content +
+                                          total_dry_mass_g:leaf_stem_mass_ratio + 
+                                          total_dry_mass_g:canopy_density_gm_cm3 +
+                                          total_dry_mass_g:canopy_moisture_content + 
+                                          leaf_stem_mass_ratio:canopy_density_gm_cm3 +
+                                          leaf_stem_mass_ratio:canopy_moisture_content +
+                                          canopy_density_gm_cm3:canopy_moisture_content +
                                           (1|genus), data = without_juniperus, REML = FALSE )
 
 ## DWS: Why "*"?
@@ -225,7 +228,7 @@ best_canopy_pc1_model_withoutj <- get.models(canopy_pc1_models_withoutj, subset 
 
 summary(best_canopy_pc1_model_withoutj) # Total_mass and canopy density without interaction
 
-sjPlot::tab_model(best_canopy_pc1_model_withoutj)
+#sjPlot::tab_model(best_canopy_pc1_model_withoutj)
 
 ##################################################################################
 # A global model with leaf traits with two way interaction for heat release
@@ -234,9 +237,9 @@ sjPlot::tab_model(best_canopy_pc1_model_withoutj)
 
 leaf_pc1_model_withoutj <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_length_per_leaflet +
                                             leaf_moisture_content   +
-                                            leaf_mass_per_area*leaf_length_per_leaflet +
-                                            leaf_mass_per_area*leaf_moisture_content + 
-                                            leaf_length_per_leaflet*leaf_moisture_content + 
+                                            leaf_mass_per_area:leaf_length_per_leaflet +
+                                            leaf_mass_per_area:leaf_moisture_content + 
+                                            leaf_length_per_leaflet:leaf_moisture_content + 
                                             (1|genus), data = without_juniperus, REML = FALSE)
 
 
@@ -246,7 +249,7 @@ best_leaf_pc1_model_withoutj <- get.models(leaf_pc1_models_withoutj, subset = TR
 
 summary(best_leaf_pc1_model_withoutj)  # leaf_length_per_leaflet
 
-sjPlot::tab_model(best_leaf_pc1_model_withoutj)
+#sjPlot::tab_model(best_leaf_pc1_model_withoutj)
 
 #######################################################################################################
 # Comparison of best canopy and leaf model for heat release
@@ -273,3 +276,152 @@ summary(best_leaf_canopy_model_withoutj) # same as best canopy
 
 
 ##################################################################################
+
+#################################################################
+# Ignition delay vs canopy traits
+#################################################################
+
+
+canopy_ignition_model <- afex::lmer(ignition_delay ~ total_dry_mass_g + leaf_stem_mass_ratio + 
+                                 canopy_density_gm_cm3 + canopy_moisture_content +
+                                 (1 | genus), data = model_data, REML = FALSE)
+
+
+## DWS: What is "group"? Looks like it is genus. Why is this not called
+## "genus"? Why are you ruling out random slopes?
+
+canopy_ignition_models <- dredge(canopy_ignition_model) # Performs an automated
+
+# model selection with subsets of the supplied global model. source: ?dredge
+
+
+best_canopy_ignition_model <- get.models(canopy_ignition_models, subset = TRUE)[[1]] # returns list and 
+# indexing the first one, top model.
+
+## DWS: But we need the model table to compare. Is the best model good? are
+## models close in AICc? I looked at model table and your slection cannot
+## select among top models, they are equivalent.
+
+canopy_ignition_mod_table <- model.sel(canopy_ignition_models)
+canopy_ignition_mod_table[1:8,]
+
+summary(best_canopy_ignition_model)
+#sjPlot::tab_model(best_canopy_ignition_model)
+
+
+
+#########################################################################################
+# Ignition delay vs leaf traits
+###########################################################################################
+
+leaf_traits_ignition_model <- afex::lmer(ignition_delay ~ leaf_mass_per_area +
+                                           leaf_length_per_leaflet + leaf_moisture_content +
+                                           (1 | genus), data = model_data, REML = FALSE)
+
+leaf_ignition_models <- dredge(leaf_traits_ignition_model) 
+
+
+best_leaf_ignition_model <- get.models(leaf_ignition_models, subset = TRUE)[[1]] 
+
+
+
+leaf_ignition_mod_table <- model.sel(leaf_ignition_models)
+leaf_ignition_mod_table[1:8,]
+
+summary(best_leaf_ignition_model)
+
+#sjPlot::tab_model(best_leaf_ignition_model)
+
+AIC(best_canopy_ignition_model, best_leaf_ignition_model) # canopy 579.15
+# leaf 584.87
+
+#########################################################################################
+# Combinations
+########################################################################################
+
+leaf_canopy_ignition_model <- afex::lmer(ignition_delay ~ canopy_density_gm_cm3 +
+                                           leaf_moisture_content +
+                                           leaf_mass_per_area + (1 | genus),
+                                         data = model_data, REML = FALSE)
+
+leaf_canopy_ignition_models <- dredge(leaf_canopy_ignition_model)
+
+best_leaf_canopy_ignition_model <- get.models(leaf_canopy_ignition_models, subset = TRUE)[[1]]
+
+#sjPlot::tab_model(best_leaf_canopy_ignition_model)
+
+summary(best_leaf_canopy_ignition_model)
+
+AIC(best_canopy_ignition_model, best_leaf_ignition_model, best_leaf_canopy_ignition_model)
+
+##########################################################################################
+# Without Juniperus
+#########################################################################################
+
+#################################################################
+# Ignition delay vs canopy traits
+#################################################################
+
+
+canopy_ignition_model_withoutj <- afex::lmer(ignition_delay ~ total_dry_mass_g + leaf_stem_mass_ratio + 
+                                               canopy_density_gm_cm3 + canopy_moisture_content +
+                                               (1 | genus), data = without_juniperus, REML = FALSE)
+
+
+
+canopy_ignition_models_withoutj <- dredge(canopy_ignition_model_withoutj) 
+
+
+best_canopy_ignition_model_withoutj <- get.models(canopy_ignition_models_withoutj, subset = TRUE)[[1]] 
+
+
+
+summary(best_canopy_ignition_model_withoutj) # Canopy moisture and total dry mass
+
+#sjPlot::tab_model(best_canopy_ignition_model_withoutj)
+
+
+#######################################################################################################
+# Leaf traits
+######################################################################################################
+
+leaf_traits_ignition_model_withoutj <- afex::lmer(ignition_delay ~ leaf_mass_per_area +
+                                                    leaf_length_per_leaflet + leaf_moisture_content +
+                                                    (1 | genus), data = without_juniperus, REML = FALSE)
+
+leaf_ignition_models_withoutj <- dredge(leaf_traits_ignition_model_withoutj) 
+
+
+best_leaf_ignition_model_withoutj <- get.models(leaf_ignition_models_withoutj, subset = TRUE)[[1]] 
+
+
+
+
+summary(best_leaf_ignition_model_withoutj) # leaf length per leaflet
+# and leaf moisture content
+#sjPlot::tab_model(best_leaf_ignition_model_withoutj)
+
+
+
+AIC(best_canopy_ignition_model_withoutj, best_leaf_ignition_model_withoutj) # canopy 364.07
+# leaf 370.25
+
+
+######################################################################################################
+#  Combinations
+#####################################################################################################
+
+leaf_canopy_ignition_model_withoutj <- afex::lmer(ignition_delay ~ total_dry_mass_g +
+                                                    leaf_length_per_leaflet + leaf_moisture_content +
+                                                    (1 | genus), data = without_juniperus, REML = FALSE)
+
+leaf_canopy_ignition_models_withoutj <- dredge(leaf_canopy_ignition_model_withoutj)
+
+best_leaf_canopy_ignition_model_withoutj <- get.models(leaf_canopy_ignition_models_withoutj, subset = TRUE)[[1]]
+
+summary(best_leaf_canopy_ignition_model_withoutj)
+
+#sjPlot::tab_model(best_leaf_canopy_ignition_model_withoutj)
+
+AIC(best_leaf_canopy_ignition_model_withoutj, best_canopy_ignition_model_withoutj, best_leaf_ignition_model_withoutj)
+

@@ -281,8 +281,8 @@ ggplot(hobo_plots,aes(species, peak_temp, color = species))+
        y=expression("Peak temperature " ( degree*C)))
 
 
-
-
+ 
+ 
 ########################################################################
 # Cleaning the environment
 ########################################################################

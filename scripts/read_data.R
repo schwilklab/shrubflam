@@ -43,8 +43,8 @@ juniperus_leaf_area <- read.csv("../data/year_2021/leaf_area_juniperus.csv")
 ###############################################################################
 
 samples <- species_table%>%
-  select(species,species_id,group)%>%
-  right_join(samples,by=c("species","species_id"))
+  select(species, species_id, group, herbivore_defense, herbivore_preference)%>%
+  right_join(samples, by = c("species","species_id"))
 
 ###############################################################################
 
@@ -104,7 +104,7 @@ leaf_measurements <- leaf_measurements%>% # Multiplying the juniperus
 
 leaf_measurements <- leaf_measurements %>%
   mutate(leaf_mass_area = lma_dry_mass_g / leaf_area_cm2)%>%
-  mutate(leaf_area_per_leaflet=leaf_area_cm2/number_of_leaflet)
+  mutate(leaf_area_per_leaflet = leaf_area_cm2/number_of_leaflet)
 
 
 ####################################################################################
@@ -117,9 +117,9 @@ leaf_measurements <- leaf_measurements %>%
 juniperus_leaf_area <- juniperus_leaf_area%>%
   mutate(diameter_mm = diameter_mm*0.1)%>% # converting mm to cm
   mutate(radius = diameter_mm/2)%>%
-  mutate(leaf_area_per_leaflet=2*pi*radius*(radius+length_cm))%>%
+  mutate(leaf_area_per_leaflet = 2*pi*radius*(radius+length_cm))%>%
   group_by(sample_id)%>%
-  summarise(leaf_area_per_leaflet=mean(leaf_area_per_leaflet))
+  summarise(leaf_area_per_leaflet = mean(leaf_area_per_leaflet))
 
 
 # Assigning leaf area of Juniperus species in leaf_measurements
@@ -127,7 +127,7 @@ juniperus_leaf_area <- juniperus_leaf_area%>%
 leaf_measurement <- leaf_measurements%>%
   filter(sample_id  %in% juniperus_leaf_area$sample_id )%>% #grabbing only juniperus
   select(-leaf_area_per_leaflet)%>% # Removing leaf_area_per_leaflet since they are empty
-  left_join(juniperus_leaf_area,by="sample_id")%>% # Merging with juniperus_leaf_area
+  left_join(juniperus_leaf_area, by = "sample_id")%>% # Merging with juniperus_leaf_area
   rbind(filter(leaf_measurements,
                !sample_id  %in% juniperus_leaf_area$sample_id)) # Grabbing samples except Juniperus
 # and attaching with only Juniperus samples by rbind
@@ -202,3 +202,4 @@ dim(samples_more_than_three)# 97 rows, now it's ok since Mimosa
 
 rm(canopy_measurements, leaf_measurements,leaf_measurement, burn_trials, 
    samples,juniperus_leaf_area)
+

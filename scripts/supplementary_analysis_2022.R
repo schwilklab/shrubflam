@@ -8,6 +8,7 @@
 
 library(car)
 library(corrplot)
+library(maps)
 
 source("../flam_pca_2022.R") # script that did the pca analysis.
 source("../analysis_2022.R") # script that did the model selection
@@ -33,6 +34,51 @@ dim(three_samples_check)
 
 xtabs(~species_id, three_samples_check) # Yes, each species at 
 # least three samples.
+
+################################################################
+# Creating a map
+################################################################
+
+site_map_2021 <- alldata %>%
+  select(property, lat_location,
+         long_location) %>%
+  rename(site = property,
+         long = long_location,
+         lat = lat_location)
+
+site_map <- alldata_2022 %>%
+  select(site, lat, long) %>%
+  rbind(site_map_2021) %>%
+  mutate(site = ifelse(site == "Dickens Park",
+                       "Dickens spring", site))
+
+View(site_map)
+
+texas <- map_data("state") %>%
+  filter(region == "texas")
+
+texas_counties <- map_data("county") %>%
+  filter(region == "texas")
+
+texas_county_names <- texas_counties %>%
+  group_by(subregion) %>%
+  summarise(mean_lat = mean(lat),
+            mean_long = mean(long))
+
+ggplot(texas, aes(long, lat)) +
+  geom_polygon(color = "black", fill = "grey") +
+  theme_bw() +
+  geom_polygon(aes(group = group), data = texas_counties,
+               fill = "NA", color = "white") +
+  geom_polygon(color = "black", fill = "NA") +
+  geom_point(aes(fill = site), color = "black",
+             shape = 21, size = 2, data = site_map) +
+  geom_text(data = texas_county_names,
+            aes(mean_long, mean_lat, label = subregion),
+            color = "white", size = 2, alpha = 0.5) +
+  labs(fill = "",
+       x = expression("Longitude ("*~degree*")"),
+       y = expression("Latitude ("*~degree*")"))
 
 ########################################################################
 # Creating a separate data set with flammability traits and morphological
