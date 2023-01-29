@@ -35,7 +35,7 @@ pca_data_2022 <- alldata_2022 %>%
   select(- canopy_density_gm_cm3, - leaf_length_per_leaflet)
 
 
-names(pca_data_2022)[7] <- "Duration over (100\u00B0C)"
+ names(pca_data_2022)[7] <- "Duration over (100\u00B0C)"
 
 dim(pca_data_2022)
 
@@ -89,7 +89,7 @@ var_contr_by_cos2 <- fviz_pca_var(flam_pca_2022,col.var = "cos2",
         plot.title = element_blank())
 
 
-var_contr_by_cos2
+
 
 ####################################################################
 ## Contributions of variables in Principle components

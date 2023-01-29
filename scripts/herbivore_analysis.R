@@ -6,6 +6,7 @@
 
 library(ggpubr)
 library(nlme)
+library(car)
 library(multcomp)
 
 
@@ -37,7 +38,7 @@ herbivore_2021 <- alldata %>%
   filter(ignition == 1) %>%
   filter(! trial %in% 1:9) %>%
   rename(degsec_100 = degsec.100) %>%
-  select(species, species_id, degsec_100, herbivore_preference,
+  dplyr::select(species, species_id, degsec_100, herbivore_preference,
          herbivore_defense, property) %>%
   rename(site = property)
 
@@ -62,7 +63,7 @@ unique(herbivore_2022$species)
 
 
 herbivore_data <- herbivore_2022 %>%
-  select(species, species_id, degsec_100, herbivore_defense,
+  dplyr::select(species, species_id, degsec_100, herbivore_defense,
          herbivore_preference, site) %>%
   rbind(herbivore_2021) %>%
   mutate(herbivore_defense = ifelse(herbivore_defense == "non_armed",
@@ -114,19 +115,14 @@ xtabs(~ herbivore_defense, data = herbivore_data)
 
 
 
-########################################################################################################
-shapiro.test(herbivore_data$degsec_100) # p-value < 2.2e-16, not normal
-
-skewness(herbivore_data$degsec_100) # #  2.242181, postively skewed
-
 #########################################################################################################
 
 
 nested_herbivore_defence_model <- lme(degsec_100 ~ herbivore_defense, data = herbivore_data, 
-                                      random = ~ 1|species,  method = "ML") 
+                                      random = ~ 1|species,  method = "REML") 
 
 nested_herbivore_defence_hetero <- lme(degsec_100 ~ herbivore_defense, weights = varIdent(form = ~ 1| herbivore_defense),
-                                       random = ~ 1|species, data = herbivore_data, method = "ML") # Counting the heterogenity
+                                       random = ~ 1|species, data = herbivore_data, method = "REML") # Counting the heterogenity
 # between groups
 
 AIC(nested_herbivore_defence_model, nested_herbivore_defence_hetero) # Lower AICc after counting the heterogenity
@@ -135,9 +131,14 @@ AIC(nested_herbivore_defence_model, nested_herbivore_defence_hetero) # Lower AIC
 
 
 
-summary(nested_herbivore_defence_hetero) # p = 0.094, no significant difference
+anova(nested_herbivore_defence_hetero) # p = 0.111, no significant difference
 
+#car::Anova(nested_herbivore_defence_hetero, type = 3, test.statistic = "F")
 
+adjusted_nested_defence <- glht(nested_herbivore_defence_hetero, 
+                                linfct = mcp(herbivore_defense = "Tukey"))
+
+summary(adjusted_nested_defence) # p = 0.0947
 
 ####################################################################################################
 # Herbivore preference
@@ -160,26 +161,34 @@ herbivore_preference_data$herbivore_preference <- as.factor(herbivore_preference
 ####################################################################################################################
 
 nested_herbivore_preference <- lme(degsec_100 ~ herbivore_preference,
-                                   random = ~ 1 | species, data = herbivore_preference_data, method = "ML")
+                                   random = ~ 1 | species, 
+                                   data = herbivore_preference_data, method = "REML")
 
 
 
 nested_herbivore_preference_withweight <- lme(degsec_100 ~ herbivore_preference, weights = varIdent(form = ~ 1|herbivore_preference),
-                                              random = ~ 1| species, data = herbivore_preference_data, method = "ML")
+                                              random = ~ 1| species, 
+                                              data = herbivore_preference_data, 
+                                              method = "REML")
 
 
-AIC(nested_herbivore_preference, nested_herbivore_preference_withoutweight) # Better after counting heterogenity
+AIC(nested_herbivore_preference, nested_herbivore_preference_withweight) # Better after counting heterogenity
 # between groups, lower AICc
 
 
-summary(nested_herbivore_preference_withweight) # p =  0.004
+summary(nested_herbivore_preference_withweight) # p =  0.01
 
 anova(nested_herbivore_preference_withweight)
 
-adjusted_nested_herbivore_preference <- glht(nested_herbivore_preference_withweight,linfct = mcp( herbivore_preference = "Tukey"))
+car::Anova(nested_herbivore_preference_withweight, type = 3, 
+           test.statistic = "F")
 
-summary(adjusted_nested_herbivore_preference) # adjusted p = 0.0006
+adjusted_nested_herbivore_preference <- glht(nested_herbivore_preference_withweight,
+                                             linfct = mcp( herbivore_preference = "Tukey"))
 
+summary(adjusted_nested_herbivore_preference) # adjusted p = 0.002
+
+confint(adjusted_nested_herbivore_preference)
 
 intervals(nested_herbivore_preference_withweight, which = c("fixed"))
 
@@ -258,12 +267,19 @@ xtabs(~ herbivore_preference, data = herbivore_preference_data_without_site_effe
 
 
 nested_without_site_efffect <- lme(degsec_100 ~ herbivore_preference, weights = varIdent(form = ~ 1|herbivore_preference),
-                                   random = ~1|species, data = herbivore_preference_data_without_site_effect, method = "ML")  
+                                   random = ~1|species, data = herbivore_preference_data_without_site_effect, method = "REML")  
 
-summary(nested_without_site_efffect) # p = 0.0016
+summary(nested_without_site_efffect) # p = 0.0054
 
 anova(nested_without_site_efffect)
 
+car::Anova(nested_without_site_efffect, type = 3, test.statistic = "F") # 0.0002
+
+
+
+adjusted_without_site_effect <- glht(nested_without_site_efffect, linfct = mcp(herbivore_preference = "Tukey"))
+
+summary(adjusted_without_site_effect)
 
 ##################################################################################################
 # Plots 
@@ -277,8 +293,7 @@ ggboxplot(herbivore_preference_data,x = "herbivore_preference",
   ylab("Temperature integration (\u00B0C.s )" ) +
   xlab("White-tailed deer preference") +
   labs(color = "",
-       shape = "") +
-  theme(plot.background = element_rect(size = 1.6))
+       shape = "")
 
 
 plot(ranef(nested_herbivore_preference_withweight, condVar = TRUE)) # Plots of random effects

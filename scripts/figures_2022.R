@@ -6,10 +6,11 @@
 
 
 
-library("randomcoloR")
+library(randomcoloR)
 library(ggmap)
+
 source("../analysis_2022.R") # The script that performed model selection
-source("../flam_pca_2022.R")
+source("../flam_pca_2022.R") # For creating the PCA plot
 
 
 ################################################################

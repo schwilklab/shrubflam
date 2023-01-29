@@ -50,7 +50,7 @@ unique(hobo_bench_drying_2022$date)
 ##########################################################################################################
 
 bench_drying_summary_2022 <- hobo_bench_drying_2022 %>%
-  select(1:4)%>%
+  select(1:5)%>%
   na.omit()%>%
   summarise(mean.temp=mean(temp),max.temp=max(temp),min.temp=min(temp),
             mean.rh=mean(rh),max.rh=max(rh),min.rh=min(rh),
