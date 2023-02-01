@@ -1,18 +1,15 @@
-#!/usr/bin/Rscript --vanilla
+# flam_pca.R
 
-# Shrub Flammability
-# Summer 2022
-# PCA analysis
-# Used prcomp() for PCA and factoextra for graphs.
+# Shrub flammability project using summer 2022 data. PCA analysis uses prcomp()
+# for PCA and factoextra for figures
 
-# All scripts that are in source() required to run before running 
-# flam_pca_2022.R script
+# This script relies on data being already loaded, eg
+# source("./read_data_2022.R") # script that read, clean and merged all the morphological and flammability traits data.
+# source("./read_hobos_2022.R") # script that reads the thermocouple data logger data during burning.
+# 
 
 library(factoextra)
 
-source("./read_data_2022.R") # script that read, clean and merged all the morphological and flammability traits data.
-
-source("./read_hobos_2022.R") # script that reads the thermocouple data logger data during burning.
 
 ####################################################################
 ## PCA analysis, unimputed data. Merging the hobo data with alldata_2022 
@@ -24,15 +21,14 @@ pca_data_2022 <- alldata_2022 %>%
   filter(! sample_id %in% c("KD18", "DK34", "KD15", "UV04",
                             "DK30")) %>% # outliers in a sense something went wrong during measurement
   # for those samples since I measured some traits for some species manually.
-  mutate(label=paste(sample_id,species_id,sep = "_")) %>%
-  left_join(hobos_wider_2022, by = "label") %>%
-  select(label, heat_release_j, massconsumed,
+  left_join(hobos_wider_2022, by = "sample_id") %>%
+  select(sample_id, heat_release_j, massconsumed,
          vol_burned, flame_height, flame_duration, dur_100,
          peak_temp, degsec_100, ignition_delay,
          canopy_density_gm_cm3, leaf_length_per_leaflet) %>% # Dropping the self_ignition # since it is a binary variable.
   filter(canopy_density_gm_cm3 < 0.05,
          leaf_length_per_leaflet < 10) %>%
-  select(- canopy_density_gm_cm3, - leaf_length_per_leaflet)
+  select(-canopy_density_gm_cm3, -leaf_length_per_leaflet)
 
 
  names(pca_data_2022)[7] <- "Duration over (100\u00B0C)"
@@ -62,14 +58,9 @@ biplot(flam_pca_2022)
 ####################################################################
 
 eig_val <- get_eigenvalue(flam_pca_2022) 
-
-
 eig_val # eignevalue for PC2 is 0.88414214
-
 variables_info <- get_pca_var(flam_pca_2022) # Variables information
-
 variables_info$coord[ ,1:2] # Coordinates of variables
-
 head(variables_info$contrib) # Contributions of variables
 
 ####################################################################
@@ -85,7 +76,7 @@ var_contr_by_cos2 <- fviz_pca_var(flam_pca_2022,col.var = "cos2",
   ylab("Principle component 2") +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.background = element_rect(size = 1.6),
+        panel.background = element_rect(linewidth = 1.6),
         plot.title = element_blank())
 
 
@@ -113,14 +104,12 @@ contributor_pc2_2022 <- fviz_contrib(flam_pca_2022, choice = "var",
 #####################################################################
 
 pca_data_2022$PC1 <- flam_pca_2022$x[ ,1]
-
 pca_data_2022$PC2 <- flam_pca_2022$x[ ,2]
 
 final_data <- alldata_2022 %>%
   filter( ! sample_id %in% c("KD18", "DK34", "KD15", "UV04",
                              "DK30")) %>%
-  mutate(label=paste(sample_id,species_id,sep = "_")) %>%
-  left_join(select(pca_data_2022, label, PC1, PC2, degsec_100), by = "label") %>%
+  left_join(select(pca_data_2022, sample_id, PC1, PC2, degsec_100), by = "sample_id") %>%
   filter(canopy_density_gm_cm3 < 0.05,
          leaf_length_per_leaflet < 10) # Removing the outliers
   
@@ -134,22 +123,22 @@ dim(final_data)
 # Changing the name of the random variable
 ##################################################################################
 
-final_data <- final_data %>%
-  mutate(genus = ifelse(genus == "Diospyros", "Diospyros texana", genus),
-         genus = ifelse(genus == "Sophora", "Sophora secundiflora", genus),
-         genus = ifelse(genus == "Mahonia","Mahonia trifoliolata", genus),
-         genus = ifelse(genus == "Rhus", "Rhus virens", genus),
-         genus = ifelse(genus == "Rhus_t", "Rhus trilobata", genus),
-         genus = ifelse(genus == "Ziziphus", "Sarcomphalus obtusifolia ", genus),
-         genus = ifelse(genus == "Juniperus", "Juniperus spp", genus),
-         genus = ifelse(genus == "Prosopis", "Prosopis glandulosa", genus),
-         genus = ifelse(genus == "Ilex", "Ilex vomitoria", genus),
-         genus = ifelse(genus == "Forestiera", "Forestiera pubescens", genus),
-         genus = ifelse(genus == "Coleogyne", "Coleogyne ramosissima", genus),
-         genus = ifelse(genus == "Zanthoxylum", "Zanthoxylum fagara", genus)) %>%
-  mutate(genus = ifelse(species == "Acacia berlandieri", "Senegalia berlandieri", genus),
-         genus = ifelse(species == "Senegalia wrightii", "Senegalia spp", genus))
-# Will use the final_data to do the rest of the analysis.
+## final_data <- final_data %>%
+##   mutate(genus = ifelse(genus == "Diospyros", "Diospyros texana", genus),
+##          genus = ifelse(genus == "Sophora", "Sophora secundiflora", genus),
+##          genus = ifelse(genus == "Mahonia","Mahonia trifoliolata", genus),
+##          genus = ifelse(genus == "Rhus", "Rhus virens", genus),
+##          genus = ifelse(genus == "Rhus_t", "Rhus trilobata", genus),
+##          genus = ifelse(genus == "Ziziphus", "Sarcomphalus obtusifolia ", genus),
+##          genus = ifelse(genus == "Juniperus", "Juniperus spp", genus),
+##          genus = ifelse(genus == "Prosopis", "Prosopis glandulosa", genus),
+##          genus = ifelse(genus == "Ilex", "Ilex vomitoria", genus),
+##          genus = ifelse(genus == "Forestiera", "Forestiera pubescens", genus),
+##          genus = ifelse(genus == "Coleogyne", "Coleogyne ramosissima", genus),
+##          genus = ifelse(genus == "Zanthoxylum", "Zanthoxylum fagara", genus)) %>%
+##   mutate(genus = ifelse(species == "Acacia berlandieri", "Senegalia berlandieri", genus),
+##          genus = ifelse(species == "Senegalia wrightii", "Senegalia spp", genus))
+## # Will use the final_data to do the rest of the analysis.
 
 
 ###############################################################################
