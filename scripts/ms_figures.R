@@ -1,17 +1,18 @@
-### figures_2022.R
-### this R script is used to create figures 
-### showing significant fixed effect of canopy and leaf traits 
-### on flammability from analysis.R and also model
-### anova and coefficient tables
+## ms_figures.R
 
+# this R script is used to create figures showing significant fixed effect of
+# canopy and leaf traits on flammability from analysis.R and also model anova
+# and coefficient tables
 
-
-library(randomcoloR)
+#library(randomcoloR)  ## DWS: Why? You don't want random colors in code!
 library(ggmap)
 
-source("../analysis_2022.R") # The script that performed model selection
-source("../flam_pca_2022.R") # For creating the PCA plot
+## This script depends on analysis.R. See run-all.R
 
+## DWS: Where does the 2021 data coe from, the code you refer to never reads it.
+
+## DWS: Why is this script so long? How many figures do you need to tell this
+## story?
 
 ################################################################
 # Creating a map,I learned to create this kind of map from Dr. Van-gestel's 
@@ -24,6 +25,10 @@ site_map_2021 <- alldata %>%
   rename(site = property,
          long = long_location,
          lat = lat_location)
+
+## DWS: This errors out. alldata does not exist.
+
+## DWS: I gave up here.
 
 site_map <- alldata_2022 %>%
   select(site, lat, long) %>%
@@ -39,8 +44,11 @@ site_map <- alldata_2022 %>%
          site = ifelse(site == "Bastrop-Fayette 2022-05","Bastrop-Fayette", site),
          site = ifelse(site == "Bastrop-Fayette 2022-06","Bastrop-Fayette", site),
          site = ifelse(site == "Bastrop-Fayette 2022-07","Bastrop-Fayette", site))
-
 unique(site_map$site)
+
+## DWS: Why are you putting more data
+
+
 #View(site_map)
 
 
@@ -109,7 +117,9 @@ ggplot(texas, aes(long, lat)) +
 #################################################################################
 
 set.seed(2643598)
-palette <- distinctColorPalette(13)   
+palette <- distinctColorPalette(13)
+
+## DWS: good god why? If you need 13 colors you are thinking about this wrong.
 
 
 ##################################################################################
@@ -124,6 +134,8 @@ best_degsec_canopy_mod_mixed <- afex::mixed(degsec_100 ~ total_dry_mass_g +
                                               data = model_data, method = "KR")
 
 anova(best_degsec_canopy_mod_mixed) # Checking by mixed
+
+## DWS: Why is their model fitting in the figure code?
 
 #####################################################################################
 # Selecting unscaled variables from final data to predict from scaled data in model_data
