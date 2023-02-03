@@ -28,19 +28,22 @@ MASS_DISK_2 = 53.21 # g
 ## We need to read them all in first before cleaning because some calculations
 ## require columns from multiple files
 
-species <- read_csv("./data/species.csv") %>%
+species <- read_csv("../data/species.csv") %>%
   mutate(display_name = paste(substr(genus, 1,1), ". ", specific_epithet, sep=""))
 ## Display name could be function because unknown species sould really be
-## something like "Senegalia spp". But fine for now ebcause I'm not sure this
+## something like "Senegalia spp". But fine for now bebcause I'm not sure this
 ## will even be used.
 
 
-samples_2022 <- read_csv("./data/year_2022/samples_2022.csv")
-canopy_measurements_2022 <- read_csv("./data/year_2022/canopy_measurements_2022.csv")
-leaf_measurements_2022 <- read_csv("./data/year_2022/leaf_measurements_2022.csv")
-moisture_measurements_2022 <- read_csv("./data/year_2022/moisture_content_2022.csv")
-burn_trials_2022 <- read_csv("./data/year_2022/flam_trials_2022.csv")
-juniperus_leaf_area_2022 <- read_csv("./data/year_2022/juniperus_leaf_area_2022.csv")
+
+
+
+samples_2022 <- read_csv("../data/year_2022/samples_2022.csv")
+canopy_measurements_2022 <- read_csv("../data/year_2022/canopy_measurements_2022.csv")
+leaf_measurements_2022 <- read_csv("../data/year_2022/leaf_measurements_2022.csv")
+moisture_measurements_2022 <- read_csv("../data/year_2022/moisture_content_2022.csv")
+burn_trials_2022 <- read_csv("../data/year_2022/flam_trials_2022.csv")
+juniperus_leaf_area_2022 <- read_csv("../data/year_2022/juniperus_leaf_area_2022.csv")
 
 
 ###############################################################################
@@ -50,23 +53,49 @@ juniperus_leaf_area_2022 <- read_csv("./data/year_2022/juniperus_leaf_area_2022.
 ###############################################################################
 ## merging samples data and species data
 ###############################################################################
-
-#species_table_2022$species_id <- as.numeric(species_table_2022$species_id)
+# The number of samples is 139, to make things simpler I am
+# filtering only those species which were collected this year
+# from the species data set (second line before right join). Since there are some species there 
+# which were not collected this year. May be removing from
+# the csv file is a better option but it's just adding a single line
+# of code.
+#############################################################################
 
 samples_2022 <- species %>%
+  filter(species %in% samples_2022$field_taxon) %>% 
   select(species_id, genus, specific_epithet, display_name, analysis_group,
-         herbivore_defense) %>% 
-  right_join(samples_2022, by="species_id" ) %>%
+         herbivore_defense, herbivore_preference) %>% 
+  right_join(samples_2022, by = "species_id" ) %>%
   select(-notes)
 
 ## DWS: Note: herbivore_preference column not found anywhere. Original script
 ## broke here anyway.
+## AM: got the herbivore_preference, fixed. 
 
-dim(samples_2022)
+names(samples_2022)
+
+dim(samples_2022) # 139 samples.
 class(samples_2022$species_id)
 class(samples_2022$sample_id)
 any(is.na(samples_2022))
 # TRUE.
+
+
+########################################################################
+# Removing species_id from samples_2022, canopy_measurements_2022,
+# burn_trials_2022 and moisture_measurements_2022 because I will merge them later 
+# only by by sample_id. However,
+# I didn't remove species_id from the leaf measurements because
+# I used it later to filter particular species to calculate
+# the leaf traits and removing species_id will make things
+# complicated later.
+########################################################################
+
+samples_2022 <- select(samples_2022, -species_id)
+canopy_measurements_2022 <- select(canopy_measurements_2022, -species_id)
+burn_trials_2022 <- select(burn_trials_2022, -species_id)
+moisture_measurements_2022 <- select(moisture_measurements_2022, -species_id)
+
 
 ###############################################################################
 # Moisture measurements
@@ -110,8 +139,8 @@ dim(moisture_measurements_2022)
 # samples right before burning.
 
 
-samples_2022 <- left_join(samples_2022, select(moisture_measurements_2022, -species_id ),
-                          by = c("sample_id")) %>%  #"species_id"  should only join by sample id, right?
+samples_2022 <- left_join(samples_2022, moisture_measurements_2022, 
+                          by = c("sample_id")) %>%  #"species_id"  should only join by sample id, right? AM: Yes.fixed it
   left_join(select(burn_trials_2022, sample_id, mass_pre)) %>%
   mutate(field_moisture_content = ifelse(site == "Edwards 2020-22", NA, field_moisture_content)) # Replacing field moisture content
 # value of the first field trip with NA since samples for measuring the Field moisture content from the first field trip was biased since the paper towel were heavily soaked.
@@ -119,7 +148,7 @@ samples_2022 <- left_join(samples_2022, select(moisture_measurements_2022, -spec
   
 class(samples_2022$sample_id)
 class(samples_2022$mass_pre)
-dim(samples_2022)
+dim(samples_2022) # 139
 
 
 any(is.na(moisture_measurements_2022$canopy_moisture_content))
@@ -142,7 +171,7 @@ samples_2022 <- samples_2022 %>%
   mutate(total_dry_mass_gm =mass_pre*(canopy_dry_mass_gm/canopy_fresh_mass_gm)) %>%
   select(-mass_pre, -canopy_fresh_mass_gm)
 
-dim(samples_2022)
+dim(samples_2022) # 139
 
 ########################################################################################################
 
@@ -176,17 +205,23 @@ dim(cylindrical_shaped) # only two
 ###################################################################################################################
 
 ## DWS: This seems fishy. What is going on? 
+## AM: The reason for doing that was: high value of canopy density of 
+## one of the samples from Ziziphus made me to think that probably the entire
+## calculation was wrong in the code, therefore I calculated the canopy density
+## of that sample separately and checked it manually to confirm
+## the calculation. It just added one more step and may be that's not a 
+## good practice.
 
 ziziphus_CD39 <- canopy_measurements_2022 %>%
   filter( sample_id == "DC39") %>%
   mutate(bottom_radius = bottom_diameter_cm/2, # Calculating the radius out of diameter
          top_radius = top_diameter_cm/2,
          max_radius = maximum_diameter/2) %>%
-  mutate(canopy_volume_cm3 =  (1/3)*pi*distance_from_bottom_cm*(bottom_radius^2 + bottom_radius*max_radius + max_radius^2) + # volume of two truncated cone
-           (1/3)*pi*(70-distance_from_bottom_cm)*(top_radius^2 + top_radius*max_radius + max_radius^2)) %>%
+  mutate(canopy_volume_cm3 =  (1/3)*3.1416*distance_from_bottom_cm*(bottom_radius^2 + bottom_radius*max_radius + max_radius^2) + # volume of two truncated cone
+           (1/3)*3.1416*(70-distance_from_bottom_cm)*(top_radius^2 + top_radius*max_radius + max_radius^2)) %>%
   mutate(total_mass_gm_paired_branch = dry_leaf_weight_gm + dry_stem_weight_gm, # total dry mass of unburned samples
          leaf_stem_mass_ratio = dry_leaf_weight_gm/dry_stem_weight_gm) %>%
-  select(sample_id,species_id, total_mass_gm_paired_branch, leaf_stem_mass_ratio, canopy_volume_cm3)
+  select(sample_id, total_mass_gm_paired_branch, leaf_stem_mass_ratio, canopy_volume_cm3)
 
 
 ####################################################################################################################
@@ -202,30 +237,31 @@ canopy_measurements_2022 <- canopy_measurements_2022 %>%
   mutate(bottom_radius = bottom_diameter_cm/2, # Calculating the radius out of diameter
          top_radius = top_diameter_cm/2,
          max_radius = maximum_diameter/2) %>%
-  mutate(canopy_volume_cm3 = ifelse(type == "truncated_cone", (1/3)*pi*70*(bottom_radius^2 + bottom_radius*top_radius + top_radius^2), # volume of truncated cone 1/3*pi*h(r1^2 + r1*r2 + r2^2)
-                                        (1/3)*pi*distance_from_bottom_cm*(bottom_radius^2 + bottom_radius*max_radius + max_radius^2) + # volume of two truncated cone
-                                          (1/3)*pi*(70-distance_from_bottom_cm)*(top_radius^2 + top_radius*max_radius + max_radius^2))) %>%
+  mutate(canopy_volume_cm3 = ifelse(type == "truncated_cone", (1/3)*3.1416*70*(bottom_radius^2 + bottom_radius*top_radius + top_radius^2), # volume of truncated cone 1/3*pi*h(r1^2 + r1*r2 + r2^2)
+                                        (1/3)*3.1416*distance_from_bottom_cm*(bottom_radius^2 + bottom_radius*max_radius + max_radius^2) + # volume of two truncated cone
+                                          (1/3)*3.1416*(70-distance_from_bottom_cm)*(top_radius^2 + top_radius*max_radius + max_radius^2))) %>%
   select(- bottom_radius, -top_radius, - max_radius) %>%
   rbind(cylindrical_shaped) %>% # binded with cylindrical shaped, Is that ok?
   mutate(total_mass_gm_paired_branch = dry_leaf_weight_gm + dry_stem_weight_gm, # total dry mass of unburned samples
          leaf_stem_mass_ratio = dry_leaf_weight_gm/dry_stem_weight_gm) %>%
-  select(sample_id,species_id, total_mass_gm_paired_branch, leaf_stem_mass_ratio, canopy_volume_cm3) %>%
+  select(sample_id, total_mass_gm_paired_branch, leaf_stem_mass_ratio, canopy_volume_cm3) %>%
   rbind(ziziphus_CD39) # binded by ziziphus DC39
   
-dim(canopy_measurements_2022)
-any(is.na(canopy_measurements_2022$leaf_stem_mass_ratio))
-any(is.na(canopy_measurements_2022$canopy_volume_cm3))
+dim(canopy_measurements_2022) # 139
+any(is.na(canopy_measurements_2022$leaf_stem_mass_ratio)) # FALSE
+any(is.na(canopy_measurements_2022$canopy_volume_cm3)) # FALSE
 
 ##############################################################################################################################################
 # Merging samples_2022 with canopy_measurements_2022 and calculating canopy density
 ##############################################################################################################################################
 
-samples_2022 <- left_join(samples_2022, select(canopy_measurements_2022,-species_id ), by = c("sample_id"))
+samples_2022 <- left_join(samples_2022, canopy_measurements_2022, by = c("sample_id"))
 
 ## DWS: You are storing species id all over the place! Seems like recipe for
 ## errors
+## AM: fixed it
 
-dim(samples_2022)
+dim(samples_2022) # 139
 
 # Calculating canopy density
 
@@ -235,9 +271,9 @@ samples_2022 <- samples_2022 %>%
   # leaf and canopy moisture content.
   select(- canopy_volume_cm3, - canopy_dry_mass_gm, leaf_dry_mass_gm) # Removing canopy_volume_cm3
 
-dim(samples_2022)
-any(is.na(samples_2022$leaf_stem_mass_ratio))
-any(is.na(samples_2022$canopy_density_gm_cm3))
+dim(samples_2022) #139
+any(is.na(samples_2022$leaf_stem_mass_ratio)) #FALSE
+any(is.na(samples_2022$canopy_density_gm_cm3)) #FALSE
 
 ###########################################################################################################################
 # Leaf measurements, calculating LMA and leaf area and leaf length per leaflet
@@ -273,7 +309,7 @@ dim(without_senegalia)
 leaf_measurements_2022 <- without_senegalia %>%
   rbind(senegalia_leaf_measurements)
 
-dim(leaf_measurements_2022)
+dim(leaf_measurements_2022) #139
 
 ########################################################################################################################################
 # Average length of Leaflet.
@@ -288,7 +324,7 @@ leaf_measurements_2022 <- leaf_measurements_2022 %>%
          -leaf5_length_cm) # Removing leaf length of individual leaf length since we already got the average
 
 
-dim(leaf_measurements_2022)
+dim(leaf_measurements_2022) #139
 
 any(is.na(leaf_measurements_2022$average_leaf_length_cm))
 
@@ -302,9 +338,10 @@ names(leaf_measurements_2022)
 # calipers and meter scales respectively and calculated the surface area according to the 
 # formula of cylinder where the breadth and length of individual branchlets are diameter
 # and height of a cylinder respectively.
+# row 311 is an empty row.
 
 
-juniperus_leaf_area_2022 <- juniperus_leaf_area_2022[-311, ] %>%
+juniperus_leaf_area_2022 <- juniperus_leaf_area_2022[-311, ] %>% 
   mutate(leaf_radius_cm = leaf_diameter_cm/2,  
          leaf_length_cm = leaf_length_cm + 0.04, # Adding the 0.04 same way did with length of individual leaflet.
   # turning diameter into radius
@@ -356,10 +393,10 @@ leaf_measurements_2022 <- without_juniperus %>%
   # leaf_length_per_leaflet
   select(-lma_fresh_mass_gm, -lma_dry_mass_gm, -leaf_area_cm2, number_of_leaflet)
 
-dim(leaf_measurements_2022)
-any(is.na(leaf_measurements_2022$leaf_length_per_leaflet))
-any(is.na(leaf_measurements_2022$leaf_area_per_leaflet))
-any(is.na(leaf_measurements_2022$leaf_mass_per_area))
+dim(leaf_measurements_2022) #139
+any(is.na(leaf_measurements_2022$leaf_length_per_leaflet)) #FALSE
+any(is.na(leaf_measurements_2022$leaf_area_per_leaflet)) #FALSE
+any(is.na(leaf_measurements_2022$leaf_mass_per_area)) #FALSE
 
 #senegalia_outlier <- leaf_measurements_2022 %>%
 #filter(species_id == 2005)
@@ -384,14 +421,17 @@ burn_trials_2022 <- burn_trials_2022 %>%
          massconsumed = (mass_pre - mass_post)) %>%
   select(-temp_d1_post, -temp_d2_post, -date)
 
-dim(burn_trials_2022)
+dim(burn_trials_2022) # 139
 
 
 ####################################################################################
 # Creating a separate dataset which I will use to merge with dataset from 2021
+# First, let's get rid of species_id and keeping only sample_id for every merge 
+# from now on
 ###################################################################################
 leaf_measurements_2022 <- select(leaf_measurements_2022, -species_id)
-burn_trials_2022 <- select(burn_trials_2022, -species_id)
+
+#burn_trials_2022 <- select(burn_trials_2022, -species_id)
 
 ## DWS: That really should be fixed either in data or on first read of the
 ## data. Why is species id occurring all over?
@@ -406,6 +446,12 @@ herbivore_2022 <- samples_2022 %>%
 
 ## DWS: Why are you filtering out KD07 and UV01 everywhere. DO THINGS ONE TIME!
 ## This is so error-prone.
+## AM: The reason for doing this I have only two samples
+## with missing values for flammability measurements. And this dataset 
+## will be used to do the herbivore_analysis. Since outliers of leaf_traits
+## and canopy traits doesn't matter for herbivore_analysis I am just simply
+## removing two sample whose flammability traits is not usable (please, see justification
+## on the codes and notes in the burn_trials.csv)
 
 ####################################################################################
 # Merging all data
@@ -414,67 +460,37 @@ herbivore_2022 <- samples_2022 %>%
 alldata_2022 <- samples_2022 %>%
   left_join(leaf_measurements_2022, by = c("sample_id")) %>%
   left_join(burn_trials_2022, by = c("sample_id")) %>%
-  filter( ! species_id %in% c(2006,1085,1009,3000,2022, 2038), # Dropping those species which has less than three samples!!
+  filter( ! field_taxon %in% c("Rhus microphylla","Arbutus xalapensis" ,"Mimosa borealis",
+                               "Unknown spp", "Ulmus crassifolia", "Frangula caroliniana"), # Dropping those species which has less than three samples!!
           ! sample_id %in% c("KD07", "UV01")) %>%  # KD07 has missing values of flammability measurements and mistakenly, UV01 has ignited with blow torch though 
      # it has self ignition and has existing flame(descriptions on notes in flam_trials_2022,csv.)
-   mutate(air_temp_f = ifelse(sample_id == "UV16", NA, air_temp_f)) # The air temperature for 
-# UV16 is 40.3 which is a mistake during data entry.
+   mutate(air_temp_f = ifelse(sample_id == "UV16", NA, air_temp_f)) %>%  # The air temperature for  UV16 is 40.3 which is a mistake during data entry.
+  filter(! sample_id %in% c("KD18", "DK34", "KD15", "UV04",
+                            "DK30")) %>% # outliers in a sense something went wrong during measurement
+  # for those samples since I measured some traits for some species manually.
+  filter(canopy_density_gm_cm3 < 0.05,
+         leaf_length_per_leaflet < 10)
 
-dim(alldata_2022)
-any(is.na(alldata_2022$canopy_density_gm_cm3))
-any(is.na(alldata_2022$leaf_area_per_leaflet))
-any(is.na(alldata_2022$leaf_length_per_leaflet))
-any(is.na(alldata_2022$leaf_mass_per_area))
-any(is.na(alldata_2022$leaf_stem_mass_ratio))
-any(is.na(alldata_2022$canopy_moisture_content))
-any(is.na(alldata_2022$leaf_moisture_content))
-
-##################################################################################
-# The flame height was recorded on paper in mm but I changed the unit to cm
-# manually during data entry but for some samples the unit remain unchanged, I
-# was in rush to push the data into github. Fixing them one by
-# one from the data sheet
-#######################################################################
-
-## DWS: Why are you doing this in code and not by fixing the data with a commit
-## message like the above comment?
-
-alldata_2022 <- alldata_2022 %>%
-  mutate(flame_height = ifelse( sample_id == "DC29", 115, flame_height)) # It is 115 actually, not 150
-
-alldata_2022 <- alldata_2022 %>%
-  mutate(flame_height = ifelse( sample_id == "DK49", 35, flame_height))
-
-alldata_2022 <- alldata_2022 %>%
-  mutate(flame_height = ifelse( sample_id == "DV05", 150, flame_height))
-
-alldata_2022 <- alldata_2022 %>%
-  mutate(flame_height = ifelse( sample_id == "DV06", 130, flame_height))
+dim(alldata_2022) # 116 , that is is exact number of samples I used all the analysis so far.
+any(is.na(alldata_2022$canopy_density_gm_cm3)) # FALSE
+any(is.na(alldata_2022$leaf_area_per_leaflet)) #FALSE
+any(is.na(alldata_2022$leaf_length_per_leaflet)) # FALSE
+any(is.na(alldata_2022$leaf_mass_per_area)) #FALSE
+any(is.na(alldata_2022$leaf_stem_mass_ratio)) #FALSE
+any(is.na(alldata_2022$canopy_moisture_content)) #FALSE
+any(is.na(alldata_2022$leaf_moisture_content)) #FALSE
+ 
 
 
-##########################################################################
-# All the flame height is in mili meter from 08/14/2022 date
-##########################################################################
-
-alldata_2022$burn_date <- as.character(alldata_2022$burn_date) # Changing the date to character
-
-## DWS: Why are you converting types here? This is a bad idea.
-
-alldata_2022 <- alldata_2022 %>%
-  mutate( flame_height = ifelse(burn_date == "2022-08-14", flame_height/10, flame_height))
-
-
-alldata_2022$burn_date <- as.Date(alldata_2022$burn_date) # Now as Date
 
 #####################################################################################
-# Changing the variable names
+# Changing the variable names and creating new label
 #####################################################################################
 
 alldata_2022 <- alldata_2022 %>%
-  rename(total_dry_mass_g = total_dry_mass_gm)
-## ,
-##          genus = group) %>%
-##   mutate(genus = ifelse(species == "Rhus trilobata", "Rhus_t", genus))
+  rename(total_dry_mass_g = total_dry_mass_gm) %>%
+  mutate(label = paste(sample_id, trials, sep = "_"))
+
  
 ######################################################################################
 # Cleaning up work space, only keeping the alldata_2022
