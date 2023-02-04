@@ -20,7 +20,7 @@ species_id,species,genus,herbivore_preference,specific_epithet,family,common_nam
 7000,Ilex vomitoria,Ilex,NA,vomitoria,Aquifoliaceae,Yaupon holly,Ilex,,simple_alternate,angiosperm,evergreen,,non_armed
 6000,Calicarpa americana,Calicarpa,NA,americana,Lamiaceae,American beautyberry,Calicarpa,,simple_opposite,angiosperm,deciduous,,non_armed
 9000,Juniperus virginiana,Juniperus,least,virginiana,Cupressaceae,Eastern redcedar,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,,non_armed
-4000,Senegalia berlandieri,Senegalia,moderate_low,berlandieri,Fabaceae,Guajillo,Senegalia berlandieri,caesalpinioideae,pinnately_cpmpound,angiosperm,deciduous,,armed
+4000,Senegalia berlandieri,Senegalia,moderate_low,berlandieri,Fabaceae,Guajillo,Senegalia berlandieri ,caesalpinioideae,pinnately_cpmpound,angiosperm,deciduous,,armed
 8888,Zanthoxylum fagara,Zanthoxylum,moderate_low,fagara,Rutaceae,Colima,Zanthoxylum,,simple,angiosperm,evergreen,,armed
 9999,Coleogyne ramosissima,Coleogyne,moderate_low,ramosissima,Rosaceae,Blackbrush,Coleogyne,,inversly_lanceolate_opposite,angiosperm,evergreen,,armed
 5403,Unknown spp2,Senegalia,NA,spp,Fabaceae,Acacia spp,Senegalia,,,angiosperm,deciduous,,armed

@@ -12,7 +12,7 @@ source("../read_data.R") # script that read, clean and merged all the morphologi
 # thermocouples data with alldata_2022
 
 # The only thing that have to make sure that the the working directory
-# is "../data" to read the hobo data. If all the codes ran well from read_data_2022.R that
+# is "./data" to read the hobo data. If all the codes ran well from read_data.R that
 # means this script is supposed to run as well . May be a bit vague explanation. 
 # Need to be checked by Dr. Schwilk.
 
@@ -227,11 +227,10 @@ dim(hobos_wider_2022)
 #####################################################################
 # The remaining code is only for plotting purpose
 # Plotting the summarized data
-# Merge the trials data with hobo summary data and alldata_2022
+# Merge  the hobo summary data with alldata_2022
 #####################################################################
 
 hobo_plots <- alldata_2022 %>%
-  mutate(label = paste(sample_id, trials, sep = "_")) %>%
   right_join(hobo_temp_sum, by = "label") %>%
   filter( sample_id != "NA")
 

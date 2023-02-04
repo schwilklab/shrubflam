@@ -4,36 +4,26 @@
 # for PCA and factoextra for figures
 
 # This script relies on data being already loaded, eg
-# source("./read_data_2022.R") # script that read, clean and merged all the morphological and flammability traits data.
-# source("./read_hobos_2022.R") # script that reads the thermocouple data logger data during burning.
-# 
+source("./read_hobos.R") # script that reads the thermocouple data logger data during burning.
+
 
 library(factoextra)
 
 
 ####################################################################
-## PCA analysis, unimputed data. Merging the hobo data with alldata_2022 
+## PCA analysis. Merging the hobo data with alldata_2022 by label
 # data set to do the PCA.
-# Decided to drop some samples, descriptions in the exploratory_figures_2022.R
 #####################################################################
 
 pca_data_2022 <- alldata_2022 %>%
-  filter(! sample_id %in% c("KD18", "DK34", "KD15", "UV04",
-                            "DK30")) %>% # outliers in a sense something went wrong during measurement
-  # for those samples since I measured some traits for some species manually.
-  left_join(hobos_wider_2022, by = "sample_id") %>%
+  left_join(hobos_wider_2022, by = "label") %>%
   select(sample_id, heat_release_j, massconsumed,
          vol_burned, flame_height, flame_duration, dur_100,
-         peak_temp, degsec_100, ignition_delay,
-         canopy_density_gm_cm3, leaf_length_per_leaflet) %>% # Dropping the self_ignition # since it is a binary variable.
-  filter(canopy_density_gm_cm3 < 0.05,
-         leaf_length_per_leaflet < 10) %>%
-  select(-canopy_density_gm_cm3, -leaf_length_per_leaflet)
+         peak_temp, degsec_100, ignition_delay)
 
 
- names(pca_data_2022)[7] <- "Duration over (100\u00B0C)"
 
-dim(pca_data_2022)
+dim(pca_data_2022) # 116
 
 any(is.na(pca_data_2022)) 
 
@@ -45,7 +35,7 @@ flam_pca_2022 <- prcomp(pca_data_2022[,-1],
                    scale=TRUE)
 
 
-summary(flam_pca_2022) # standard deviation for PC2 is 0.94029
+summary(flam_pca_2022) # standard deviation for PC2 is 0.093
 
 flam_loadings <- flam_pca_2022$rotation[ ,1:2] 
 
@@ -58,7 +48,7 @@ biplot(flam_pca_2022)
 ####################################################################
 
 eig_val <- get_eigenvalue(flam_pca_2022) 
-eig_val # eignevalue for PC2 is 0.88414214
+eig_val # eignevalue for PC2 is 0.842
 variables_info <- get_pca_var(flam_pca_2022) # Variables information
 variables_info$coord[ ,1:2] # Coordinates of variables
 head(variables_info$contrib) # Contributions of variables
@@ -107,38 +97,11 @@ pca_data_2022$PC1 <- flam_pca_2022$x[ ,1]
 pca_data_2022$PC2 <- flam_pca_2022$x[ ,2]
 
 final_data <- alldata_2022 %>%
-  filter( ! sample_id %in% c("KD18", "DK34", "KD15", "UV04",
-                             "DK30")) %>%
-  left_join(select(pca_data_2022, sample_id, PC1, PC2, degsec_100), by = "sample_id") %>%
-  filter(canopy_density_gm_cm3 < 0.05,
-         leaf_length_per_leaflet < 10) # Removing the outliers
+  left_join(select(pca_data_2022, sample_id, PC1, PC2, degsec_100), by = "sample_id")
   
 
 dim(final_data)
 
-
-## Will use the final_data to do the rest of the analysis regarding mixed effect model.
-
-##################################################################################
-# Changing the name of the random variable
-##################################################################################
-
-## final_data <- final_data %>%
-##   mutate(genus = ifelse(genus == "Diospyros", "Diospyros texana", genus),
-##          genus = ifelse(genus == "Sophora", "Sophora secundiflora", genus),
-##          genus = ifelse(genus == "Mahonia","Mahonia trifoliolata", genus),
-##          genus = ifelse(genus == "Rhus", "Rhus virens", genus),
-##          genus = ifelse(genus == "Rhus_t", "Rhus trilobata", genus),
-##          genus = ifelse(genus == "Ziziphus", "Sarcomphalus obtusifolia ", genus),
-##          genus = ifelse(genus == "Juniperus", "Juniperus spp", genus),
-##          genus = ifelse(genus == "Prosopis", "Prosopis glandulosa", genus),
-##          genus = ifelse(genus == "Ilex", "Ilex vomitoria", genus),
-##          genus = ifelse(genus == "Forestiera", "Forestiera pubescens", genus),
-##          genus = ifelse(genus == "Coleogyne", "Coleogyne ramosissima", genus),
-##          genus = ifelse(genus == "Zanthoxylum", "Zanthoxylum fagara", genus)) %>%
-##   mutate(genus = ifelse(species == "Acacia berlandieri", "Senegalia berlandieri", genus),
-##          genus = ifelse(species == "Senegalia wrightii", "Senegalia spp", genus))
-## # Will use the final_data to do the rest of the analysis.
 
 
 ###############################################################################
