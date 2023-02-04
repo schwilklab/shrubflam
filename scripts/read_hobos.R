@@ -1,3 +1,5 @@
+#!/usr/bin/Rscript --vanilla
+
 # Shrub Flammability project
 # Dylan Schwilk, Azaj Mahmud
 # 2022
@@ -5,48 +7,45 @@
 # Read the thermocouple data, in multiple csv files saved from the HOBO
 # software.
 
+source("../read_data.R") # script that read, clean and merged all the morphological and flammability traits data
+# except hobo thermocouples data. That's why in this script I will merge the 
+# thermocouples data with alldata_2022
+
+# The only thing that have to make sure that the the working directory
+# is "../data" to read the hobo data. If all the codes ran well from read_data_2022.R that
+# means this script is supposed to run as well . May be a bit vague explanation. 
+# Need to be checked by Dr. Schwilk.
+
 TZ = "CST6CDT"
+
 
 library(tidyr)
 library(ggplot2)
 library(stringr)
 
-## Data caching
-DATA_CACHE_DIR <- "./results/tempdata"
 
+################################################################################
+# Getting alldata_2022 from read_data.R, labeled by sample_id and trials
+# since I already removed the species_id. I hope it will make sense!
+################################################################################
 
-####################################################################
-# Reading trials data in order to grab the temperatures from hobo
-# data loggers
-####################################################################
-
-trials_2022 <- read.csv("./data/year_2022/flam_trials_2022.csv",
-                        stringsAsFactors = FALSE)
-
-
-#####################################################################
-# Getting the end trial time, converting the time zone of trials data
-#####################################################################
-
-
-# KD07 has missing values of flammability measurements and mistakenly, UV01 has
-# ignited with blow torch though it has self ignition and has existing
-# flame (descriptions on notes in flam_trials_2022.csv)
-trials_2022 <- trials_2022 %>% filter( ! sample_id %in% c("KD07", "UV01")) %>% 
-  mutate(start_time = mdy_hm(str_c(date, " ",
-                                   trial_time), tz = TZ))%>%
+hobo_thermocouples_data <- alldata_2022 %>%
+  mutate(burn_date <- as.Date(burn_date, "%Y-%m-%d")) %>%
+  mutate(trial_time <- hms(trial_time)) %>%
+  mutate(start_time = as.POSIXct(paste(burn_date, trial_time), tz = TZ)) %>%
   mutate(end_time = as.POSIXct(start_time + 120 + ignition_delay + flame_duration),
          format = "%m-%d-%y %H:%M:%S", tz = TZ)%>% # Two minutes
   #pre-heating and ignition period,  plus flame_duration
   mutate(intervals = interval(start_time, end_time))%>%
-  mutate(label = paste(sample_id,species_id, sep = "_"))
+  mutate(label = paste(sample_id, trials, sep = "_"))
 
 
-## DWS: But I've seen this filtering happening in multiple spots! Do it once.
+class(hobo_thermocouples_data$start_time)
 
-dim(trials_2022)
-class(trials_2022$start_time)
-class(trials_2022$end_time)
+
+class(hobo_thermocouples_data$end_time)
+
+
 
 
 ####################################################################
@@ -79,21 +78,25 @@ concat_hobo_files <- function(filelist, label){
 ######################################################################
 # We could grab the column name from the file name and do this in one go, but
 # this also works.
-
 #######################################################################
 # Grabbing all the hobo files from left
 ########################################################################
 
-flam_left <- concat_hobo_files(list.files("./data/year_2022/hobos_2022",
+flam_left <- concat_hobo_files(list.files("../data/year_2022/hobos_2022",
                                           full.names = TRUE, recursive = TRUE,
                                           pattern = "flam.left*.csv"),
                                "flam_left")
 
 
+
 class(flam_left$time) 
+
 any(is.na(flam_left$flam.left))
+
 any(is.na(flam_left$time)) 
+
 flam.left <- separate(flam_left, time, into = c("date", "time"), sep = " ")
+
 unique(flam.left$date)
 
 
@@ -101,16 +104,20 @@ unique(flam.left$date)
 # Grabbing all the hobo files from mid
 #####################################################################
 
-flam_mid <- concat_hobo_files(list.files("./data/year_2022/hobos_2022",
+flam_mid <- concat_hobo_files(list.files("../data/year_2022/hobos_2022",
                                          full.names = TRUE, recursive = TRUE,
                                          pattern = "flam.mid*.csv"),
                               "flam_mid")
 
 class(flam_mid$time) 
+
 any(is.na(flam_mid$flam.mid))
+
 any(is.na(flam_mid$time)) 
+
 flam.mid <- separate(flam_mid,time, into = c("date","time"),
                      sep = " ")
+
 
 unique(flam.mid$date)
 
@@ -118,17 +125,21 @@ unique(flam.mid$date)
 # Grabbing all the hobo files from right
 #####################################################################
 
-flam_right <- concat_hobo_files(list.files("./data/year_2022/hobos_2022",
+flam_right <- concat_hobo_files(list.files("../data/year_2022/hobos_2022",
                                            full.names = TRUE, recursive = TRUE,
                                            pattern = "flam.right*.csv"),
                                 "flam_right")
 
 
 class(flam_right$time)
+
 any(is.na(flam_right$flam.right))
+
 any(is.na(flam_right$time))
+
 flam.right <- separate(flam_right, time, into =  c("date", "time"), 
                        sep = " ")
+
 unique(flam.right$date)
 
 #####################################################################
@@ -138,9 +149,12 @@ unique(flam.right$date)
 hobos <- full_join(flam_left, flam_mid, by = "time") %>% 
   full_join(flam_right,  by = "time")
 
+
 class(hobos$time)
+
 hobos_separate <- separate(hobos, time, into = c("date", "time"),
                            sep= " ")
+
 
 unique(hobos_separate$date)
 
@@ -151,9 +165,9 @@ unique(hobos_separate$date)
 #####################################################################
 
 get_trial_label <- function(time) {
-  matches <- time %within% trials_2022$intervals
+  matches <- time %within% hobo_thermocouples_data$intervals
   if(! any(matches)) return(NA)
-  return(trials_2022$label[which.max(matches)])
+  return(hobo_thermocouples_data$label[which.max(matches)])
 }
 
 
@@ -162,7 +176,10 @@ get_trial_label <- function(time) {
 #####################################################################
 
 hobos$label <- unlist(sapply(hobos$time, get_trial_label))
-unique(hobos$label)
+
+
+unique(hobos$label) 
+length(unique(hobos$label)) #117, one NA
 
 #####################################################################
 # Getting the hobos as long format to summarise the data by 
@@ -188,8 +205,9 @@ hobo_temp_sum <- hobos_long %>% group_by(label, position) %>%
             num_NA = sum(is.na(temperature))) %>% ungroup()%>%
   filter(label != "NA")
 
-dim(trials_2022)
-dim(hobo_temp_sum) # 137*3 = 411
+dim(hobo_thermocouples_data) #116
+
+dim(hobo_temp_sum) # 116*3 = 348
 
 
 ########################################################################
@@ -202,79 +220,75 @@ hobos_wider_2022 <- hobo_temp_sum %>%
   group_by(label) %>%
   summarise(dur_100=mean(dur_100),
             peak_temp=max(peak_temp),
-            degsec_100=max(degsec_100)) %>%
-  separate(label, c("sample_id", NA))
+            degsec_100=max(degsec_100))
 
 dim(hobos_wider_2022)
 
-
-## DWS: Justify those choices?
-
 #####################################################################
+# The remaining code is only for plotting purpose
 # Plotting the summarized data
 # Merge the trials data with hobo summary data and alldata_2022
 #####################################################################
 
 hobo_plots <- alldata_2022 %>%
-  mutate(label = paste(sample_id, species_id, sep = "_")) %>%
+  mutate(label = paste(sample_id, trials, sep = "_")) %>%
   right_join(hobo_temp_sum, by = "label") %>%
   filter( sample_id != "NA")
-## DWS: But hobo_temp_sum has three rows per sample_id. WHy are you not merging
-## with hobos_wider_2022?
 
-dim(alldata_2022) # 129
-dim(hobo_plots) # 129*3 = 387
-## DWS: But that is [1] 414  57 not what you show. UNless we merge with hobos_wider_2022
-any(is.na(hobo_plots$dur_100))
-any(is.na(hobo_plots$degsec_100))
-any(is.na(hobo_plots$peak_temp))
+dim(alldata_2022) # 116
+
+dim(hobo_plots) # 116*3 = 348
+
+any(is.na(hobo_plots$dur_100)) #FALSE
+
+any(is.na(hobo_plots$degsec_100)) #FALSE
+
+any(is.na(hobo_plots$peak_temp)) #FALSE
 
 ########################################################################
 # Plot for the summary
 ########################################################################
 
-## ggplot(hobo_plots, aes(display_name, dur_100))+
-##   geom_jitter(width = 0)+
-##   facet_grid(.~ position)+
-##   theme_bw()+
-##   theme(axis.text.x = element_text(angle = 45,
-##                                    hjust = 1,
-##                                    face = "italic"))+
-##   labs(x="Species",
-##        y=expression(paste("Duration over ",100^degree*C, " in (s)")))
+ggplot(hobo_plots,aes(field_taxon, dur_100, color = field_taxon))+
+  geom_jitter(width = 0)+
+  facet_grid(.~position)+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust = 1,
+                                   face = "italic"))+
+  labs(x = "Display name",
+       y=expression(paste("Duration over ",100^degree*C, " in (s)")))
 
 
-## ggplot(hobo_plots,aes(species, degsec_100, color = species))+
-##   geom_jitter(width = 0)+
-##   facet_grid(.~position)+
-##   theme_bw()+
-##   theme(axis.text.x = element_text(angle = 45,
-##                                    hjust = 1,
-##                                    face = "italic"))+
-##   labs(x="Display name")
+ggplot(hobo_plots,aes(field_taxon, degsec_100, color = field_taxon))+
+  geom_jitter(width = 0)+
+  facet_grid(.~position)+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust = 1,
+                                   face = "italic"))+
+  labs(x = "Display name",
+  y = expression(Temperature ~ integration ~ (degree~C %.% s ) ) )
 
-## ggplot(hobo_plots,aes(species, peak_temp, color = species))+
-##   geom_jitter(width = 0)+
-##   facet_grid(.~position)+
-##   theme_bw()+ 
-##   theme(axis.text.x = element_text(angle = 45,
-##                                    hjust = 1, 
-##                                    face = "italic"))+
-##   labs(x="Display name",
-##        y=expression("Peak temperature " ( degree*C)))
-
-## DWS: writing a summary file to save later run time. A better way to do this
-## would be with data caching and checking timestamps but I'll keep it manual
-## for now.
-
-saveRDS(hobos_wider_2022, file.path(DATA_CACHE_DIR, "hobos_wider_2022"))
+ggplot(hobo_plots,aes(field_taxon, peak_temp, color = field_taxon))+
+  geom_jitter(width = 0)+
+  facet_grid(.~position)+
+  theme_bw()+ 
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust = 1, 
+                                   face = "italic"))+
+  labs(x="Display name",
+       y=expression("Peak temperature " ( degree*C)))
 
 
+
+ 
 ########################################################################
 # Cleaning the environment
 ########################################################################
 
 rm("concat_hobo_files", "get_trial_label", "read_hobo_file",
    "hobos_long","hobo_plots", "flam.right","flam.mid","flam.left",
-   "flam_right","flam_mid","flam_left")
+   "flam_right","flam_mid","flam_left", "hobo_thermocouples_data",
+   "hobo_temp_sum")
 

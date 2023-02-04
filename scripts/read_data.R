@@ -31,7 +31,7 @@ MASS_DISK_2 = 53.21 # g
 species <- read_csv("../data/species.csv") %>%
   mutate(display_name = paste(substr(genus, 1,1), ". ", specific_epithet, sep=""))
 ## Display name could be function because unknown species sould really be
-## something like "Senegalia spp". But fine for now bebcause I'm not sure this
+## something like "Senegalia spp". But fine for now because I'm not sure this
 ## will even be used.
 
 
@@ -192,7 +192,7 @@ cylindrical_shaped <- canopy_measurements_2022 %>%
   filter( type == "cylinder") %>%
   mutate(average_diameter = (bottom_diameter_cm + top_diameter_cm + maximum_diameter)/3,
          average_radius = average_diameter/2,
-         canopy_volume_cm3 = pi*average_radius^2*70) %>%  #pi*r^2*h
+         canopy_volume_cm3 = 3.1416*average_radius^2*70) %>%  #pi*r^2*h
   select(- average_diameter, -average_radius)
   
 names(cylindrical_shaped)
