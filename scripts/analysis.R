@@ -21,6 +21,7 @@
 ## 
 
 library(MuMIn)
+source("../flam_pca.R") # The script where the PCA was performed 
 
 # MuMIn package for automated model selection through subsetting
 # the maximum model, with optimal constraints for model inclusion.
