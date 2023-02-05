@@ -1,6 +1,6 @@
 # Shrub Flammability project
 # Dylan Schwilk, Azaj Mahmud
-# Febraury 2023
+# February 2023
 
 # This script depends on scripts listed in run-all.R
 
@@ -62,7 +62,7 @@ model_data <- final_data %>%
   mutate_at(c("total_dry_mass_g", "canopy_density_gm_cm3", "leaf_stem_mass_ratio",
               "canopy_moisture_content","leaf_mass_per_area", 
               "leaf_area_per_leaflet", "leaf_length_per_leaflet",
-              "leaf_moisture_content"), list(zscore))
+              "leaf_moisture_content", "mean_pre_burning_temp"), list(zscore))
 
 names(model_data)
 
@@ -73,7 +73,7 @@ dim(model_data)
 
 model_data <- model_data %>%
   select(degsec_100, field_taxon,
-         ignition_delay,
+         ignition_delay, mean_pre_burning_temp,
          display_name, analysis_group, total_dry_mass_g , 
          canopy_density_gm_cm3 , leaf_stem_mass_ratio , 
          canopy_moisture_content, leaf_mass_per_area , 
@@ -204,6 +204,20 @@ summary(best_leaf_pc1_model) # Leaf mass per area is the best model
 AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 3.18
 # and leaf 76.26
 
+########################################################################
+# Does pre_burning temperature improves the best model?
+#########################################################################
+
+pre_burning_temp_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g +
+                                                     canopy_density_gm_cm3 +
+                                                     mean_pre_burning_temp +
+                                                     (1 | analysis_group),
+                                                   data = model_data, REML = FALSE)
+
+summary(pre_burning_temp_canopy_traits_model) # pre_burning_temp: p-value = 0.231
+
+AIC(best_canopy_pc1_model, pre_burning_temp_canopy_traits_model) # AICc = 3.75,
+# didn't improve the model.
 
 
 ##################################################################################
@@ -255,6 +269,8 @@ canopy_ignition_mod_table <- model.sel(canopy_ignition_models)
 canopy_ignition_mod_table[1:8,]
 summary(best_canopy_ignition_model)
 
+# Canopy_density and canopy moisture content best fit the dataset
+
 #sjPlot::tab_model(best_canopy_ignition_model)
 
 #########################################################################################
@@ -275,15 +291,27 @@ best_leaf_ignition_model <- get.models(leaf_ignition_models, subset = TRUE)[[1]]
 leaf_ignition_mod_table <- model.sel(leaf_ignition_models)
 leaf_ignition_mod_table[1:8,]
 
-summary(best_leaf_ignition_model)
+summary(best_leaf_ignition_model) # LMA and leaf_moisture_content
 
 #sjPlot::tab_model(best_leaf_ignition_model)
 
 AIC(best_canopy_ignition_model, best_leaf_ignition_model) # canopy 579.15
 # leaf 584.87
 
+#######################################################################
+# Does pre_burning temperature improves the best model?
+########################################################################
+
+pre_burning_ignition_model <- afex::lmer(ignition_delay ~ canopy_density_gm_cm3 +
+                                           canopy_moisture_content +
+                                           mean_pre_burning_temp +
+                                           (1 | analysis_group),
+                                         data = model_data, REML = FALSE)
 
 
+AIC(best_canopy_ignition_model, pre_burning_ignition_model) # Didn't improve the model
+
+# AIC for pre burning ignition = 580.9, pretty close
 
 ##########################################################################################
 # Without Juniperus, Do the best traits have significant effect on ignition
@@ -300,3 +328,51 @@ ignition_delay_without_juniperus <- afex::lmer(ignition_delay ~ canopy_density_g
 
 summary(ignition_delay_without_juniperus) # Only moisture content , p = 0.027
 anova(ignition_delay_without_juniperus)
+
+########################################################################
+# Does remaining less important traits have any significant effect on
+# heat release and ignition delay? The reason for creating separate model
+# for canopy traits and leaf traits is that some of the traits are
+# correlated with each other.
+########################################################################
+
+leaf_stem_canopy_mc_heat_release_model <- afex::lmer(degsec_100 ~ leaf_stem_mass_ratio +
+                                                       canopy_moisture_content +
+                                                       (1 | analysis_group),
+                                                     data = model_data, REML = FALSE)
+
+summary(leaf_stem_canopy_mc_heat_release_model) # none of them have any
+# significant effect on heat release
+# leaf:stem: p- value = 0.113
+# canopy_mc: p-value = 0.592
+
+leaf_length_leaf_mc_heat_release_model <- afex::lmer(degsec_100 ~ leaf_length_per_leaflet +
+                                                       leaf_moisture_content +
+                                                       (1 | analysis_group),
+                                                     data = model_data, REML = FALSE)
+
+summary(leaf_length_leaf_mc_heat_release_model) # none of them had any 
+# significant effect!!
+# leaf_mc: p-value = 0.374
+# leaf_length: p-value = 0.786
+
+#########################################################################
+# Same for ignition delay
+#########################################################################
+
+total_dry_mass_leaf_stem_ignition <- afex::lmer(ignition_delay ~ total_dry_mass_g +
+                                                  leaf_stem_mass_ratio +
+                                                  (1|analysis_group),
+                                                data = model_data, REML = FALSE)
+
+summary(total_dry_mass_leaf_stem_ignition) # total dry mass has
+# significant effect
+# total_dry_mass: p-value = 0.023
+# leaf:stem: p-value = 0.3872
+
+
+leaf_length_ignition_model <- afex::lmer(ignition_delay ~ leaf_length_per_leaflet +
+                                           (1 | analysis_group),
+                                         data = model_data, REML = FALSE)
+
+summary(leaf_length_ignition_model) # no effect: p-value = 0.552

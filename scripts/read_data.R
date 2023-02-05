@@ -489,7 +489,8 @@ any(is.na(alldata_2022$leaf_moisture_content)) #FALSE
 
 alldata_2022 <- alldata_2022 %>%
   rename(total_dry_mass_g = total_dry_mass_gm) %>%
-  mutate(label = paste(sample_id, trials, sep = "_"))
+  mutate(label = paste(sample_id, trials, sep = "_")) %>%
+  mutate(mean_pre_burning_temp = (temp_d1_pre + temp_d2_pre)/2)
 
  
 ######################################################################################

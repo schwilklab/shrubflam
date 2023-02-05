@@ -4,8 +4,8 @@
 # for PCA and factoextra for figures
 
 # This script relies on data being already loaded, eg
-source("./read_hobos.R") # script that reads the thermocouple data logger data during burning.
-
+source("../read_hobos.R") # script that reads the thermocouple data logger data during burning.
+source("../read_data.R") # script that reads and clean the whole dataset
 
 library(factoextra)
 
@@ -35,7 +35,7 @@ flam_pca_2022 <- prcomp(pca_data_2022[,-1],
                    scale=TRUE)
 
 
-summary(flam_pca_2022) # standard deviation for PC2 is 0.093
+summary(flam_pca_2022) # standard deviation for PC2 is 0.918
 
 flam_loadings <- flam_pca_2022$rotation[ ,1:2] 
 

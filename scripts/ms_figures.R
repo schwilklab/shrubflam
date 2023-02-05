@@ -5,6 +5,7 @@
 # and coefficient tables
 
 #library(randomcoloR)  ## DWS: Why? You don't want random colors in code!
+
 library(ggmap)
 
 ## This script depends on analysis.R. See run-all.R
@@ -14,103 +15,7 @@ library(ggmap)
 ## DWS: Why is this script so long? How many figures do you need to tell this
 ## story?
 
-################################################################
-# Creating a map,I learned to create this kind of map from Dr. Van-gestel's 
-# R class.
-################################################################
 
-site_map_2021 <- alldata %>%
-  select(property, lat_location,
-         long_location) %>%
-  rename(site = property,
-         long = long_location,
-         lat = lat_location)
-
-## DWS: This errors out. alldata does not exist.
-
-## DWS: I gave up here.
-
-site_map <- alldata_2022 %>%
-  select(site, lat, long) %>%
-  rbind(site_map_2021) %>%
-  mutate(site = ifelse(site == "Dickens Park",
-                       "Dickens spring", site),
-         site = ifelse(site == "Menard 2020-01" , "Menard", site),
-         site = ifelse(site == "Kendall 2021-8", "Kendall 2021-08", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-01","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-02","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-03","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-04","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-05","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-06","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-07","Bastrop-Fayette", site))
-unique(site_map$site)
-
-## DWS: Why are you putting more data
-
-
-#View(site_map)
-
-
-texas <- map_data("state") %>%
-  filter(region == "texas")
-
-texas_counties <- map_data("county") %>%
-  filter(region == "texas")
-
-texas_county_names <- texas_counties %>%
-  group_by(subregion) %>%
-  summarise(mean_lat = mean(lat),
-            mean_long = mean(long))
-
-
-
-ggplot(texas, aes(long, lat)) +
-  geom_polygon(color = "black", fill = "grey") +
-  theme_bw() +
-  geom_polygon(aes(group = group), data = texas_counties,
-               fill = "NA", color = "white") +
-  geom_polygon(color = "black", fill = "NA") +
-  geom_point(aes(fill = site), color = "black",
-             shape = 21, size = 2, data = site_map) +
-  geom_text(data = texas_county_names,
-            aes(mean_long, mean_lat, label = subregion),
-            color = "white", size = 2, alpha = 0.5) +
-  labs(fill = "",
-       x = expression("Longitude ("*~degree*")"),
-       y = expression("Latitude ("*~degree*")"))
-
-
-site_map_2022 <- alldata_2022 %>%
-  select(site, lat, long) %>%
-  mutate(site = ifelse(site == "Dickens Park",
-                       "Dickens spring", site),
-         site = ifelse(site == "Kendall 2021-8", "Kendall 2021-08", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-01","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-02","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-03","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-04","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-05","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-06","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-07","Bastrop-Fayette", site),
-         site = ifelse(site == "Kendall 2021-7", "Kendall 2021-07", site))
-
-unique(site_map_2022$site)
-
-ggplot(texas, aes(long, lat)) +
-  geom_polygon(color = "black", fill = "grey") +
-  theme_bw() +
-  geom_polygon(aes(group = group), data = texas_counties,
-               fill = "NA", color = "white") +
-  geom_polygon(color = "black", fill = "NA") +
-  geom_point(aes(fill = site), color = "black",
-             shape = 21, size = 2, data = site_map_2022) +
-  geom_text(data = texas_county_names,
-            aes(mean_long, mean_lat, label = subregion),
-            color = "white", size = 2, alpha = 0.5) +
-  labs(fill = "",
-       x = expression("Longitude ("*~degree*")"),
-       y = expression("Latitude ("*~degree*")"))
 
 ##################################################################################
 # Generating thirteen disinct color
