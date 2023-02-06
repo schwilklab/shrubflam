@@ -441,7 +441,8 @@ herbivore_2022 <- samples_2022 %>%
   left_join(burn_trials_2022, by = "sample_id") %>%
   filter(! sample_id %in% c("KD07", "UV01")) %>%  # KD07 has missing values of flammability measurements and mistakenly, UV01 has ignited with blow torch though 
   # it has self ignition and has existing flame(descriptions on notes in flam_trials_2022,csv.)
-  mutate(air_temp_f = ifelse(sample_id == "UV16", NA, air_temp_f))
+  mutate(air_temp_f = ifelse(sample_id == "UV16", NA, air_temp_f)) %>%
+  mutate(label = paste(sample_id, trials, sep = "_"))
 
 
 ## DWS: Why are you filtering out KD07 and UV01 everywhere. DO THINGS ONE TIME!

@@ -1,6 +1,6 @@
 species_id,species,genus,herbivore_preference,specific_epithet,family,common_name,analysis_group,subfamily,leaf_structure,seed_type,foliage_seasonality,notes,herbivore_defense
 1000,Diospyros texana,Diospyros,least,texana,Ebenaceae,Texas Persimmon,Diospyros,ebenoideae,simple_alternate,angiosperm,deciduous_evergreen,Found almost in every property,non_armed
-1002,Mahonia trifoliolata,Mahonia,NA,trifoliata,Berberidaceae,Agarita,Mahonia,berberidoideae,palmate_trifoliate,angiosperm,evergreen,Found almost in every property,armed
+1002,Mahonia trifoliolata,Mahonia,NA,trifoliolata,Berberidaceae,Agarita,Mahonia,berberidoideae,palmate_trifoliate,angiosperm,evergreen,Found almost in every property,armed
 1022,Juniperus ashei,Juniperus,least,ashei,Cupressaceae,Mountain Cedar/Ashe Juniper,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Found almost in every property,non_armed
 2011,Juniperus pinchotii,Juniperus,least,pinchotii,Cupressaceae,Pinchot Juniper,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Only Found in Dickens Park,non_armed
 1021,Sophora secundiflora,Sophora,least,secundiflora,Fabaceae,Texas Mountain Laurel,Sophora,papilionoideae,pinnately_compound_alternate,angiosperm,evergreen,Found almost in every property,non_armed
@@ -11,7 +11,6 @@ species_id,species,genus,herbivore_preference,specific_epithet,family,common_nam
 1085,Arbutus xalapensis,Arbutus,NA,xalapensis,Ericaceae,Texas Madrone,Arbutus,arbutoideae,simple,angiosperm,evergreen,Found in Real 2020-11 and Bandera 2020-30 but only collected from Real 2020-11,non_armed
 1113,Prosopis glandulosa,Prosopis,least,glandulosa,Fabaceae,Mesquite,Prosopis,caesalpinioideae,pinnately_twice_compound,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park,armed
 2007,Ziziphus obtusifolia,Sarcomphalus,NA,obtusifolia,Rhamnaceae,Texas Buckthorn,Sarcomphalus,ziziphoideae,simple,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park,armed
-2010,Forestiera reticulata,Forestiera,moderate_low,reticulata,Oleaceae,Netleaf Forestiera,Forestiera,oleeae,simple_opposite,angiosperm,semi_evergreen,Only collected from Edwards 2020-22,non_armed
 2005,Senegalia wrightii,Senegalia,moderate_low,wrightii,Fabaceae,Wright Acacia,Senegalia,mimosoideae,pinnately_twice_compound,angiosperm,semi_evergreen,Treated wrightii and romeriana as same species and found in almost every property except Bandera,armed
 3000,Unknown spp,Coma,NA,spp,Sapotaceae,Coma,Coma,unknown,simple_alternate,angiosperm,evergreen,"Armed, collected from Kendall 2020-07, most likely coma",armed
 2010,Forestiera pubescens,Forestiera,moderate_low,pubescens,Oleaceae,Elbow bush,Forestiera,oleeae,simple,angiosperm,deciduous,,non_armed

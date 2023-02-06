@@ -2,7 +2,6 @@
 
 # Shrub flammability project using summer 2022 data. PCA analysis uses prcomp()
 # for PCA and factoextra for figures
-
 # This script relies on data being already loaded, eg
 source("../read_hobos.R") # script that reads the thermocouple data logger data during burning.
 source("../read_data.R") # script that reads and clean the whole dataset
@@ -108,6 +107,6 @@ dim(final_data)
 # Cleaning the environment
 ###############################################################################
 
-rm("pca_data_2022", "flam_pca_2022", "flam_loadings",
+rm( "flam_pca_2022", "flam_loadings",
    "eig_val", "variables_info")
 

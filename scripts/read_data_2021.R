@@ -1,5 +1,4 @@
 #!/usr/bin/Rscript --vanilla
-
 # Shrub Flammability project
 # Dylan Schwilk, Azaj Mahmud
 # 2021
@@ -42,8 +41,9 @@ juniperus_leaf_area <- read.csv("../data/year_2021/leaf_area_juniperus.csv")
 ## merging samples data and species data
 ###############################################################################
 
-samples <- species_table%>%
-  select(species, species_id, group, herbivore_defense, herbivore_preference)%>%
+samples <- species_table %>%
+  filter(species %in% samples$species) %>%
+  dplyr::select(species, species_id, group, herbivore_defense, herbivore_preference)%>%
   right_join(samples, by = c("species","species_id"))
 
 ###############################################################################
@@ -65,7 +65,7 @@ samples <- tidyr::separate(samples, species, into = c("genus","specific_epithet"
 # for measuring moisture content.
 
 canopy_measurements <- left_join(canopy_measurements,
-                                 select(burn_trials, sample_id, mass.pre))
+                                 dplyr::select(burn_trials, sample_id, mass.pre))
 
 # Calculate derived canopy traits. For volume, we assume the canopy is a
 # cylinder whose diameter and height are the average width and the length of the
@@ -82,7 +82,7 @@ canopy_measurements <- canopy_measurements %>%
          # total mass should be dry mass equivalent (estimated)
          total_mass_g = (fresh_mass_g + mass.pre) * dry_mass_g/fresh_mass_g,
          canopy_density = total_mass_g / canopy_volume_cm3) %>%
-  select(-bottom_width_in, -middle_width_in, -top_width_in, -mass.pre)
+  dplyr::select(-bottom_width_in, -middle_width_in, -top_width_in, -mass.pre)
 
 
 ###############################################################################
@@ -97,7 +97,6 @@ leaf_measurements$leaf_area_cm2[leaf_measurements$sample_id == "ED07"] <- 99.61
 # I found when I created plot the relationship between leaf_area_per_leaflet
 # and PC1 among groups (codes in exploratory.figures.R)
 
-pi <- 3.1416
 
 leaf_measurements <- leaf_measurements%>% # Multiplying the juniperus
   # leaf area by pi
@@ -127,7 +126,7 @@ juniperus_leaf_area <- juniperus_leaf_area%>%
 
 leaf_measurement <- leaf_measurements%>%
   filter(sample_id  %in% juniperus_leaf_area$sample_id )%>% #grabbing only juniperus
-  select(-leaf_area_per_leaflet)%>% # Removing leaf_area_per_leaflet since they are empty
+  dplyr::select(-leaf_area_per_leaflet)%>% # Removing leaf_area_per_leaflet since they are empty
   left_join(juniperus_leaf_area, by = "sample_id")%>% # Merging with juniperus_leaf_area
   rbind(filter(leaf_measurements,
                !sample_id  %in% juniperus_leaf_area$sample_id)) # Grabbing samples except Juniperus
@@ -147,11 +146,17 @@ burn_trials <- burn_trials %>%
          heat2 = (temp.d2.post - temp.d2.pre) * MASS_DISK_2 * SPECIFIC_HEAT_AL,
          heat_release_J = (heat1+heat2)/2.0, # For when we want one value
          massconsumed = (mass.pre-mass.post) / mass.pre) %>%
-  select(-temp.d1.post, -temp.d1.pre, -temp.d2.post, -temp.d1.pre)
+  dplyr::select(-temp.d1.post, -temp.d1.pre, -temp.d2.post, -temp.d1.pre)
 
 
 ###############################################################################
 ## Merge all the data
+# The first nine  trails removed from the analysis since the drying period was
+# tweenty four hours for those samples and drying period for rest of all the samples
+# were thirty six hours.
+# Since I am gooing to combine both years data set, I am eliminitating the
+# samples which didn't get ignited in 10 seconds since in 2022 the blowtorch
+# was on until a sample got ignited.
 ###############################################################################
 
 alldata <- left_join(samples, canopy_measurements) %>%
@@ -159,145 +164,22 @@ alldata <- left_join(samples, canopy_measurements) %>%
   left_join(burn_trials) %>%
   mutate(species = paste(genus, specific_epithet),
          display_name = paste(substr(genus, 1, 1), ". ", specific_epithet, sep=""))%>%
-  mutate(ignition=ifelse(flame.dur==0,0,1))
+  mutate(ignition=ifelse(flame.dur==0,0,1)) %>%
+  filter(ignition == 1) %>%
+  filter(! trial %in% 1:9) %>%
+  mutate(label=paste(sample_id,species_id,sep = "_")) %>%
+  rename(site = property) %>%
+  filter(! display_name %in% c("C. canadensis",
+                               "C. obovatus", "Y. rupicola",
+                               "P. remota")) # only one sample per
+# species was collected for those species and didn't collect
+# neither of thyem in 2021
+
+dim(alldata) # 94, after removing first nine trials
+# and those samples didn't get ignited
 
 ## DWS: if we need to filter out short branches, that can be done here.
 
-################################################################################
-#Subsetting species which have three or more than three samples
-################################################################################
-
-################################################################################
-# Filtering samples for those species which has at least three samples
-# in the dataset
-################################################################################
-
-samples_more_than_three <- alldata%>%
-  filter(leaf_area_per_leaflet !="NA")%>%
-  filter(leaf_mass_area != "NA")%>%
-  group_by(species)%>%
-  summarise(number_of_individual=n())%>%
-  filter(number_of_individual >=3)%>%
-  left_join(alldata,by="species")%>%
-  mutate(label=paste(sample_id,species_id,sep = "_"))%>%
-  filter(leaf_area_per_leaflet !="NA")%>%
-  filter(leaf_mass_area != "NA")%>%
-  filter( number_of_individual != "NA")%>%
-  select(-c(number_of_individual,genus))
-
-
-#unique(samples_more_than_three$species) # Now it's ok
-#any(is.na(samples_more_than_three$leaf_mass_area)) # Ok
-#any(is.na(samples_more_than_three$leaf_area_per_leaflet)) # Ok
-dim(samples_more_than_three)# 97 rows, now it's ok since Mimosa
-# species was included previously.
-# I will use this dataset to do rest of the analysis
-#species_id_count <- samples_more_than_three%>%
-  #count(species_id)%>%
-  #View()
-
-##########################################################################
-# Summer 2022, the next is for cleaning some stuff, I am choosing this 
-# script because cleaning everything in read_data.R is making the script
-# really big
-###########################################################################
-
-################################################################
-# Creating a map,I learned to create this kind of map from Dr. Van-gestel's 
-# R class.
-################################################################
-
-site_map_2021 <- alldata %>%
-  select(property, lat_location,
-         long_location) %>%
-  rename(site = property,
-         long = long_location,
-         lat = lat_location)
-
-## DWS: This errors out. alldata does not exist.
-
-## DWS: I gave up here.
-site_map <- alldata_2022 %>%
-  select(site, lat, long) %>%
-  rbind(site_map_2021) %>%
-  mutate(site = ifelse(site == "Dickens Park",
-                       "Dickens spring", site),
-         site = ifelse(site == "Menard 2020-01" , "Menard", site),
-         site = ifelse(site == "Kendall 2021-8", "Kendall 2021-08", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-01","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-02","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-03","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-04","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-05","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-06","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-07","Bastrop-Fayette", site))
-unique(site_map$site)
-
-## DWS: Why are you putting more data
-
-
-#View(site_map)
-
-
-texas <- map_data("state") %>%
-  filter(region == "texas")
-
-texas_counties <- map_data("county") %>%
-  filter(region == "texas")
-
-texas_county_names <- texas_counties %>%
-  group_by(subregion) %>%
-  summarise(mean_lat = mean(lat),
-            mean_long = mean(long))
-
-
-
-ggplot(texas, aes(long, lat)) +
-  geom_polygon(color = "black", fill = "grey") +
-  theme_bw() +
-  geom_polygon(aes(group = group), data = texas_counties,
-               fill = "NA", color = "white") +
-  geom_polygon(color = "black", fill = "NA") +
-  geom_point(aes(fill = site), color = "black",
-             shape = 21, size = 2, data = site_map) +
-  geom_text(data = texas_county_names,
-            aes(mean_long, mean_lat, label = subregion),
-            color = "white", size = 2, alpha = 0.5) +
-  labs(fill = "",
-       x = expression("Longitude ("*~degree*")"),
-       y = expression("Latitude ("*~degree*")"))
-
-
-site_map_2022 <- alldata_2022 %>%
-  select(site, lat, long) %>%
-  mutate(site = ifelse(site == "Dickens Park",
-                       "Dickens spring", site),
-         site = ifelse(site == "Kendall 2021-8", "Kendall 2021-08", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-01","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-02","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-03","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-04","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-05","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-06","Bastrop-Fayette", site),
-         site = ifelse(site == "Bastrop-Fayette 2022-07","Bastrop-Fayette", site),
-         site = ifelse(site == "Kendall 2021-7", "Kendall 2021-07", site))
-
-unique(site_map_2022$site)
-
-ggplot(texas, aes(long, lat)) +
-  geom_polygon(color = "black", fill = "grey") +
-  theme_bw() +
-  geom_polygon(aes(group = group), data = texas_counties,
-               fill = "NA", color = "white") +
-  geom_polygon(color = "black", fill = "NA") +
-  geom_point(aes(fill = site), color = "black",
-             shape = 21, size = 2, data = site_map_2022) +
-  geom_text(data = texas_county_names,
-            aes(mean_long, mean_lat, label = subregion),
-            color = "white", size = 2, alpha = 0.5) +
-  labs(fill = "",
-       x = expression("Longitude ("*~degree*")"),
-       y = expression("Latitude ("*~degree*")"))
 
 #####################################################################
 ## clean up work space, export two data frame, alldata and 

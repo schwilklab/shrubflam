@@ -1,5 +1,4 @@
 #!/usr/bin/Rscript --vanilla
-
 # Shrub Flammability project
 # Dylan Schwilk, Azaj Mahmud
 # 2022
@@ -23,26 +22,8 @@ source("./read_hobos_2022.R") # The script that used to calculate the flammabili
 
 ###################################################################################
 # First getting the necessary variables from collection of 2021
-# The first nine  trails removed from the analysis since the drying period was
-# tweenty four hours for those samples and drying period for rest of all the samples
-# were thirty six hours.
-# Since I am gooing to combine both years data set, I am eliminitating the
-# samples which didn't get ignited in 10 seconds since in 2022 the blowtorch
-# was on until a sample got ignited.
 # Merging all data with hobo data for 2021
 ###################################################################################
-
-herbivore_2021 <- alldata %>%
-  mutate(label=paste(sample_id,species_id,sep = "_")) %>%
-  left_join(hobos_wider, by = "label") %>%
-  filter(ignition == 1) %>%
-  filter(! trial %in% 1:9) %>%
-  rename(degsec_100 = degsec.100) %>%
-  dplyr::select(species, species_id, degsec_100, herbivore_preference,
-         herbivore_defense, property) %>%
-  rename(site = property)
-
-unique(herbivore_2021$species)
 
 
 ###################################################################################
@@ -52,37 +33,22 @@ unique(herbivore_2021$species)
 
 
 herbivore_2022 <- herbivore_2022 %>%
-  mutate(label=paste(sample_id,species_id,sep = "_")) %>%
   left_join(hobos_wider_2022, by = "label")
 
 
-unique(herbivore_2022$species)
+unique(herbivore_2022$display_name)
+
 ###################################################################################
 # Merging 2021 with 2022
 ###################################################################################
 
 
 herbivore_data <- herbivore_2022 %>%
-  dplyr::select(species, species_id, degsec_100, herbivore_defense,
-         herbivore_preference, site) %>%
+  dplyr::select(display_name, degsec_100, herbivore_preference,
+                herbivore_defense, site) %>%
   rbind(herbivore_2021) %>%
   mutate(herbivore_defense = ifelse(herbivore_defense == "non_armed",
-                                    "unarmed", herbivore_defense)) %>%
-  mutate(species = ifelse(species == "Forestiera reticulata",
-                          "Forestiera pubescens", species)) %>%
-  mutate(species = ifelse(species == "Juniperus pinchottii",
-                          "Juniperus pinchotii", species)) %>%
-  mutate(species = ifelse(species == "Quercus fusiformis",
-                          "Quercus virginiana", species)) %>%
-  mutate(species = ifelse(species == "Acacia berlandieri" ,
-                          "Senegalia berlandieri" , species)) %>%
-  filter(! species %in% c("Cotinus obovatus", "Arbutus xalapensis",
-                          "Cercis canadensis", "Pinus remota",
-                          "Yucca rupicola", "Quercus laceyi",
-                          "Ulmus crassifolia", "Prunus serotina",
-                          "Frangula caroliniana", "Unknown spp")) # removing those species which has less than three samples
-
-
+                                    "unarmed", herbivore_defense))
 
 
 
@@ -91,8 +57,9 @@ herbivore_data <- herbivore_data %>%
                        site)) # changing the name of the site, both are same
 # site but as different name
 
-unique(herbivore_data$species)
+unique(herbivore_data$display_name)
 
+xtabs(~ display_name, herbivore_data)
 unique(herbivore_data$herbivore_defense)
 
 herbivore_data$herbivore_defense <- as.factor(herbivore_data$herbivore_defense)
