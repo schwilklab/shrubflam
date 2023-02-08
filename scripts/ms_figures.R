@@ -7,10 +7,13 @@
 library(randomcoloR)  ## DWS: Why? You don't want random colors in code!
 ## AM: Don't know how to fix the color issue
 library(ggmap)
+library(factoextra)
 
 source("../flam_pca.R") # The script where the pca performed
 source("../analysis.R") # The script where the model selection
 # procedure was performed
+source("../ggplot_theme.R") # Plot theme for publication standard
+# plot by Dr. Schwilk
 
 ## This script depends on analysis.R. See run-all.R
 
@@ -84,7 +87,7 @@ degsec_by_group <- final_data %>% group_by(analysis_group) %>%
 # summarized data
 ###########################################################################################
 
-ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, degsec_100, 
+total_dry_mass <- ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, degsec_100, 
                                          color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_degsec_canopy_plot_data) + 
@@ -93,10 +96,8 @@ ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, degsec_100,
              aes(color = analysis_group)) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
   xlab("Total dry mass (g)")  + 
-  theme(panel.background = element_rect(size = 1.6, fill = NA),
-        panel.border = element_rect(size = 1.6, fill=NA),
-        axis.title = element_text(size = 14),
-        legend.position = "none") +
+  pubtheme +
+  theme(legend.position = "none") +
   scale_color_manual(values = c("maroon2", "#7CD5D9", "yellow", "#6FA3CE","red",
                                 "#D6E2A6", "#73E17B", "lightblue",
                                 "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
@@ -106,11 +107,15 @@ ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, degsec_100,
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
+ggsave("../results/total_dry_mass.pdf",
+       plot = total_dry_mass, height = beamer_height,
+       width = 10, units = "cm")
+
 ############################################################################################################
 # Same way for canopy density
 #####################################################################################
 
-ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, color = analysis_group)) +
+canoyp_density <- ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_degsec_canopy_plot_data) + 
   geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
@@ -118,10 +123,8 @@ ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, colo
              aes(color = analysis_group)) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
   xlab(expression(paste("Canopy density (", g / cm^3, ")")))  + 
-  theme(panel.background = element_rect(size = 1.6, fill = NA),
-        panel.border = element_rect(size = 1.6, fill=NA),
-        axis.title = element_text(size = 14),
-        legend.position = "none") +
+  pubtheme +
+  theme(legend.position = "none")  +
   scale_color_manual(values = c("maroon2", "#7CD5D9", "yellow", "#6FA3CE","red",
                                 "#D6E2A6", "#73E17B", "lightblue",
                                 "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
@@ -131,7 +134,9 @@ ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, colo
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-  
+ggsave("../results/canopy_density.pdf",
+       plot = canopy_density, height = beamer_height,
+       width = 10, units = "cm")
 
 #################################################################################################
 # Now the leaf traits, using the best leaf traits model for temperature integration 
@@ -183,7 +188,7 @@ degsec_leaf_by_group <- final_data %>%
 # Plotting the lma vs temperature integration
 ####################################################################################
 
-ggplot(best_degsec_leaf_plot_data, aes(leaf_mass_per_area, degsec_100,
+LMA <- ggplot(best_degsec_leaf_plot_data, aes(leaf_mass_per_area, degsec_100,
                                        color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_degsec_leaf_plot_data) + 
@@ -192,10 +197,8 @@ ggplot(best_degsec_leaf_plot_data, aes(leaf_mass_per_area, degsec_100,
              aes(color = analysis_group)) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
   xlab(expression(paste("Leaf mass per area (", g/cm^2, ")"))) +
-  theme(panel.background = element_rect(size = 1.6, fill = NA),
-        panel.border = element_rect(size = 1.6, fill=NA),
-        axis.title = element_text(size = 14),
-        legend.position = "none") +
+  pubtheme +
+  theme(legend.position = "none") +
   scale_color_manual(values = c("maroon2", "#7CD5D9", "yellow", "#6FA3CE","red",
                                 "#D6E2A6", "#73E17B", "lightblue",
                                 "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
@@ -205,7 +208,9 @@ ggplot(best_degsec_leaf_plot_data, aes(leaf_mass_per_area, degsec_100,
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-
+ggsave("../results/LMA.pdf",
+       plot = LMA, height = beamer_height,
+       width = 10, units = "cm")
 ##################################################################################
 # The best model for canopy traits and leaf traits for ignition delay using scaled 
 # variables from model_data from analysis.R script
@@ -251,7 +256,7 @@ ignition_delay_by_group <- final_data %>%
             ignition_delay = mean(ignition_delay))
 
 
-ggplot(best_canopy_ignition_plot_data, aes(canopy_density_gm_cm3,ignition_delay,
+canopy_density_ignition <- ggplot(best_canopy_ignition_plot_data, aes(canopy_density_gm_cm3,ignition_delay,
                                            color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_ignition_canopy_plot_data) + 
@@ -260,10 +265,8 @@ ggplot(best_canopy_ignition_plot_data, aes(canopy_density_gm_cm3,ignition_delay,
              aes(color = analysis_group)) +
   ylab("Ignition delay (s)") +
   xlab(expression(paste("Canopy density (", g / cm^3, ")")))  + 
-  theme(panel.background = element_rect(size = 1.6, fill = NA),
-        panel.border = element_rect(size = 1.6, fill=NA),
-        axis.title = element_text(size = 14),
-        legend.position = "none") +
+  pubtheme +
+  theme(legend.position = "none") +
   scale_color_manual(values = c("maroon2", "#7CD5D9", "yellow", "#6FA3CE","red",
                                 "#D6E2A6", "#73E17B", "lightblue",
                                 "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
@@ -273,7 +276,11 @@ ggplot(best_canopy_ignition_plot_data, aes(canopy_density_gm_cm3,ignition_delay,
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-ggplot(best_canopy_ignition_plot_data, aes(canopy_moisture_content,ignition_delay, 
+ggsave("../results/canopy_density_ignition.pdf",
+       plot = canopy_density_ignition, height = beamer_height,
+       width = 10, units = "cm")
+
+canopy_moisture_ignition <- ggplot(best_canopy_ignition_plot_data, aes(canopy_moisture_content,ignition_delay, 
                                            color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_ignition_canopy_plot_data) + 
@@ -282,10 +289,8 @@ ggplot(best_canopy_ignition_plot_data, aes(canopy_moisture_content,ignition_dela
              aes(color = analysis_group)) +
   ylab("Ignition delay (s)") +
   xlab("Canopy moisture content (%)")  + 
-  theme(panel.background = element_rect(size = 1.6, fill = NA),
-        panel.border = element_rect(size = 1.6, fill=NA),
-        axis.title = element_text(size = 14),
-        legend.position = "none") +
+  pubtheme +
+  theme(legend.position = "none") +
   scale_color_manual(values = c("maroon2", "#7CD5D9", "yellow", "#6FA3CE","red",
                                 "#D6E2A6", "#73E17B", "lightblue",
                                 "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
@@ -295,6 +300,9 @@ ggplot(best_canopy_ignition_plot_data, aes(canopy_moisture_content,ignition_dela
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
+ggsave("../results/canopy_moisture_ignition.pdf",
+       plot = canopy_moisture_ignition, height = beamer_height,
+       width = 10, units = "cm")
 ######################################################################################
 # Leaf traits vs ignition delay
 ######################################################################################
@@ -335,7 +343,7 @@ leaf_ignition_delay_by_group <- final_data %>%
             ignition_delay = mean(ignition_delay))
 
 
-ggplot(best_leaf_ignition_plot_data, aes(leaf_mass_per_area,ignition_delay, 
+LMA_ignition <- ggplot(best_leaf_ignition_plot_data, aes(leaf_mass_per_area,ignition_delay, 
                                          color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_ignition_leaf_plot_data) + 
@@ -344,10 +352,8 @@ ggplot(best_leaf_ignition_plot_data, aes(leaf_mass_per_area,ignition_delay,
              aes(color = analysis_group)) +
   ylab("Ignition delay (s)") +
   xlab(expression(paste("Leaf mass per area (", g/cm^2, ")")))  + 
-  theme(panel.background = element_rect(size = 1.6, fill = NA),
-        panel.border = element_rect(size = 1.6, fill=NA),
-        axis.title = element_text(size = 14),
-        legend.position = "none") +
+  pubtheme +
+  theme(legend.position = "none") +
   scale_color_manual(values = c("maroon2", "#7CD5D9", "yellow", "#6FA3CE","red",
                                 "#D6E2A6", "#73E17B", "lightblue",
                                 "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
@@ -357,9 +363,11 @@ ggplot(best_leaf_ignition_plot_data, aes(leaf_mass_per_area,ignition_delay,
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-  
+ggsave("../results/LMA_ignition.pdf",
+       plot = LMA_ignition, height = beamer_height,
+       width = 10, units = "cm")
 
-ggplot(best_leaf_ignition_plot_data, aes(leaf_moisture_content,ignition_delay, 
+leaf_moisture_ignition <- ggplot(best_leaf_ignition_plot_data, aes(leaf_moisture_content,ignition_delay, 
                                          color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_ignition_leaf_plot_data) + 
@@ -368,10 +376,8 @@ ggplot(best_leaf_ignition_plot_data, aes(leaf_moisture_content,ignition_delay,
              aes(color = analysis_group)) +
   ylab("Ignition delay (s)") +
   xlab("Leaf moisture content (%)")  + 
-  theme(panel.background = element_rect(size = 1.6, fill = NA),
-        panel.border = element_rect(size = 1.6, fill=NA),
-        axis.title = element_text(size = 14),
-        legend.position = "none") +
+  pubtheme +
+  theme(legend.position = "none") +
   scale_color_manual(values = c("maroon2", "#7CD5D9", "yellow", "#6FA3CE","red",
                                 "#D6E2A6", "#73E17B", "lightblue",
                                 "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
@@ -381,7 +387,9 @@ ggplot(best_leaf_ignition_plot_data, aes(leaf_moisture_content,ignition_delay,
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-
+ggsave("../results/leaf_moisture_ignition.pdf",
+       plot = leaf_moisture_ignition, height = beamer_height,
+       width = 10, units = "cm")
 
 
 ##################################################################################
@@ -418,5 +426,5 @@ renamed_pca_plot <- fviz_pca_var(renamed_pca,col.var = "cos2",
         panel.background = element_rect(size = 1.6),
         plot.title = element_blank())
 
-renamed_pca_plot
+
  
