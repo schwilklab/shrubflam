@@ -1,6 +1,6 @@
 ## ms_figures.R
 
-# this R script is used to create figures showing significant fixed effect of
+# This R script is used to create figures showing significant fixed effect of
 # canopy and leaf traits on flammability from analysis.R and also model anova
 # and coefficient tables
 
@@ -19,10 +19,9 @@ source("./scripts/ggplot_theme.R")
 
 ## This script depends on analysis.R. See run-all.R
 
-
-##################################################################################
+###############################################################################
 # Generating thirteen disinct color
-#################################################################################
+###############################################################################
 
 set.seed(2643598)
 palette <- distinctColorPalette(14)
@@ -30,46 +29,44 @@ palette <- distinctColorPalette(14)
 ## DWS: good god why? If you need 13 colors you are thinking about this wrong.
 
 
-##################################################################################
-# The best model for canopy traits for temperature integration using scaled 
+###############################################################################
+# The best model for canopy traits for temperature integration using scaled
 # variables from model_data from analysis.R script
-##################################################################################
+###############################################################################
 
-## DWS: Why is their model fitting in the figure code?
-## AM: removed the model.
-
-#####################################################################################
-# Selecting unscaled variables from final data to predict from scaled data in model_data
-#######################################################################################
+###############################################################################
+# Selecting unscaled variables from final data to predict from scaled data in
+# model_data
+###############################################################################
 
 best_degsec_canopy_plot_data <- final_data %>% 
   select(total_dry_mass_g, canopy_density_gm_cm3, degsec_100, analysis_group)
 
 
-#########################################################################################
-# Predicting the unscaled variables and naming the new variable as predicted_degsec_100
-#########################################################################################
+###############################################################################
+# Predicting the unscaled variables and naming the new variable as
+# predicted_degsec_100
+###############################################################################
 
 
 best_degsec_canopy_plot_data$predicted_degsec_100 <- predict(best_canopy_pc1_model, 
                                                              newdata = best_degsec_canopy_plot_data)
 
-##########################################################################################
-# Keeping unscled total_dry_mass_gm, canopy density, degsec_100 and predicted degsec
-# _100 to summarise them by group
-###########################################################################################
+###############################################################################
+# Keeping unscled total_dry_mass_gm, canopy density, degsec_100 and predicted
+# degsec _100 to summarise them by group
+###############################################################################
 
 predicted_degsec_canopy_plot_data <- best_degsec_canopy_plot_data %>%
   select(predicted_degsec_100, total_dry_mass_g, canopy_density_gm_cm3, 
          degsec_100, analysis_group)
 
-############################################################################################
-# Summarising the fixed effects by group and making sure that the name of the mean value 
-# after summarising them are same as best_degsec_
-# canopy_plt_data  so that we can use them another layer in the plot as geom_point() 
-# where we will put the mean value, the bigger dots in 
-# the plot
-############################################################################################
+###############################################################################
+# Summarising the fixed effects by group and making sure that the name of the
+# mean value after summarising them are same as best_degsec_ canopy_plt_data so
+# that we can use them another layer in the plot as geom_point() where we will
+# put the mean value, the bigger dots in the plot
+###############################################################################
 
 degsec_by_group <- final_data %>% group_by(analysis_group) %>%
   summarize(total_dry_mass_g = mean(total_dry_mass_g), 
@@ -77,10 +74,10 @@ degsec_by_group <- final_data %>% group_by(analysis_group) %>%
             degsec_100 = mean(degsec_100))
 
 
-###########################################################################################
-# Plotting the predicted vs unscaled total mass and adding layer by
-# summarized data
-###########################################################################################
+###############################################################################
+# Plotting the predicted vs unscaled total mass and adding layer by summarized
+# data
+###############################################################################
 
 total_dry_mass <- ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, degsec_100, 
                                          color = analysis_group)) +
@@ -106,9 +103,9 @@ ggsave("./results/total_dry_mass.pdf",
        plot = total_dry_mass, height = beamer_height,
        width = 10, units = "cm")
 
-############################################################################################################
+###############################################################################
 # Same way for canopy density
-#####################################################################################
+###############################################################################
 
 canopy_density <- ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
@@ -133,46 +130,45 @@ ggsave("./results/canopy_density.pdf",
        plot = canopy_density, height = beamer_height,
        width = 10, units = "cm")
 
-#################################################################################################
-# Now the leaf traits, using the best leaf traits model for temperature integration 
-# once again from analysis.R
-#################################################################################################
+###############################################################################
+# Now the leaf traits, using the best leaf traits model for temperature
+# integration once again from analysis.R
+###############################################################################
 
 
 
-#################################################################################################
+###############################################################################
 # Getting the unscaled fixed terms from final_data 
-#################################################################################################
+###############################################################################
 
 best_degsec_leaf_plot_data <- final_data %>% 
   select(leaf_mass_per_area, degsec_100, analysis_group)
 
 
-#####################################################################################
-# Predicting the unscaled variables and naming the new variable as 
+###############################################################################
+# Predicting the unscaled variables and naming the new variable as
 # predicted_degsec_100
-###################################################################################
+###############################################################################
 
 
 best_degsec_leaf_plot_data$predicted_degsec_100 <- predict(best_leaf_pc1_model, 
                                                            newdata = best_degsec_leaf_plot_data)
 
-########################################################################################
-# Keeping unscaled leaf_mass_per_area degsec_100 and predicted degsec_100
-# to summarise them by analysis_group
-########################################################################################
+###############################################################################
+# Keeping unscaled leaf_mass_per_area degsec_100 and predicted degsec_100 to
+# summarise them by analysis_group
+###############################################################################
 
 predicted_degsec_leaf_plot_data <- best_degsec_leaf_plot_data %>%
   select(predicted_degsec_100, leaf_mass_per_area, degsec_100,
          analysis_group)
 
-########################################################################################
-# Summarising the fixed effects by group and making sure that the name of the 
-# mean value after summarising them are same as best_degsec_
-# canopy_plot_data  so that we can use them another layer in the plot as 
-# geom_point() where we will put the mean value, the bigger dots in 
-# the plot
-###########################################################################################
+###############################################################################
+# Summarising the fixed effects by group and making sure that the name of the
+# mean value after summarising them are same as best_degsec_ canopy_plot_data
+# so that we can use them another layer in the plot as geom_point() where we
+# will put the mean value, the bigger dots in the plot
+###############################################################################
 
 degsec_leaf_by_group <- final_data %>% 
   group_by(analysis_group) %>%
@@ -206,43 +202,44 @@ LMA <- ggplot(best_degsec_leaf_plot_data, aes(leaf_mass_per_area, degsec_100,
 ggsave("./results/LMA.pdf",
        plot = LMA, height = beamer_height,
        width = 10, units = "cm")
-##################################################################################
-# The best model for canopy traits and leaf traits for ignition delay using scaled 
-# variables from model_data from analysis.R script
-##################################################################################
+
+###############################################################################
+# The best model for canopy traits and leaf traits for ignition delay using
+# scaled variables from model_data from analysis.R script
+###############################################################################
 
 
-#####################################################################################
-# Selecting unscaled variables from final data to predict from scaled data in model_data
-#######################################################################################
+###############################################################################
+# Selecting unscaled variables from final data to predict from scaled data in
+# model_data
+###############################################################################
 
 
 best_canopy_ignition_plot_data <- final_data %>% 
   select(canopy_moisture_content, canopy_density_gm_cm3, 
          ignition_delay, analysis_group)
 
-
-#########################################################################################
-# Predicting the unscaled variables and naming the new variable as predicted_ignition_delay
-#########################################################################################
-
+###############################################################################
+# Predicting the unscaled variables and naming the new variable as
+# predicted_ignition_delay
+###############################################################################
 
 best_canopy_ignition_plot_data$predicted_ignition_delay <- predict(best_canopy_ignition_model, 
                                                                    newdata = best_canopy_ignition_plot_data)
 
-##########################################################################################
-# Keeping unscled canopy moisture content, canopy density, ignition delay and predicted ignition
-# delay to summarise them by group
-###########################################################################################
+###############################################################################
+# Keeping unscled canopy moisture content, canopy density, ignition delay and
+# predicted ignition delay to summarise them by group
+###############################################################################
 
 predicted_ignition_canopy_plot_data <- best_canopy_ignition_plot_data %>%
   select(canopy_moisture_content, canopy_density_gm_cm3,
          ignition_delay, analysis_group, predicted_ignition_delay)
 
-############################################################################################
-# Summarising the fixed effects by group and making sure that the name of the mean value 
-# after summarising them
-############################################################################################
+###############################################################################
+# Summarising the fixed effects by group and making sure that the name of the
+# mean value after summarising them
+###############################################################################
 
 ignition_delay_by_group <- final_data %>% 
   group_by(analysis_group) %>%
@@ -298,36 +295,37 @@ canopy_moisture_ignition <- ggplot(best_canopy_ignition_plot_data, aes(canopy_mo
 ggsave("./results/canopy_moisture_ignition.pdf",
        plot = canopy_moisture_ignition, height = beamer_height,
        width = 10, units = "cm")
-######################################################################################
+###############################################################################
 # Leaf traits vs ignition delay
-######################################################################################
+###############################################################################
 
 best_leaf_ignition_plot_data <- final_data %>% 
   select(leaf_moisture_content, leaf_mass_per_area, 
          ignition_delay, analysis_group)
 
 
-#########################################################################################
-# Predicting the unscaled variables and naming the new variable as predicted_ignition_delay
-#########################################################################################
+###############################################################################
+# Predicting the unscaled variables and naming the new variable as
+# predicted_ignition_delay
+###############################################################################
 
 
 best_leaf_ignition_plot_data$predicted_ignition_delay <- predict(best_leaf_ignition_model, 
                                                                  newdata = best_leaf_ignition_plot_data)
 
-##########################################################################################
-# Keeping unscled canopy moisture content, canopy density, ignition delay and predicted ignition
-# delay to summarise them by group
-###########################################################################################
+###############################################################################
+# Keeping unscaled canopy moisture content, canopy density, ignition delay and
+# predicted ignition delay to summarise them by group
+###############################################################################
 
 predicted_ignition_leaf_plot_data <- best_leaf_ignition_plot_data %>%
   select(leaf_moisture_content, leaf_mass_per_area,
          ignition_delay, analysis_group, predicted_ignition_delay)
 
-############################################################################################
-# Summarising the fixed effects by group and making sure that the name of the mean value 
-# after summarising them
-############################################################################################
+###############################################################################
+# Summarising the fixed effects by group and making sure that the name of the
+# mean value after summarising them
+###############################################################################
 
 leaf_ignition_delay_by_group <- final_data %>% 
   group_by(analysis_group) %>%
@@ -385,16 +383,13 @@ ggsave("./results/leaf_moisture_ignition.pdf",
        width = 10, units = "cm")
 
 
-##################################################################################
-##########################################################################################
-# Renamed pca plot
-# The problem is there are nine variables.
-# First problem is overlapping into the plot, even repel function
-# can't fix it. Decided to use the abbreviation here.
-# Second problem is I had to rename the variables either in this script
-# or flam_pca.R script. Thought, doing it at the end of everything
-# might not be a bad idea because can fix it easily later.
-##########################################################################################
+###############################################################################
+# Renamed pca plot The problem is there are nine variables. First problem is
+# overlapping into the plot, even repel function can't fix it. Decided to use
+# the abbreviation here. Second problem is I had to rename the variables either
+# in this script or flam_pca.R script. Thought, doing it at the end of
+# everything might not be a bad idea because can fix it easily later.
+###############################################################################
 
 pca_data_renamed_2022 <- pca_data_2022 %>%
   rename(ID = ignition_delay,
