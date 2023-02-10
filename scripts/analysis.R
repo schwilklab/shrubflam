@@ -5,23 +5,20 @@
 # This script depends on scripts listed in run-all.R
 
 ## DWS: This script is NUTS! it is hundreds of line of code. We agreed on a
-## pretty straightforward analysis method and you are fishing. 
-## AM: The reason behind why it looked liked tons of model is
-## that all the models were fitted with and without "Juniperus"
-## species, therefore, it made the number of models double.
-## Moreover, there was another type of global model were 
-## created with the combination of best canopy traits and best
-## leaf traits to see whether the combination is better than
-## individual types of traits or not!! However, Now I am just removing the models of
-## the combination of best canopy traits and leaf traits and just
-## testing whether the best canopy traits and leaf traits
-## have statistically significant effect on heat release
-## and ignition delay if we remove the most flammable 
-## group "Juniperus" from the analysis.
+## pretty straightforward analysis method and you are fishing. AM: The reason
+## behind why it looked liked tons of model is that all the models were fitted
+## with and without "Juniperus" species, therefore, it made the number of
+## models double. Moreover, there was another type of global model were created
+## with the combination of best canopy traits and best leaf traits to see
+## whether the combination is better than individual types of traits or not!!
+## However, Now I am just removing the models of the combination of best canopy
+## traits and leaf traits and just testing whether the best canopy traits and
+## leaf traits have statistically significant effect on heat release and
+## ignition delay if we remove the most flammable group "Juniperus" from the
+## analysis.
 ## 
 
 library(MuMIn)
-source("../flam_pca.R") # The script where the PCA was performed 
 
 # MuMIn package for automated model selection through subsetting
 # the maximum model, with optimal constraints for model inclusion.
@@ -119,7 +116,6 @@ canopy_pc1_models <- dredge(canopy_pc1_model) # Performs an automated
 
 # model selection with subsets of the supplied global model. source: ?dredge
 
-
 best_canopy_pc1_model <- get.models(canopy_pc1_models, subset = TRUE)[[1]] # returns list and 
 # indexing the first one, top model.
 
@@ -135,6 +131,10 @@ canopy_mod_table[1:8,]
 ## they looks really close. However, the weight of
 ## the model tells that the best model is really 
 ## much better than the second best (much higher weight).
+
+
+## 
+
 ## So, now the question is how much weight will increase by changing
 ## one unit of AICc value? So far, in this case it looks like it changes a lot.
 ## And I don't know whether mathmetically it makes sense or not.

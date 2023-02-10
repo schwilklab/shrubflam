@@ -7,15 +7,6 @@
 # Read the thermocouple data, in multiple csv files saved from the HOBO
 # software.
 
-source("../read_data.R") # script that read, clean and merged all the morphological and flammability traits data
-# except hobo thermocouples data. That's why in this script I will merge the 
-# thermocouples data with alldata_2022
-
-# The only thing that have to make sure that the the working directory
-# is "./data" to read the hobo data. If all the codes ran well from read_data.R that
-# means this script is supposed to run as well . May be a bit vague explanation. 
-# Need to be checked by Dr. Schwilk.
-
 TZ = "CST6CDT"
 
 
@@ -82,7 +73,7 @@ concat_hobo_files <- function(filelist, label){
 # Grabbing all the hobo files from left
 ########################################################################
 
-flam_left <- concat_hobo_files(list.files("../data/year_2022/hobos_2022",
+flam_left <- concat_hobo_files(list.files("./data/year_2022/hobos_2022",
                                           full.names = TRUE, recursive = TRUE,
                                           pattern = "flam.left*.csv"),
                                "flam_left")
@@ -90,13 +81,9 @@ flam_left <- concat_hobo_files(list.files("../data/year_2022/hobos_2022",
 
 
 class(flam_left$time) 
-
 any(is.na(flam_left$flam.left))
-
 any(is.na(flam_left$time)) 
-
 flam.left <- separate(flam_left, time, into = c("date", "time"), sep = " ")
-
 unique(flam.left$date)
 
 
@@ -104,42 +91,33 @@ unique(flam.left$date)
 # Grabbing all the hobo files from mid
 #####################################################################
 
-flam_mid <- concat_hobo_files(list.files("../data/year_2022/hobos_2022",
+flam_mid <- concat_hobo_files(list.files("./data/year_2022/hobos_2022",
                                          full.names = TRUE, recursive = TRUE,
                                          pattern = "flam.mid*.csv"),
                               "flam_mid")
 
 class(flam_mid$time) 
-
 any(is.na(flam_mid$flam.mid))
-
 any(is.na(flam_mid$time)) 
-
 flam.mid <- separate(flam_mid,time, into = c("date","time"),
                      sep = " ")
-
-
 unique(flam.mid$date)
 
 #####################################################################
 # Grabbing all the hobo files from right
 #####################################################################
 
-flam_right <- concat_hobo_files(list.files("../data/year_2022/hobos_2022",
+flam_right <- concat_hobo_files(list.files("./data/year_2022/hobos_2022",
                                            full.names = TRUE, recursive = TRUE,
                                            pattern = "flam.right*.csv"),
                                 "flam_right")
 
 
 class(flam_right$time)
-
 any(is.na(flam_right$flam.right))
-
 any(is.na(flam_right$time))
-
 flam.right <- separate(flam_right, time, into =  c("date", "time"), 
                        sep = " ")
-
 unique(flam.right$date)
 
 #####################################################################
@@ -148,13 +126,9 @@ unique(flam.right$date)
 
 hobos <- full_join(flam_left, flam_mid, by = "time") %>% 
   full_join(flam_right,  by = "time")
-
-
 class(hobos$time)
-
 hobos_separate <- separate(hobos, time, into = c("date", "time"),
                            sep= " ")
-
 
 unique(hobos_separate$date)
 
@@ -206,16 +180,13 @@ hobo_temp_sum <- hobos_long %>% group_by(label, position) %>%
   filter(label != "NA")
 
 dim(hobo_thermocouples_data) #116
-
 dim(hobo_temp_sum) # 116*3 = 348
 
-
-########################################################################
-# Need to make the summarise data wider in order to merge with
-# the alldata_2022 to perform the PCA. Need to make 
-# sure it has equal number of observations of alldata_2022.
-########################################################################
-
+###############################################################################
+# Need to make the summarise data wider in order to merge with the alldata_2022
+# to perform the PCA. Need to make sure it has equal number of observations of
+# alldata_2022.
+###############################################################################
 hobos_wider_2022 <- hobo_temp_sum %>%
   group_by(label) %>%
   summarise(dur_100=mean(dur_100),
@@ -224,68 +195,62 @@ hobos_wider_2022 <- hobo_temp_sum %>%
 
 dim(hobos_wider_2022)
 
-#####################################################################
-# The remaining code is only for plotting purpose
-# Plotting the summarized data
-# Merge  the hobo summary data with alldata_2022
-#####################################################################
+##############################################################################
+# The remaining code is only for plotting purpose Plotting the summarized data
+# Merge the hobo summary data with alldata_2022
+#############################################################################
 
 hobo_plots <- alldata_2022 %>%
   right_join(hobo_temp_sum, by = "label") %>%
   filter( sample_id != "NA")
-
 dim(alldata_2022) # 116
-
 dim(hobo_plots) # 116*3 = 348
-
 any(is.na(hobo_plots$dur_100)) #FALSE
-
 any(is.na(hobo_plots$degsec_100)) #FALSE
-
 any(is.na(hobo_plots$peak_temp)) #FALSE
 
 ########################################################################
 # Plot for the summary
 ########################################################################
 
-ggplot(hobo_plots,aes(field_taxon, dur_100, color = field_taxon))+
-  geom_jitter(width = 0)+
-  facet_grid(.~position)+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1,
-                                   face = "italic"))+
-  labs(x = "Display name",
-       y=expression(paste("Duration over ",100^degree*C, " in (s)")))
+## ggplot(hobo_plots,aes(field_taxon, dur_100, color = field_taxon))+
+##   geom_jitter(width = 0)+
+##   facet_grid(.~position)+
+##   theme_bw()+
+##   theme(axis.text.x = element_text(angle = 45,
+##                                    hjust = 1,
+##                                    face = "italic"))+
+##   labs(x = "Display name",
+##        y=expression(paste("Duration over ",100^degree*C, " in (s)")))
 
 
-ggplot(hobo_plots,aes(field_taxon, degsec_100, color = field_taxon))+
-  geom_jitter(width = 0)+
-  facet_grid(.~position)+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1,
-                                   face = "italic"))+
-  labs(x = "Display name",
-  y = expression(Temperature ~ integration ~ (degree~C %.% s ) ) )
+## ggplot(hobo_plots,aes(field_taxon, degsec_100, color = field_taxon))+
+##   geom_jitter(width = 0)+
+##   facet_grid(.~position)+
+##   theme_bw()+
+##   theme(axis.text.x = element_text(angle = 45,
+##                                    hjust = 1,
+##                                    face = "italic"))+
+##   labs(x = "Display name",
+##   y = expression(Temperature ~ integration ~ (degree~C %.% s ) ) )
 
-ggplot(hobo_plots,aes(field_taxon, peak_temp, color = field_taxon))+
-  geom_jitter(width = 0)+
-  facet_grid(.~position)+
-  theme_bw()+ 
-  theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1, 
-                                   face = "italic"))+
-  labs(x="Display name",
-       y=expression("Peak temperature " ( degree*C)))
+## ggplot(hobo_plots,aes(field_taxon, peak_temp, color = field_taxon))+
+##   geom_jitter(width = 0)+
+##   facet_grid(.~position)+
+##   theme_bw()+ 
+##   theme(axis.text.x = element_text(angle = 45,
+##                                    hjust = 1, 
+##                                    face = "italic"))+
+##   labs(x="Display name",
+##        y=expression("Peak temperature " ( degree*C)))
 
 
+## Save RDS data
+saveRDS(hobos_wider_2022, file.path(DATA_CACHE_DIR, "hobos_wider_2022"))
 
- 
 ########################################################################
 # Cleaning the environment
 ########################################################################
-
 rm("concat_hobo_files", "get_trial_label", "read_hobo_file",
    "hobos_long","hobo_plots", "flam.right","flam.mid","flam.left",
    "flam_right","flam_mid","flam_left", "hobo_thermocouples_data",
