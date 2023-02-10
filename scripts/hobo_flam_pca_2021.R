@@ -5,28 +5,21 @@
 ## read hobos and PCA analysis from 2021, just in a single
 ## script.
 
-
-source("./read_data_2021.R") # The script where the data from 2021 were cleaned 
-
 TZ = "CST6CDT"
 
 library(tidyr)
 library(stringr)
 
-## DWS: Do you need all those packages?
-# AM: removed unnecessary packages.
-
-####################################################################
-# Reading trials data in order to grab the temperatures from hobo
-# data loggers
-####################################################################
+###############################################################################
+# Reading trials data in order to grab the temperatures from hobo data loggers
+###############################################################################
 
 trials <- read.csv("../data/year_2021/burn_trials.csv",
                    stringsAsFactors = FALSE)
 
-#####################################################################
+###############################################################################
 # Getting the end trial time, converting the time zone of trials data
-#####################################################################
+###############################################################################
 
 trials <- trials%>%
   mutate(start.time = mdy_hm(str_c(burn.date, " ",
