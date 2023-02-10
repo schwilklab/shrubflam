@@ -26,12 +26,12 @@ MASS_DISK_2      = 53.21  # g
 ## We need to read them all in first before cleaning because some calculations
 ## require columns from multiple files
 
-samples <- read_csv("../data/year_2021/samples.csv")
-canopy_measurements <- read_csv("../data/year_2021/canopy_measurements.csv")
-leaf_measurements <- read_csv("../data/year_2021/leaf_measurements.csv")
-burn_trials <- read_csv("../data/year_2021/burn_trials.csv")
-species_table <- read_csv("../data/year_2021/species_table.csv")
-juniperus_leaf_area <- read.csv("../data/year_2021/leaf_area_juniperus.csv")
+samples <- read_csv("./data/year_2021/samples.csv")
+canopy_measurements <- read_csv("./data/year_2021/canopy_measurements.csv")
+leaf_measurements <- read_csv("./data/year_2021/leaf_measurements.csv")
+burn_trials <- read_csv("./data/year_2021/burn_trials.csv")
+species_table <- read_csv("./data/year_2021/species_table.csv")
+juniperus_leaf_area <- read.csv("./data/year_2021/leaf_area_juniperus.csv")
 
 ###############################################################################
 ## Calculations and cleaning

@@ -9,12 +9,6 @@ library(car)
 library(multcomp)
 
 
-source("./read_data.R") # The script that used to clean the dataset of 2021
-source("./read_hobos.R") # The script that used to calculate the flammability
-# metrics from k-type thermocouple sensors from 2021
-source("./read_data_2022.R") # The script that used to clean the dataset of 2022
-source("./read_hobos_2022.R") # The script that used to calculate the flammability
-# metrics from k-type thermocouple sensors from 2022
 
 
 
