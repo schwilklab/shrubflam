@@ -6,23 +6,18 @@
 
 library(randomcoloR)  ## DWS: Why? You don't want random colors in code!
 ## AM: Don't know how to fix the color issue
-library(ggmap)
-library(factoextra)
 
-source("../flam_pca.R") # The script where the pca performed
-source("../analysis.R") # The script where the model selection
-# procedure was performed
-source("../ggplot_theme.R") # Plot theme for publication standard
-# plot by Dr. Schwilk
+## DWS: What is wrong with the suggestions I made in our meeting? "I don't
+## know" is not very useful and doesn't tell me how to help you.
+
+library(ggmap)
+
+#library(factoextra) # unnecessary, already loaded in a previous script.
+
+# Plot theme for publication standard
+source("./scripts/ggplot_theme.R") 
 
 ## This script depends on analysis.R. See run-all.R
-
-## DWS: Where does the 2021 data coe from, the code you refer to never reads it.
-
-## DWS: Why is this script so long? How many figures do you need to tell this
-## story?
-## AM : Fixed this issue.
-
 
 
 ##################################################################################
@@ -107,7 +102,7 @@ total_dry_mass <- ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, deg
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-ggsave("../results/total_dry_mass.pdf",
+ggsave("./results/total_dry_mass.pdf",
        plot = total_dry_mass, height = beamer_height,
        width = 10, units = "cm")
 
@@ -115,7 +110,7 @@ ggsave("../results/total_dry_mass.pdf",
 # Same way for canopy density
 #####################################################################################
 
-canoyp_density <- ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, color = analysis_group)) +
+canopy_density <- ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_blank(data = predicted_degsec_canopy_plot_data) + 
   geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
@@ -134,7 +129,7 @@ canoyp_density <- ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-ggsave("../results/canopy_density.pdf",
+ggsave("./results/canopy_density.pdf",
        plot = canopy_density, height = beamer_height,
        width = 10, units = "cm")
 
@@ -208,7 +203,7 @@ LMA <- ggplot(best_degsec_leaf_plot_data, aes(leaf_mass_per_area, degsec_100,
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-ggsave("../results/LMA.pdf",
+ggsave("./results/LMA.pdf",
        plot = LMA, height = beamer_height,
        width = 10, units = "cm")
 ##################################################################################
@@ -276,7 +271,7 @@ canopy_density_ignition <- ggplot(best_canopy_ignition_plot_data, aes(canopy_den
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-ggsave("../results/canopy_density_ignition.pdf",
+ggsave("./results/canopy_density_ignition.pdf",
        plot = canopy_density_ignition, height = beamer_height,
        width = 10, units = "cm")
 
@@ -300,7 +295,7 @@ canopy_moisture_ignition <- ggplot(best_canopy_ignition_plot_data, aes(canopy_mo
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-ggsave("../results/canopy_moisture_ignition.pdf",
+ggsave("./results/canopy_moisture_ignition.pdf",
        plot = canopy_moisture_ignition, height = beamer_height,
        width = 10, units = "cm")
 ######################################################################################
@@ -310,8 +305,6 @@ ggsave("../results/canopy_moisture_ignition.pdf",
 best_leaf_ignition_plot_data <- final_data %>% 
   select(leaf_moisture_content, leaf_mass_per_area, 
          ignition_delay, analysis_group)
-
-
 
 
 #########################################################################################
@@ -363,7 +356,7 @@ LMA_ignition <- ggplot(best_leaf_ignition_plot_data, aes(leaf_mass_per_area,igni
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-ggsave("../results/LMA_ignition.pdf",
+ggsave("./results/LMA_ignition.pdf",
        plot = LMA_ignition, height = beamer_height,
        width = 10, units = "cm")
 
@@ -387,7 +380,7 @@ leaf_moisture_ignition <- ggplot(best_leaf_ignition_plot_data, aes(leaf_moisture
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black"))
 
-ggsave("../results/leaf_moisture_ignition.pdf",
+ggsave("./results/leaf_moisture_ignition.pdf",
        plot = leaf_moisture_ignition, height = beamer_height,
        width = 10, units = "cm")
 
