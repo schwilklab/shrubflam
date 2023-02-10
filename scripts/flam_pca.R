@@ -5,10 +5,10 @@
 
 library(factoextra)
 
-####################################################################
-## PCA analysis. Merging the hobo data with alldata_2022 by label
-# data set to do the PCA.
-#####################################################################
+###############################################################################
+# PCA analysis. Merging the hobo data with alldata_2022 by label data set to do
+# the PCA.
+###############################################################################
 
 pca_data_2022 <- alldata_2022 %>%
   left_join(hobos_wider_2022, by = "label") %>%
@@ -20,9 +20,9 @@ pca_data_2022 <- alldata_2022 %>%
 dim(pca_data_2022) # 116
 any(is.na(pca_data_2022)) 
 
-####################################################################
+###############################################################################
 # PCA by prcomp, correlation matrix since I am using scale is TRUE
-####################################################################
+###############################################################################
 
 flam_pca_2022 <- prcomp(pca_data_2022[,-1], 
                    scale=TRUE)
@@ -32,9 +32,9 @@ flam_loadings <- flam_pca_2022$rotation[ ,1:2]
 flam_loadings
 biplot(flam_pca_2022)
 
-####################################################################
+##############################################################################
 ## Scree plot, eigenvalue and variables info
-####################################################################
+###############################################################################
 
 eig_val <- get_eigenvalue(flam_pca_2022) 
 eig_val # eignevalue for PC2 is 0.842
@@ -42,9 +42,9 @@ variables_info <- get_pca_var(flam_pca_2022) # Variables information
 variables_info$coord[ ,1:2] # Coordinates of variables
 head(variables_info$contrib) # Contributions of variables
 
-####################################################################
+##############################################################################
 ## Plot based on cos2 values of variables
-####################################################################
+###############################################################################
 
 # Will remove the plots and take them to results_2022.R later.
 
@@ -61,9 +61,9 @@ var_contr_by_cos2 <- fviz_pca_var(flam_pca_2022,col.var = "cos2",
 
 
 
-####################################################################
+###############################################################################
 ## Contributions of variables in Principle components
-####################################################################
+###############################################################################
 
 contributor_pc1_2022 <-  fviz_contrib(flam_pca_2022, choice = "var",
                                  axes = 1,
@@ -77,10 +77,10 @@ contributor_pc2_2022 <- fviz_contrib(flam_pca_2022, choice = "var",
                                      fill = "lightgray",
                                      color = "black") 
 
-#####################################################################
+###############################################################################
 # Assigning PC1 to pca_data_2022 and then merging with alldata_2022
 # data set for doing rest of the analysis.
-#####################################################################
+###############################################################################
 
 pca_data_2022$PC1 <- flam_pca_2022$x[ ,1]
 pca_data_2022$PC2 <- flam_pca_2022$x[ ,2]

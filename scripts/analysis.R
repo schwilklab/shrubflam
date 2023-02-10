@@ -20,11 +20,10 @@
 
 library(MuMIn)
 
-# MuMIn package for automated model selection through subsetting
-# the maximum model, with optimal constraints for model inclusion.
-# Model parameter and prediction averaging based on model weights 
-# derived from information criteria (AIC).
-# source: https://cran.r-project.org/web/packages/MuMIn/MuMIn.pdf
+# MuMIn package for automated model selection through subsetting the maximum
+# model, with optimal constraints for model inclusion. Model parameter and
+# prediction averaging based on model weights derived from information criteria
+# (AIC). source: https://cran.r-project.org/web/packages/MuMIn/MuMIn.pdf
 
 
 # Principle component analysis
@@ -38,20 +37,24 @@ library(MuMIn)
 
 
 
-##################################################################################
-# scaling the response variables since they measured in different
-# units
-##################################################################################
+###############################################################################
+# scaling the response variables since they measured in different units
+###############################################################################
 
-## DWS: But this makes interpretation difficult. Do you need to do this?
-## AM: all the traits were measured in different units, completely
-## different than each other and so far my knowledge scaling as z-score
-## makes comparison easier. However, in this case, the main concern is AICc value
-## which  tells whichb traits fit the data best. Therefore, estimates and p-value
-## might not be an important issue in this case, unless reviewer or 
-## thesis committee asked for. Therefore, may be not doing scaling would be
-## ok. But for now  I am leaving it as it is and can be changed later after
-## Dr. Schwilk's opinion on this matter.
+## DWS: But this makes interpretation difficult. Do you need to do this? AM:
+## all the traits were measured in different units, completely different than
+## each other and so far my knowledge scaling as z-score makes comparison
+## easier.
+
+## NO, You do not understand what I am saying. This has nothing to do with
+## p-values. Talk to me.
+
+## However, in this case, the main concern is AICc value which tells which
+## traits fit the data best. Therefore, estimates and p-value might not be an
+## important issue in this case, unless reviewer or thesis committee asked for.
+## Therefore, may be not doing scaling would be ok. But for now I am leaving it
+## as it is and can be changed later after Dr. Schwilk's opinion on this
+## matter.
 
 zscore <- function(x) (x -mean(x, na.rm=TRUE))/ sd(x, na.rm = TRUE)
 
@@ -64,9 +67,10 @@ model_data <- final_data %>%
 names(model_data)
 
 dim(model_data)
-####################################################################################
+
+###############################################################################
 # Making sure that variables with missing value is out from the analysis
-###################################################################################
+###############################################################################
 
 model_data <- model_data %>%
   select(degsec_100, field_taxon,
@@ -82,17 +86,21 @@ dim(model_data)
 
 any(is.na(model_data)) # FALSE
 
-model_data$degsec_100 <- log(model_data$degsec_100) # log transformation of response variable
+model_data$degsec_100 <- log(model_data$degsec_100) # log transformation of
+                                                    # response variable
 
 ## DWS: So you are making z score and then taking log. How will you graph this?
-## AM: Log transformation made the residuals better though not completely normal.
-# If we don't need to 
-## worry about testing model assumptions, then not doing log transformation
-## is ok.
-#################################################################################
-# A global model of canopy traits with two way interactions for 
-# temperature integration.
-##################################################################################
+## AM: Log transformation made the residuals better though not completely
+## normal. If we don't need to worry about testing model assumptions, then not
+## doing log transformation is ok.
+
+## DWS: Make sure you understand trade-off here.
+
+
+###############################################################################
+# A global model of canopy traits with two way interactions for temperature
+# integration.
+###############################################################################
 
 
 options(na.action = "na.fail")
@@ -107,10 +115,10 @@ canopy_pc1_model <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ra
                                  (1 | analysis_group), data = model_data, REML = FALSE)
 
 
-## DWS: What is "group"? Looks like it is genus. Why is this not called
-## "genus"? Why are you ruling out random slopes?
-## AM: The reason behind ruling out the random slopes
-## is that it made the model overfitted (isSingular?).
+## AM: The reason behind ruling out the random slopes is that it made the model
+## overfitted (isSingular?).
+
+## DWS: well what about a smaller model?
 
 canopy_pc1_models <- dredge(canopy_pc1_model) # Performs an automated
 
@@ -126,21 +134,21 @@ best_canopy_pc1_model <- get.models(canopy_pc1_models, subset = TRUE)[[1]] # ret
 canopy_mod_table <- model.sel(canopy_pc1_models)
 canopy_mod_table[1:8,]
 
-## DWS: So top four models pretty close.
-## AM: comparing by AICc, it is true that
-## they looks really close. However, the weight of
-## the model tells that the best model is really 
-## much better than the second best (much higher weight).
+## DWS: So top four models pretty close. AM: comparing by AICc, it is true that
+## they looks really close. However, the weight of the model tells that the
+## best model is really much better than the second best (much higher weight).
 
 
-## 
+## I'm not sure I agree that 32% is super convincing.
 
-## So, now the question is how much weight will increase by changing
-## one unit of AICc value? So far, in this case it looks like it changes a lot.
-## And I don't know whether mathmetically it makes sense or not.
+## So, now the question is how much weight will increase by changing one unit
+## of AICc value? So far, in this case it looks like it changes a lot. And I
+## don't know whether mathmetically it makes sense or not.
+
+## DWS: ??
 
 # Generate or extract a list of fitted model objects from a "model.selection"
-# table, object returned by dredge. The argument subset must be explicitely
+# table, object returned by dredge. The argument subset must be explicitly
 # provided. This is to assure that a potentially long list of models is not
 # fitted unintentionally. To evaluate all models, set subset to NA or TRUE.
 # source: ?get.models
@@ -152,16 +160,11 @@ summary(best_canopy_pc1_model)
 
 #sjPlot::tab_model(best_canopy_pc1_model)
 
-
-
-
-##################################################################################
-##################################################################################
+###############################################################################
 # A global model of leaf traits with two way interaction for heat release
-# Kendall rank correlation coefficient between leaf_area_per_leaflet and 
-# leaf_length_per_leaflet is 0.67 and
-# decided to drop leaf_area_per_leaflet from the model
-# to avoid the high collinearity between two fixed effects.
+# Kendall rank correlation coefficient between leaf_area_per_leaflet and
+# leaf_length_per_leaflet is 0.67 and decided to drop leaf_area_per_leaflet
+# from the model to avoid the high collinearity between two fixed effects.
 # theoretical explanation will be given in thesis/paper.
 
 
@@ -172,11 +175,6 @@ leaf_pc1_model <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_length_per_l
                                leaf_mass_per_area:leaf_moisture_content + 
                                leaf_length_per_leaflet:leaf_moisture_content + 
                                (1| analysis_group), data = model_data, REML = FALSE)
-
-## DWS: Your use of "*" above does not make sense to me. It looks like you are
-## already specifying the main effects?
-## AM: This issue is fixed. Please, see comments on the Top of
-## the script.
 
 leaf_pc1_models <- dredge(leaf_pc1_model)
 
@@ -192,21 +190,24 @@ best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]]
 summary(best_leaf_pc1_model) # Leaf mass per area is the best model 
 
 ## DWS: BUt not by much!
+
 ## AM: This issue is addressed in the last model.
+
+## DWS: Talk to me.
 
 #sjPlot::tab_model(best_leaf_pc1_model)
 
-#################################################################################
+###############################################################################
 # Comparison between best canopy and leaf model for temperature integration
-#################################################################################
+###############################################################################
 
 
 AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 3.18
 # and leaf 76.26
 
-########################################################################
+###############################################################################
 # Does pre_burning temperature improves the best model?
-#########################################################################
+###############################################################################
 
 pre_burning_temp_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g +
                                                      canopy_density_gm_cm3 +
@@ -220,11 +221,10 @@ AIC(best_canopy_pc1_model, pre_burning_temp_canopy_traits_model) # AICc = 3.75,
 # didn't improve the model.
 
 
-##################################################################################
-# Does  the best canopy traits and leaf traits have significant
-# effect on heat release if we remove the most flammable group
-# "Juniperus" from the analysis?
-##################################################################################
+###############################################################################
+# Does the best canopy traits and leaf traits have significant effect on heat
+# release if we remove the most flammable group "Juniperus" from the analysis?
+###############################################################################
 
 
 without_juniperus <- model_data %>% # creating a new data set without Juniperus group
@@ -245,15 +245,15 @@ anova(heat_release_without_juniperus)
 ## canopy density is marginally significant p = 0.073
 ## and LMA is not significant at all p = .959
 
-##################################################################################
+###############################################################################
 # A global model of canopy traits and leaf traits without interaction (to avoid
 # overfitting problem) for ignition delay.
-##################################################################################
+###############################################################################
 
 
-#################################################################
+###############################################################################
 # Ignition delay vs canopy traits
-#################################################################
+###############################################################################
 
 
 canopy_ignition_model <- afex::lmer(ignition_delay ~ total_dry_mass_g + leaf_stem_mass_ratio + 
@@ -273,9 +273,9 @@ summary(best_canopy_ignition_model)
 
 #sjPlot::tab_model(best_canopy_ignition_model)
 
-#########################################################################################
+###############################################################################
 # Ignition delay vs leaf traits
-###########################################################################################
+###############################################################################
 
 leaf_traits_ignition_model <- afex::lmer(ignition_delay ~ leaf_mass_per_area +
                                            leaf_length_per_leaflet + leaf_moisture_content +
@@ -298,9 +298,9 @@ summary(best_leaf_ignition_model) # LMA and leaf_moisture_content
 AIC(best_canopy_ignition_model, best_leaf_ignition_model) # canopy 579.15
 # leaf 584.87
 
-#######################################################################
+###############################################################################
 # Does pre_burning temperature improves the best model?
-########################################################################
+###############################################################################
 
 pre_burning_ignition_model <- afex::lmer(ignition_delay ~ canopy_density_gm_cm3 +
                                            canopy_moisture_content +
@@ -313,13 +313,12 @@ AIC(best_canopy_ignition_model, pre_burning_ignition_model) # Didn't improve the
 
 # AIC for pre burning ignition = 580.9, pretty close
 
-##########################################################################################
+###############################################################################
 # Without Juniperus, Do the best traits have significant effect on ignition
-# delay if we remove "Juniperus" group? One important note:
-# The leaf and canopy moisture content are highly correlated and
-# I am using only leaf moisture content since leaf is one of the first thing
-# that's get ingited.
-#########################################################################################
+# delay if we remove "Juniperus" group? One important note: The leaf and canopy
+# moisture content are highly correlated and I am using only leaf moisture
+# content since leaf is one of the first thing that's get ingited.
+###############################################################################
 
 ignition_delay_without_juniperus <- afex::lmer(ignition_delay ~ canopy_density_gm_cm3 +
                                                  leaf_mass_per_area + leaf_moisture_content +
@@ -329,12 +328,12 @@ ignition_delay_without_juniperus <- afex::lmer(ignition_delay ~ canopy_density_g
 summary(ignition_delay_without_juniperus) # Only moisture content , p = 0.027
 anova(ignition_delay_without_juniperus)
 
-########################################################################
-# Does remaining less important traits have any significant effect on
-# heat release and ignition delay? The reason for creating separate model
-# for canopy traits and leaf traits is that some of the traits are
-# correlated with each other.
-########################################################################
+###############################################################################
+# Does remaining less important traits have any significant effect on heat
+# release and ignition delay? The reason for creating separate model for canopy
+# traits and leaf traits is that some of the traits are correlated with each
+# other.
+###############################################################################
 
 leaf_stem_canopy_mc_heat_release_model <- afex::lmer(degsec_100 ~ leaf_stem_mass_ratio +
                                                        canopy_moisture_content +
@@ -356,9 +355,9 @@ summary(leaf_length_leaf_mc_heat_release_model) # none of them had any
 # leaf_mc: p-value = 0.374
 # leaf_length: p-value = 0.786
 
-#########################################################################
+###############################################################################
 # Same for ignition delay
-#########################################################################
+###############################################################################
 
 total_dry_mass_leaf_stem_ignition <- afex::lmer(ignition_delay ~ total_dry_mass_g +
                                                   leaf_stem_mass_ratio +
