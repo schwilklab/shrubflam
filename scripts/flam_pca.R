@@ -55,7 +55,7 @@ var_contr_by_cos2 <- fviz_pca_var(flam_pca_2022,col.var = "cos2",
   ylab("Principle component 2") +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        panel.background = element_rect(linewidth = 1.6),
+        panel.background = element_rect(),
         plot.title = element_blank())
 
 
