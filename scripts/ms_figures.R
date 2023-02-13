@@ -109,7 +109,8 @@ ggsave("./results/total_dry_mass.pdf",
 
 canopy_density <- ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
-  geom_blank(data = predicted_degsec_canopy_plot_data) + 
+  geom_blank(data = predicted_degsec_canopy_plot_data) +
+  # DWS: this is not the model you describe in the methods:
   geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
   geom_point(data = degsec_by_group, size = 4.5 , alpha = 1, shape = 16,
              aes(color = analysis_group)) +
