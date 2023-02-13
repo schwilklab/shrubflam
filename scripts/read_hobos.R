@@ -203,6 +203,11 @@ dim(hobos_wider_2022)
 hobo_plots <- alldata_2022 %>%
   right_join(hobo_temp_sum, by = "label") %>%
   filter( sample_id != "NA")
+
+## DWS: this produces a warning.
+
+
+
 dim(alldata_2022) # 116
 dim(hobo_plots) # 116*3 = 348
 any(is.na(hobo_plots$dur_100)) #FALSE
