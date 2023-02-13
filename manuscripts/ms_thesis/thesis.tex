@@ -5,7 +5,8 @@
 \usepackage[top=1in, left=1.5in, right=1in, bottom=1in]{geometry}
 
 \title{
-Shoot Flammability of Shrubs in Texas\\[15pt]
+  Shoot Flammability of Shrubs in Texas\\[15pt]
+  %% Title could be better! 
 by\\
 Azaj Mahmud, degrees\\
 A Thesis\\
@@ -96,15 +97,15 @@ A global mixed-effect model was built for each type of trait for temperature int
 \section{Results}
 
 \subsection{Flammability axes}
-According to the principle component analysis, the first two principal components accounted for 77.8\% of the variation of all the measured flammability metrics. The first axis, which represents heat release [DWS: How do you know what it ``represents''?], captured 68.5\% of the total variation. The temperature integration in the first axis received the most contributions and six flammability traits had a strong positive correlation with one another (loadings: temperature integration = 0.38, flame duration = 0.38, duration over 100C [fix] = 0.37, mass-consumed = 0.37, the maximum temperature of the thermocouple temperature sensors = 0.36, percentage of volume burned = 0.35). The second axis of PCA explained 9.36 \% of the total variation and the ignition delay and heat release (j) both contributed the most in the second principle component and are negatively correlated with each other (loading: ignition delay = -0.75, heat release (j) = 0.58). [DWS: Table? any figures? You do not cite any figures!]
+According to the principle component analysis, the first two principal components accounted for 77.8\% of the variation of all the measured flammability metrics. The first axis, which represents heat release [DWS: How do you know what it ``represents''?], captured 68.5\% of the total variation (Fig. \ref{fig:pca-plot}). The temperature integration in the first axis received the most contributions and six flammability traits had a strong positive correlation with one another (loadings: temperature integration = 0.38, flame duration = 0.38, duration over 100C [fix] = 0.37, mass-consumed = 0.37, the maximum temperature of the thermocouple temperature sensors = 0.36, percentage of volume burned = 0.35). The second axis of PCA explained 9.36 \% of the total variation and the ignition delay and heat release (j) both contributed the most in the second principle component and are negatively correlated with each other (loading: ignition delay = -0.75, heat release (j) = 0.58). [DWS: Table? any figures? You do not cite any figures!]
 
 \begin{figure}  % DWS: You never cite this so why include it?
     \centering
-    \includegraphics[width = \textwidth]{pca_plot.pdf}
-    \caption{Principle component analysis biplot of nine flammability traits with their abbreviations (ID = Ignition delay, FD = Flame duration, TI = Temperature integration over 100 $^{\circ}$C, Duration over 100 $^{\circ}$C, MC = Mass consumed, VB = Volume burned, PT = Peak temperature, FH = Flame height, HR = Heat release (j)) with their quality of representation as $cos^2$ (squared coordinates). A high $cos^2$ indicates a good representation of the variable in the principle component and a low $cos^2$ of a variable indicates less importance in the principle component}
+    \includegraphics[width = \textwidth]{../../results/pca_plot.pdf}
+    \caption[Principle components results]{\label{fig:pca-plot} Principle component analysis biplot of nine flammability traits with their abbreviations (ID = Ignition delay, FD = Flame duration, TI = Temperature integration over 100 $^{\circ}$C, Duration over 100 $^{\circ}$C, MC = Mass consumed, VB = Volume burned, PT = Peak temperature, FH = Flame height, HR = Heat release (j)) with their quality of representation as $cos^2$ (squared coordinates). A high $cos^2$ indicates a good representation of the variable in the principle component and a low $cos^2$ of a variable indicates less importance in the principle component}
   \end{figure}
 
-  [DWS: You have figures you include but never cite]
+  [DWS: You have figures you include but never cite. I added exmaple citations here but I can't figure out where the code produces this figure. ]
 
 \subsection{Effect of canopy traits and leaf traits on heat release}
 To examine the impact of wind speed on flammability [DWS: why is this interesting? Why are you doing this this was not a question you introduced and seems out of place], a linear regression was first conducted [DWS: NO, why? This is bad]. The results showed that wind speed had no effect on the temperature integration over 100 $^{\circ}$C (p > 0.05). [DWS: But how can linear regression answer this in a multivariate relationship? You are doing dangerous things here]. For canopy traits, the model with total dry mass and canopy density without interaction is the best fit to predict temperature integration and \MakeUppercase{lma} alone is the best fit as predictor among all the leaf traits. The model with canopy traits is better at fitting the data set compared to leaf traits ($AIC_{c}$ value: best canopy traits model = 3.18, best leaf traits model = 76.26). I built another linear mixed effect model using the best canopy traits and mean pre-burning disc temperature as a covariate to see whether adding pre-burning temperature improves the model or not. I found that, adding pre-burning temperature didn't improve the model ($AIC_{c}$ value: best canopy traits model = 3.18, pre-burning temperature model = 3.75).
@@ -124,42 +125,42 @@ To examine the impact of wind speed on flammability [DWS: why is this interestin
         best leaf traits    & LMA & 76.26 \\
        \hline
 \end{tabular}
-\caption{Model selection results for the best model for each type of trait for temperature integration with their corresponding $AIC_{c}$ value}
-\end{table} 
+\caption{\labe{tab:model-selection}Model selection results for the best model for each type of trait for temperature integration with their corresponding $AIC_{c}$ value}
+\end{table}
 
+[DWS: This table only shows two models, but the model selection was on a next set from a full models. Then you did a two model test, right?]
 
-After selecting the best models [DWS: ??? best?], I checked how well the models fit the data. Total dry mass and canopy density had a significant positive linear effect on temperature integration above 100 $^{\circ}$C. Marginal $R^2$ for the model with total dry mass and canopy density without interaction was 0.51 (total dry mass: p $<$ 0.001, canopy density: p = 0.026). LMA had also a significant positive effect on temperature integration above 100 $^{\circ}$C. Marginal $R^2$ for the model with LMA was 0.040 (LMA: p = 0.032). The majority of the measured traits have higher values for the species from the \emph{Juniperus} taxon, especially \emph{Juniperus ashei} and \emph{Juniperus pinchotii}. In order to understand how this taxon influenced the results, I removed the species from the \emph{Juniperus} taxon from the analysis and then examined the impact of those traits on the remaining species. After removing the \emph{Juniperus} species from the analysis, the total dry mass still had a strong positive effect (p $<$ 0.001), but canopy density had a marginal effect on temperature integration (p = 0.073). However, LMA didn't have any significant effect on temperature integration for the remaining species (p = .959) [DWS: not how to report this. Check with me].
+After selecting the best models [DWS: ??? best?], I checked how well the models fit the data. Total dry mass and canopy density had a significant positive linear effect [DWS: But I thought variable was lof-scaled?  What do you mean?] on temperature integration above 100 $^{\circ}$C (Fig. \ref{fig:dm-tempint}. Marginal $R^2$ for the model with total dry mass and canopy density without interaction was 0.51 (total dry mass: p $<$ 0.001, canopy density: p = 0.026) (Fig \ref{fig:canopyden-tempint}). LMA had also a significant positive effect on temperature integration above 100 $^{\circ}$C. Marginal $R^2$ for the model with LMA was 0.040 (LMA: p = 0.032). The majority of the measured traits have higher values for the species from the \emph{Juniperus} taxon, especially \emph{Juniperus ashei} and \emph{Juniperus pinchotii}. In order to understand how this taxon influenced the results, I removed the species from the \emph{Juniperus} taxon from the analysis and then examined the impact of those traits on the remaining species. After removing the \emph{Juniperus} species from the analysis, the total dry mass still had a strong positive effect (p $<$ 0.001), but canopy density had a marginal effect on temperature integration (p = 0.073). However, LMA didn't have any significant effect on temperature integration for the remaining species (p = .959) [DWS: not how to report this. Check with me].
 
+[DWS: Why not a model table?]
 
 \begin{figure}
     \centering
-    \includegraphics[width = \textwidth]{total_dry_mass.pdf}
-    \caption{Relationship between total dry mass and temperature integration above 100 $^{\circ}$C. The line indicates the best-fitted linear mixed model with species as a random intercept effect (p $<$ 0.001). Small points in the background are individual observations, and large points are species means. The red dots are \emph{Juniperus} taxon}
+    \includegraphics[width = \textwidth]{../../results/total_dry_mass.pdf}
+    \caption[Dry mass effect on temperature integration]{\label{fig:dm-tempint}Relationship between total dry mass and temperature integration above 100 $^{\circ}$C. The line indicates the best-fitted linear mixed model with species as a random intercept effect (p $<$ 0.001). Small points in the background are individual observations, and large points are species means. The red dots are \emph{Juniperus} taxon}
 \end{figure}
 
 
 \begin{figure}
     \centering
     \includegraphics[width = \textwidth]{canopy_density.pdf}
-    \caption{Relationship between canopy density and temperature integration above 100 $^{\circ}$C. The line indicates the best-fitted linear mixed model with species as a random intercept effect (p = 0.024). Small points in the background are individual observations, and large points are species means. The red dots are \emph{Juniperus} taxon}
+    \caption[short version]{\label{fig:canopyden-tempint} Relationship between canopy density and temperature integration above 100 $^{\circ}$C. The line indicates the best-fitted linear mixed model with species as a random intercept effect (p = 0.024). Small points in the background are individual observations, and large points are species means. The red dots are \emph{Juniperus} taxon}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width = \textwidth]{LMA.pdf}
-    \caption{Relationship between LMA and temperature integration above 100 $^{\circ}$C. The line indicates the best-fitted linear mixed model with species as a random intercept effect (p = 0.028). Small points in the background are individual observations, and large points are species means. The red dots are \emph{Juniperus} taxon}
+    \caption[short version]{\label{fig:LMA-tempint} Relationship between LMA and temperature integration above 100 $^{\circ}$C. The line indicates the best-fitted linear mixed model with species as a random intercept effect (p = 0.028). Small points in the background are individual observations, and large points are species means. The red dots are \emph{Juniperus} taxon}
 \end{figure}
 
 
-[DWS: Three figure you never use? Why?]
+[DWS: Three figure you never use? Why? Why three univariate relationships and not figures that better represent the models? Do all of the results basically just show juniperus as biggest effect? I see models without Juniperus in the analysis code.]
 
 
 
 \subsection{Effect of canopy and leaf traits on ignition delay}
 
-## DWS: why ignition delay? This is all so confusing. You have chosen two
-traits out of the many you looked at but never explain why. You never explain
-the approach]
+## DWS: why ignition delay? This is all so confusing. You have chosen two traits out of the many you looked at but never explain why. You never explain the approach. Is this based on theory? past work, the PCA? ]
 
 For ignition delay, all the models were fitted without any interaction term to avoid the overfitting problem [DWS:  ??? So why is it a problem here but not elsewhere? These decisions and explanation are confusing and any reviewer will reject this]. For canopy traits, the model with canopy density and canopy moisture content is the best fit to predict ignition delay and LMA and leaf moisture content is the best fit as predictor among all the leaf traits. The model with canopy traits is better at fitting the data set compared to leaf traits ($AIC_{c}$ value: best canopy traits model = 579.15, best leaf traits model = 584.87). I built another linear mixed effect model using the best canopy traits and  mean pre-burning disc temperature as a covariate to see whether adding pre-burning temperature improves the model or not. I found that, adding pre-burning temperature didn't improve the model ($AIC_{c}$ value: best canopy traits model = 579.15, pre-burning temperature model = 580.9).
 
@@ -192,7 +193,7 @@ Therefore, since leaf moisture content and canopy moisture content are highly co
 
 Finally, I tested the significance of the effect of the rest of the less important [DWS: why are they less important? I don;t understand] traits on flammability and I found that none of the less important traits have any significant effect on temperature integration (leaf: stem: p = 0.113 , canopy moisture content: p = 0.592, leaf moisture content: p =0.374, leaf length per leaflet: p = 0.786). However, only the total dry mass among all the less important traits, had significant positive effect on ignition delay (total dry mass: p = 0.023, leaf:stem: p = 0.387, leaf length per leaflet: p = 0.552).
 
-[DWS: I thought this was a hypothesis testing paper and it has devolved into variable selection. What a waste].
+[DWS: I thought this was a hypothesis testing paper and it has devolved into variable selection].
 
 
 
@@ -224,12 +225,13 @@ Finally, I tested the significance of the effect of the rest of the less importa
 \end{figure}
 
 
-[DWS: Many more figures you never use.]
+[DWS: Many more figures you never use. What is the point of all this? What is the story?]
 
 
 \section{Discussion}
 
-I found that canopy traits are more important than leaf traits in shoot flammability in shrub fuels. [DWS: great, I thought this was the main question but the methods and results don't match.]
+I found that canopy traits are more important than leaf traits in shoot flammability in shrub fuels. [DWS: great, I thought this was the main question but the methods and results don't match. Is this all driven by juniper or not?]
+
 Specifically, species with higher amounts of fuel per 70\,cm length and higher canopy density produced more heat during burning. These observations are consistent with the importance of the spatial arrangement of plant parts such as the bulk density \citep{pausas2012fire} and twigginess \citep{potts2022growth} in small-scale flammability experiments. However, I did not find any significant effect of the leaf:stem ratio [DWS: learn how to refer to ratios, this was a mess throughout] on temperature integration, which might be the proxy measurements of the leaf area index, one of the most crucial characteristics of crown fire susceptibility \citep{ray2005micrometeorological}. Part of the reason could be the difference in the variability of the canopy functional traits and leaf functional traits in three-dimensional space \citep{kamoske2021leaf} [DWS: I do not understand this. You are talking about higher moments of the distribution or some time-scale effect? differences in variaton?]. Therefore, although the paired branch looked almost similar to each other, the leaf:stem might not be the same in many cases  [DWS: Talk to me about how to dsicuss this. This is unexplained variance. I think you are saying that it is higher for some traits and therefore you have less power to detect effects with some measurements?]. There might be another reason like the leaf density \citep{potts2022growth}, leaf:stem is not a critical factor in shoot flammability due to the complex nature of flammability
 
 [DWS: Why does the whole first paragraph focus on a negative result about leaf:stem ratio? What is theory there? I did not think it was a major hypothesis of yours but this negative result is getting top billing int he thesis?]
@@ -275,7 +277,7 @@ Specifically, species with higher amounts of fuel per 70\,cm length and higher c
 \end{table}
 
 
-[DWS: You don;t use this?]
+[DWS: You don't use this table? It is never cited]
 
 
 Leaf mass per area (LMA), one of the most important traits from the Leaf Economic Spectrum \citep{wright2004worldwide} is the most important determinants of heat release among all the measured leaf traits in this study. LMA is related to leaf thickness \citep{niinemets1999research}, and species with high LMAgenerally have more dense leaf tissue \citep{poorter2009causes}. Like leaf dry matter content (LDMC) [DWS: missing words ehre?]  in shoot flammability \citep{alam2020shoot, potts2022growth}, this observation was also likely due to the denser leaf tissue which allows longer burning and with greater intensity and is consistent with previous leaf flammability experiments \citep{krix2018landscape}. However, the significance of this relationship doesn’t hold true after removing the most flammable taxon from the analysis. 
@@ -288,7 +290,7 @@ The observed effect of the amount of fuel and higher density of individual shoot
 
 [DWS: I suggest ``although'' in all formal writing]
 
-Texas and fire have a long history together \citep{moir1982firehistory, stambaugh2011firehistory,stambaugh2014historicalfirehistory,smeins2005historyoffire1}, and there are fire adapted species in this study (e.g. \emph{Prospis glandulosa}) \citep{glandulosahoney,wright1976effect} [DWS: hm. debatable!]. Moreover, all of the most flammable shrubs are seed-bearing in this experiment [DWS: waht do you mean? they had fruits or cones on when burned? Or that they are simple seed plants and no ferns?] and study suggests that fire influences seed coat chemistry \citep{mcinnes2022doesseedcoatchemistry} and in general, most of the flammable plants are reseeders \citep{midgley2011pushingreseeders}. Therefore,  the observed strong positive effect of total dry mass per 70\,cm length and shoot density on flammability might be selected to spread the fire to the surrounding plants because if the subsequent fires kill nearby, less flammable neighbors and also increases fecundity, flammability may improve inclusive fitness \citep{bond1995kill}. However, those structural traits might have other competitive advantages such as light harvesting. Moreover, Texas has a long history with grazing as well and herbivores can also influence the architecture of plants \citep{danell1994browseeffects}. Previous study regarding \emph{Juniperus ashei}, one of the most flammable species in this study, suggested that the enhanced flammability might be the response to herbivores \citep{owens1998seasonal}. Moreover, a recent study also shows that \emph{Juniperus ashei} has an allelopathic relationship with \emph{Bouteloua curtipendula}, a native grass in this ecosystem \citep{young2009assessmentallelopathy}. Therefore, future study is required to investigate whether it is a single evolutionary force or a combination of different selective pressure that drove the enhanced flammability in these ecosystem.
+Texas and fire have a long history together \citep{moir1982firehistory, stambaugh2011firehistory,stambaugh2014historicalfirehistory,smeins2005historyoffire1}, and there are fire adapted species in this study (e.g. \emph{Prospis glandulosa}) \citep{glandulosahoney,wright1976effect} [DWS: hm. debatable!]. Moreover, all of the most flammable shrubs are seed-bearing in this experiment [DWS: what do you mean? they had fruits or cones on when burned? Or that they are simple seed plants and no ferns?] and study suggests that fire influences seed coat chemistry \citep{mcinnes2022doesseedcoatchemistry} and in general, most of the flammable plants are reseeders \citep{midgley2011pushingreseeders}. Therefore,  the observed strong positive effect of total dry mass per 70\,cm length and shoot density on flammability might be selected to spread the fire to the surrounding plants because if the subsequent fires kill nearby, less flammable neighbors and also increases fecundity, flammability may improve inclusive fitness \citep{bond1995kill}. However, those structural traits might have other competitive advantages such as light harvesting. Moreover, Texas has a long history with grazing as well and herbivores can also influence the architecture of plants \citep{danell1994browseeffects}. Previous study regarding \emph{Juniperus ashei}, one of the most flammable species in this study, suggested that the enhanced flammability might be the response to herbivores \citep{owens1998seasonal}. Moreover, a recent study also shows that \emph{Juniperus ashei} has an allelopathic relationship with \emph{Bouteloua curtipendula}, a native grass in this ecosystem \citep{young2009assessmentallelopathy}. Therefore, future study is required to investigate whether it is a single evolutionary force or a combination of different selective pressure that drove the enhanced flammability in these ecosystem.
 
 [DWS: I read to here. You did a second chapter without discussing with me and you need to get the first one finished first. The results are a real mess and the model descriptions suggest you were doing a fishing expeditions although you should have had clear hypothesis].
 
@@ -306,7 +308,7 @@ Both fire and herbivores shape community assembly by acting as an ecological fil
 
 Plants can interact biochemically in a variety of ways, from stimulation to inhibition, that are ecologically significant\citep{muller1966role}. The effect of volatile compounds in enhanced flammability is well-known \citep{mutch1970wildland,white1994monoterpenes,owens1998seasonal,volatile1,volatile2,volatile3,alam2020shoot,ormeno2009relationship} and the ability of plant species to create and store certain types of chemical compounds might have adaptive value in fire-prone ecosystem \citep{pausas2016secondary}. However, the evidence for the primary function of the secondary compounds being defense is widespread \citep{primaryfunction} and plants-to-plants biochemical interaction can form a distinct type of ecosystem such as the shrub-fire-herb cycle in the California chaparral \citep{allelopathic}. A recent study suggests that, even in plants with little fire history, flammability can be emerged \citep{cui2020shoot}. Moreover, some volatile compounds act as herbivore defense as well as can enhance flammability \citep{white1994monoterpenes} and \citep{owens1998seasonal} suggested that, in some cases, the development of enhanced flammability might be the response to herbivores.\\
 
-A plant can have physical (e.g., thorns, spines, prickles), chemical (secondary compounds), or both types of defense against browsing animals. Studies tend to support the notion that defense is expensive and that there is a real trade-off between chemical and physical deterrents. \citep{rhoades1979evolution, van1988defence,twigg1996physicalchemical}. However, this view is not universal and sometimes inconsistent with other studies \citep{iddles2003potentialnegativecorrelation,steward1988theredifferentview,koricheva2004metanegativecorrelation}. Moreover, the plant defense can occasionally promote the development of a mutualistic relationship with other organisms \citep{janzen1966coevolution}, and herbivores can occasionally be advantageous to plants \citep{belsky1986does}. A recent study with a global data set showed that there is no conclusive evidence to support the trade-off and suggested that several defense characteristic combinations can be found in plants \citep{moles2013correlations}. Therefore, testing the flammability difference between armed (plants having e.g., spines, thorns, prickles) and unarmed plant species might improve the understanding of the trade-off.\\
+A plant can have physical (e.g., thorns, spines, or prickles), chemical (secondary compounds), or both types of defense against browsing animals. Studies tend to support the notion that defense is expensive and that there is a real trade-off between chemical and physical deterrents. \citep{rhoades1979evolution, van1988defence,twigg1996physicalchemical}. However, this view is not universal and sometimes inconsistent with other studies \citep{iddles2003potentialnegativecorrelation,steward1988theredifferentview,koricheva2004metanegativecorrelation}. Moreover, the plant defense can occasionally promote the development of a mutualistic relationship with other organisms \citep{janzen1966coevolution}, and herbivores can occasionally be advantageous to plants \citep{belsky1986does}. A recent study with a global data set showed that there is no conclusive evidence to support the trade-off and suggested that several defense characteristic combinations can be found in plants \citep{moles2013correlations}. Therefore, testing the flammability difference between armed (plants having e.g., spines, thorns, prickles) and unarmed plant species might improve the understanding of the trade-off.\\
 
 Texas has a long history of fire \citep{moir1982firehistory, stambaugh2011firehistory,stambaugh2014historicalfirehistory,smeins2005historyoffire1} and grazing \citep{buechner1950lifegrazing, wilcox2012historicalgrazing2}. Studies suggest that, in many cases, the transformation of many open grasslands and savannas into woodlands and the dominance of many fire-sensitive and least preferred shrubs for herbivores in this region is due to the infrequent natural wildfires and overgrazing \citep{archer1989havejoint,andruk2014joint, masters1986prescribed}. Therefore, Texas is an ideal place to test the prediction related to life history strategies shaped by fire and herbivores as a consumer of plants. The preference of herbivores is a relative concept that depends on a number of variables, including soil type, plant's age, the degree of use, and the availability of alternative plants \citep{wright2003white}.  A recent study suggests that there is a negative correlation between flammability and digestibility in plants \citep{gowda2022digestibility}. Moreover, \citep{archibald2019unified} suggested that it is feasible to determine the extent to which fire and herbivore adaptations are hostile or linked once they are placed on common axes. Therefore, testing the difference in flammability between different groups of shrubs based on herbivores' preferences might improve the understanding of avoidance–attraction traits for fire and herbivore \citep{schwilk2003flammability, archibald2019unified}. 
 
