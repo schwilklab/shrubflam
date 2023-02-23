@@ -1,0 +1,25 @@
+species_id,species,genus,herbivore_preference,specific_epithet,family,common_name,analysis_group,subfamily,leaf_structure,seed_type,foliage_seasonality,notes,herbivore_defense
+1000,Diospyros texana,Diospyros,least,texana,Ebenaceae,Texas Persimmon,Diospyros,ebenoideae,simple_alternate,angiosperm,deciduous_evergreen,Found almost in every property,non_armed
+1002,Mahonia trifoliolata,Mahonia,NA,trifoliolata,Berberidaceae,Agarita,Mahonia,berberidoideae,palmate_trifoliate,angiosperm,evergreen,Found almost in every property,armed
+1022,Juniperus ashei,Juniperus,least,ashei,Cupressaceae,Mountain Cedar/Ashe Juniper,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Found almost in every property,non_armed
+2011,Juniperus pinchotii,Juniperus,least,pinchotii,Cupressaceae,Pinchot Juniper,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,Only Found in Dickens Park,non_armed
+1021,Sophora secundiflora,Sophora,least,secundiflora,Fabaceae,Texas Mountain Laurel,Sophora,papilionoideae,pinnately_compound_alternate,angiosperm,evergreen,Found almost in every property,non_armed
+1009,Mimosa borealis,Mimosa,moderate_low,borealis,Fabaceae,Pink Mimosa,Mimomsa,mimosoideae,pinnately_twice_compound,angiosperm,deciduous,Haven't found in Bandera ,armed
+1036,Rhus virens,Rhus,moderate_low,virens,Anacardiaceae,Evergreen Sumac,Rhus virens,anacardioideae,compound_alternate,angiosperm,evergreen,Found almost in every property,non_armed
+2006,Rhus microphylla,Rhus,moderate_low,micrphylla,Anacardiaceae,Littleleaf Sumac,Rhus microphylla,anacardioideae,compound_alternate,angiosperm,deciduous,"Found in Edwards 2020-22, Menard property and Dickens Park",non_armed
+2012,Rhus trilobata,Rhus,moderate_low,trilobata,Anacardiaceae,Three Leaf Sumac,Rhus trilobata,anacardioideae,palmate_trifoliate,angiosperm,deciduous,Found only in Dickens Park,non_armed
+1085,Arbutus xalapensis,Arbutus,NA,xalapensis,Ericaceae,Texas Madrone,Arbutus,arbutoideae,simple,angiosperm,evergreen,Found in Real 2020-11 and Bandera 2020-30 but only collected from Real 2020-11,non_armed
+1113,Prosopis glandulosa,Prosopis,least,glandulosa,Fabaceae,Mesquite,Prosopis,caesalpinioideae,pinnately_twice_compound,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park,armed
+2007,Ziziphus obtusifolia,Sarcomphalus,NA,obtusifolia,Rhamnaceae,Texas Buckthorn,Sarcomphalus,ziziphoideae,simple,angiosperm,deciduous,Found in Menard 2020-01 and Dickens Park,armed
+2005,Senegalia wrightii,Senegalia,moderate_low,wrightii,Fabaceae,Wright Acacia,Senegalia,mimosoideae,pinnately_twice_compound,angiosperm,semi_evergreen,Treated wrightii and romeriana as same species and found in almost every property except Bandera,armed
+3000,Unknown spp,Coma,NA,spp,Sapotaceae,Coma,Coma,unknown,simple_alternate,angiosperm,evergreen,"Armed, collected from Kendall 2020-07, most likely coma",armed
+2010,Forestiera pubescens,Forestiera,moderate_low,pubescens,Oleaceae,Elbow bush,Forestiera,oleeae,simple,angiosperm,deciduous,,non_armed
+2022,Ulmus crassifolia,Ulmus,NA,crassifolia,Ulmaceae,Cedar elm,Ulmus,,simple_alternate,angiosperm,deciduous,,non_armed
+2038,Frangula caroliniana,Frangula,NA,caroliniana,Rhamnaceae,Carolina Buckthorn,Buckthorn,,simple_alternate,angiosperm,deciduous,,non_armed
+7000,Ilex vomitoria,Ilex,NA,vomitoria,Aquifoliaceae,Yaupon holly,Ilex,,simple_alternate,angiosperm,evergreen,,non_armed
+6000,Calicarpa americana,Calicarpa,NA,americana,Lamiaceae,American beautyberry,Calicarpa,,simple_opposite,angiosperm,deciduous,,non_armed
+9000,Juniperus virginiana,Juniperus,least,virginiana,Cupressaceae,Eastern redcedar,Juniperus,cupressoideae,scalelike,gymnosperm,evergreen,,non_armed
+4000,Senegalia berlandieri,Senegalia,moderate_low,berlandieri,Fabaceae,Guajillo,Senegalia berlandieri ,caesalpinioideae,pinnately_cpmpound,angiosperm,deciduous,,armed
+8888,Zanthoxylum fagara,Zanthoxylum,moderate_low,fagara,Rutaceae,Colima,Zanthoxylum,,simple,angiosperm,evergreen,,armed
+9999,Coleogyne ramosissima,Coleogyne,moderate_low,ramosissima,Rosaceae,Blackbrush,Coleogyne,,inversly_lanceolate_opposite,angiosperm,evergreen,,armed
+5403,Unknown spp2,Senegalia,NA,spp,Fabaceae,Acacia spp,Senegalia,,,angiosperm,deciduous,,armed

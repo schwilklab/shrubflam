@@ -1,4 +1,4 @@
-﻿date,lat,long,site,sample_id,species,species_id,notes
+date,lat,long,site,sample_id,field_taxon,species_id,notes
 5/26/2022,30.869288,-99.492579,Menard,KD12,Ziziphus obtusifolia,2007,Ziziphus
 5/26/2022,30.869297,-99.492681,Menard,KD11,Rhus microphylla,2006,Rush microphylla
 5/26/2022,30.869176,-99.492604,Menard,KD10,Prosopis glandulosa,1113,Mesquite
@@ -54,9 +54,9 @@
 6/25/2022,29.846923,-99.977107,Real 2022-13,RE03,Diospyros texana,1000,
 6/25/2022,29.84685,-99.976803,Real 2022-13,RE04,Juniperus ashei,1022,
 6/25/2022,29.847652,-99.979599,Real 2022-13,RE05,Prosopis glandulosa,1113,
-6/26/2022,29.448378,-99.62692,Uvalde 2021-3,UV10,Acacia berlandieri,4000,
-6/26/2022,29.448429,-99.627033,Uvalde 2021-3,UV11,Acacia berlandieri,4000,
-6/26/2022,29.448528,-99.626951,Uvalde 2021-3,UV12,Acacia berlandieri,4000,
+6/26/2022,29.448378,-99.62692,Uvalde 2021-3,UV10,Senegalia berlandieri,4000,
+6/26/2022,29.448429,-99.627033,Uvalde 2021-3,UV11,Senegalia berlandieri,4000,
+6/26/2022,29.448528,-99.626951,Uvalde 2021-3,UV12,Senegalia berlandieri,4000,
 6/26/2022,29.448377,-99.626992,Uvalde 2021-3,UV13,Senegalia wrightii,2005,
 6/26/2022,29.448468,-99.626902,Uvalde 2021-3,UV14,Senegalia wrightii,2005,
 6/26/2022,29.448712,-99.627087,Uvalde 2021-3,UV15,Sophora secundiflora,1021,
@@ -116,11 +116,11 @@
 7/11/2022,33.628978,-100.827832,Dickens spring,DK47,Ziziphus obtusifolia,2007,
 7/11/2022,33.62861,-100.827979,Dickens spring,DK48,Ziziphus obtusifolia,2007,
 7/11/2022,33.628668,-100.827985,Dickens spring,DK49,Ziziphus obtusifolia,2007,
-8/2/2022,29.447886,-99.627046,Uvalde 2021-3,UV40,Acacia berlandieri,4000,
-8/2/2022,29.447946,-99.627003,Uvalde 2021-3,UV41,Acacia berlandieri,4000,
-8/2/2022,29.44793,-99.626972,Uvalde 2021-3,UV42,Acacia berlandieri,4000,
-8/2/2022,29.447921,-99.627119,Uvalde 2021-3,UV43,Acacia berlandieri,4000,
-8/2/2022,29.447841,-99.626954,Uvalde 2021-3,UV44,Acacia berlandieri,4000,
+8/2/2022,29.447886,-99.627046,Uvalde 2021-3,UV40,Senegalia berlandieri,4000,
+8/2/2022,29.447946,-99.627003,Uvalde 2021-3,UV41,Senegalia berlandieri,4000,
+8/2/2022,29.44793,-99.626972,Uvalde 2021-3,UV42,Senegalia berlandieri,4000,
+8/2/2022,29.447921,-99.627119,Uvalde 2021-3,UV43,Senegalia berlandieri,4000,
+8/2/2022,29.447841,-99.626954,Uvalde 2021-3,UV44,Senegalia berlandieri,4000,
 8/2/2022,29.447942,-99.627012,Uvalde 2021-3,UV45,Senegalia wrightii,2005,
 8/2/2022,29.447681,-99.626882,Uvalde 2021-3,UV46,Senegalia wrightii,2005,
 8/3/2022,27.707465,-98.244037,Duval 2022-01,DV01,Zanthoxylum fagara,8888,

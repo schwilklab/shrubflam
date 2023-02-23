@@ -1,94 +1,102 @@
-#!/usr/bin/Rscript --vanilla
+# flam_pca.R
 
-# Shrub Flammability
-# Summer 2021
-
-# Need to set the directory as setwd("../scripts") to read the scripts
-# Need to make sure that the number of observations of pca_data and
-# samples_more_than_three are same.
-## PCA analysis
-## Used prcomp() for PCA and factoextra for graphics.
+# Shrub flammability project using summer 2022 data. PCA analysis uses prcomp()
+# for PCA and factoextra for figures
 
 library(factoextra)
-source("./read_data.R")
-source("./read_hobos.R")
 
-####################################################################
-## PCA analysis, unimputed data.
-# Merging the hobo data with samples_more_than_three dataset to do 
+###############################################################################
+# PCA analysis. Merging the hobo data with alldata_2022 by label data set to do
 # the PCA.
-#####################################################################
+###############################################################################
 
-pca_data <- samples_more_than_three%>%
-  left_join(hobos_wider, by ="label")%>%
-  select(label,heat_release_J,massconsumed,vol.burned, 
-  flame.ht,flame.dur,dur.100,peak.temp) #%>%
-  #rename(expression("Duration over 100("*~degree*C*")") == dur.100)
-names(pca_data)[7] <- "Duration over (100\u00B0C)"
-dim(pca_data) # 97 rows same as samples_more_than_three
-#unique(pca_data$label)
+pca_data_2022 <- alldata_2022 %>%
+  left_join(hobos_wider_2022, by = "label") %>%
+  select(sample_id, heat_release_j, massconsumed,
+         vol_burned, flame_height, flame_duration, dur_100,
+         peak_temp, degsec_100, ignition_delay)
 
-#pca_data_check <- tidyr::separate(pca_data, label, into = c("sample_id","species_id"),
-                                  #sep = "_")
-#species_id_count <- pca_data_check%>%
-  #count(species_id)%>%
-  #View()
 
-any(is.na(pca_data)) # No NA
-#View(pca_data)
+dim(pca_data_2022) # 116
+any(is.na(pca_data_2022)) 
 
-  
-####################################################################
-## pca by prcomp, correlation matrix since I am using scale is TRUE
-####################################################################
+###############################################################################
+# PCA by prcomp, correlation matrix since I am using scale is TRUE
+###############################################################################
 
-flam_pca <- prcomp(pca_data[,-1], 
-                        scale=TRUE)
+flam_pca_2022 <- prcomp(pca_data_2022[,-1], 
+                   scale=TRUE)
 
-summary(flam_pca)
-flam_loadings <- flam_pca$rotation[,1:2] 
+summary(flam_pca_2022) # standard deviation for PC2 is 0.918
+flam_loadings <- flam_pca_2022$rotation[ ,1:2] 
 flam_loadings
+biplot(flam_pca_2022)
 
-
-
-####################################################################
+##############################################################################
 ## Scree plot, eigenvalue and variables info
-####################################################################
+###############################################################################
 
-# fviz_eig(flam_pca,addlabels = TRUE)
-## DWS: if code needs to make plots, save them to a file and don't have them
-## blow past the user on the screen.
-eig.val <- get_eigenvalue(flam_pca) 
-
-eig.val
-
-variables_info <- get_pca_var(flam_pca) # Variables information
-
-variables_info$coord[,1:2] # Coordinates of variables
-
+eig_val <- get_eigenvalue(flam_pca_2022) 
+eig_val # eignevalue for PC2 is 0.842
+variables_info <- get_pca_var(flam_pca_2022) # Variables information
+variables_info$coord[ ,1:2] # Coordinates of variables
 head(variables_info$contrib) # Contributions of variables
 
+##############################################################################
+## Plot based on cos2 values of variables
+###############################################################################
+
+# Will remove the plots and take them to results_2022.R later.
+
+var_contr_by_cos2 <- fviz_pca_var(flam_pca_2022,col.var = "cos2",
+                                           gradient.cols = c("#00AFBB","#E7B800","#FC4E07"),
+                                          repel = TRUE, col.circle = "white") +
+  xlab("Principle component 1") +
+  ylab("Principle component 2") +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(),
+        plot.title = element_blank())
 
 
-#####################################################################
-# Assigning PC1 to pca_data and then merging with samples_more_than_three
-# dataset for doing rest of the analysis.
-#####################################################################
 
-pca_data$PC1 <- flam_pca$x[,1]*(-1) #PC1 is negative
 
-model_data <- samples_more_than_three%>%
-  right_join(select(pca_data,label,PC1),by="label")
+###############################################################################
+## Contributions of variables in Principle components
+###############################################################################
 
-dim(model_data) # 97 rows
-#View(model_data)
+contributor_pc1_2022 <-  fviz_contrib(flam_pca_2022, choice = "var",
+                                 axes = 1,
+                                 fill = "lightgray",
+                                 color = "black") 
 
-######################################################################
-# All the variables are negative with PC1 and PC1 and PC2 accounts
-# for 75.25% and 9.34% variation respectively.
-# vol.burned, heat_release_J, peak.temp and massconsumed
-# contributed the most in PC1 and dur.100 and flame.dur 
-# contributed the most in PC2
-######################################################################
 
+
+contributor_pc2_2022 <- fviz_contrib(flam_pca_2022, choice = "var", 
+                                     axes = 2,
+                                     fill = "lightgray",
+                                     color = "black") 
+
+###############################################################################
+# Assigning PC1 to pca_data_2022 and then merging with alldata_2022
+# data set for doing rest of the analysis.
+###############################################################################
+
+pca_data_2022$PC1 <- flam_pca_2022$x[ ,1]
+pca_data_2022$PC2 <- flam_pca_2022$x[ ,2]
+
+final_data <- alldata_2022 %>%
+  left_join(select(pca_data_2022, sample_id, PC1, PC2, degsec_100), by = "sample_id")
+  
+
+dim(final_data)
+
+
+
+###############################################################################
+# Cleaning the environment
+###############################################################################
+
+rm( "flam_pca_2022", "flam_loadings",
+   "eig_val", "variables_info")
 

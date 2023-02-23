@@ -196,12 +196,11 @@ and a description how the variables measured.
 
 ## Data analysis and scripts
 
-All the data analysis were performed in R with all scripts in
-scripts_2022/. To reproduce the results, only need to run
-./analysis_2022.R for all model results. Task need to perform before
+All the data analyses were performed in R with all scripts in
+scripts/. To reproduce the results, please read run-all.R script. The task need to perform before
 running each script is documented at the beginning of each script.
 
-## Hobo data loggers, aluminium discs and gas flow
+## Hobo data loggers, aluminum discs and gas flow
 
 The gas flow from the Blue Rhino gas cylinder was 20.35 gram per minute.
 The position and distance of the data loggers:
