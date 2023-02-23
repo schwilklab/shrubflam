@@ -415,5 +415,8 @@ renamed_pca_plot <- fviz_pca_var(renamed_pca,col.var = "cos2",
         panel.background = element_rect(size = 1.6),
         plot.title = element_blank())
 
+ggsave("./results/pca_plot.pdf",
+       plot = renamed_pca_plot, height = beamer_height,
+       width = 10, units = "cm")
 
  
