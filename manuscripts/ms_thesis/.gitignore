@@ -1,0 +1,13 @@
+# latex stuff:
+*.aux
+*.bbl
+*.blg
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+
+# ingore pdfs as always:
+*.pdf
+
