@@ -1,43 +1,184 @@
-\documentclass[12pt]{report}
-\usepackage{graphicx}
+\documentclass{ttuthes2007}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Include any other add-on  packages you need:%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\let\bibhang\relax % ttuthes2007 is not easily compatible with natbib
+
 \usepackage{natbib}
-\usepackage{hyperref}
+\bibpunct{(}{)}{,}{a}{}{,}
+\usepackage{amsmath,graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[labelfont=bf,labelsep=period]{caption}
+%\usepackage{multirow}
+%\usepackage{textcomp}
+\usepackage[colorlinks=true,citecolor=black,linkcolor=black]{hyperref}
+%\usepackage{enumitem}
+\usepackage{lineno}
+%\usepacakge{blindtext}
 \usepackage{setspace}
 \usepackage{booktabs}
-\usepackage[top=1in, left=1.5in, right=1in, bottom=1in]{geometry}
+
+%\usepackage[top=1in, left=1.5in, right=1in, bottom=1in]{geometry}
+
+% Format for typesetting R packages
+\newcommand{\pkg}[1]{\textsc{#1}} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%EDIT  (Running head--  REQUIRED)%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\rhead{\small Texas Tech University, \textit{Azaj Mahmud}, May 2023}	%update your name and graduation date-year here
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Uncomment if the grad school doesn't like the%
+%line under the  running head:                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\headrulewidth}{0pt}
 
 
-\newcommand{\pkg}[1]{\textsc{#1}}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Spacing -- Do you want double or one-and-a-half?%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\doublespacing
+%\onehalfspacing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Leave the one you want uncommented.                        %
+%In places where single-line-spacing is appropriate         %
+%e.g, extended quotations, you can enclose the material     %
+%in a singlespacing environment (with \begin{singlespacing} %
+% ...  \end{singlespacing}                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% DWS: The below is all wrong for TTU style!
-\title{
-  Shoot Flammability of Shrubs in Texas\\[15pt]
-  %% Title could be better! 
-by\\
-Azaj Mahmud, degrees\\
-A Thesis\\
-In\\
-Department of Biology\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Other preamble stuff, e.g., theorem environments%
+%or newcommands go here:                         %
+% e.g.                                           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{proposition}[theorem]{proposition}
+% \newtheorem{question}{Question}
+% \newtheorem{conjecture}{Conjecture}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Start main document %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Title page -- Edit the spacing commands after   %
+%each \\ if necessary                            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titlepage}
+\vbox to  \textheight{
+\begin{singlespacing}
+  \begin{center}
+  Shoot flammability of shrubs in Texas\\[15pt]
+by\\[15pt]
+Azaj Mahmud, B.S\\[15pt]
+A Thesis\\[15pt]
+In\\[15pt]
+Department of Biological Sciences\\[15pt]
 Intend to submit to the Graduate Faculty\\
 of Texas Tech University in\\
 Partial Fulfillment of\\
-the Requirements for the Degree of\\
-Master's of Science\\}
+the Requirements for the Degree of\\[15pt]
+Master's of Science\\[30pt]
+Approved\\[15pt]
+Dylan W Schwilk, Ph.D.\\
+Chair of Committee\\[15pt]
+Nathan Gill, Ph.D.\\[15pt]
+Nicholas G. Smith, Ph.D.\\[15pt]
+Mark Sheridan, Ph.D.\\
+Dean of the Graduate School\\[30pt]
+May 2023
+\end{center}
+\end{singlespacing}
+\vfill}
+\end{titlepage}
 
-\begin{document}
-\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%End of title page                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Copyright page                                  %
+%usage: \copyrightpage{year of appearance}{Name} %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ % Copyright Page
+%\frontmatter
+\copyrightpage{2023}{Azaj Mahmud} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%end of copyright page                          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Start of frontmatter                            %
+%You need this:                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frontmatter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Acknowledgements                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{\textbf{Acknowledgements}}
+\noindent TODO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Table of Contents                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{singlespace}
 \tableofcontents
+\end{singlespace}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Abstract                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{\textbf{Abstract}}
+\noindent Flammability is a trait of land plants, and an understanding of this trait is important to comprehend the ecological and evolutionary consequences of fire on plant species in fire-prone ecosystems. Numerous plant traits can influence flammability. Although many studies have examined the flammability of individual leaves, fewer have examined how entire canopies behave as fuel because quantifying plant flammability by burning whole plants is expensive. With the development of a new plant flammability device that allows standardized measurement of the canopy flammability of portions up to 70\,cm long and in the light of a recent study regarding the effectiveness of burning shoots to predict plant flammability; I burned 70\,cm branches from at least three samples per species of 16 native shrubs of Texas and measured four canopy traits: total dry mass per 70\,cm, canopy density, leaf: stem (in dry mass basis) and canopy moisture content and four common leaf traits: leaf mass per area (LMA), leaf area per leaflet, leaf length per leaflet and leaf moisture content to answer two questions: 1) Are canopy traits more important than leaf traits in shoot flammability? 2) Are heat release and flame spread rate independent axes of flammability in shrub fuels? I found that canopy traits are more important in determining flammability than are leaf traits; total dry mass per 70\,cm branch and canopy density together are the best predictors of heat release in shoot flammability in shrub fuels. Furthermore, I found that shoot flammability in shrub fuel is mostly described by a single axis, represented by flammability metrics related to duration and temperature. This finding illustrates the potential for incorporating canopy traits in fire behavior models and might improve the understanding of fire-fuel feedback in the shrublands of Texas.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%List of tables and list of figures              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \listoftables
 \listoffigures
-\doublespacing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%MAIN PART OF  DOCUMENT                          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Start introduction chapter                      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\rhead{Texas Tech University, \textit{Azaj Mahmud}, May 2023}
+
+% Should remove line numbers when submitting to grad school
+\linenumbers
+\renewcommand{\linenumberfont}{\normalfont\bfseries\large\color{black}}
 
 \chapter{Canopy traits drive plant flammability: shoot flammability of Texas shrubs}
-
-[DWS: Note that there are errors in references and references are formatted inconsistently. You have full names for some authors and initials for others. I would use only initials.]
-
-\section{Abstract}
-    
-Flammability is a trait of land plants, and an understanding of this trait is important to comprehend the ecological and evolutionary consequences of fire on plant species in fire-prone ecosystems. Numerous plant traits can influence flammability. Although many studies have examined the flammability of individual leaves, fewer have examined how entire canopies behave as fuel because quantifying plant flammability by burning whole plants is expensive. With the development of a new plant flammability device that allows standardized measurement of the canopy flammability of portions up to 70\,cm long and in the light of a recent study regarding the effectiveness of burning shoots to predict plant flammability; I burned 70\,cm branches from at least three samples per species of 16 native shrubs of Texas and measured four canopy traits: total dry mass per 70\,cm, canopy density, leaf: stem (in dry mass basis) and canopy moisture content and four common leaf traits: leaf mass per area (LMA), leaf area per leaflet, leaf length per leaflet and leaf moisture content to answer two questions: 1). Are canopy traits more important than leaf traits in shoot flammability? 2). Are heat release and flame spread rate independent axes of flammability in shrub fuels? I found that canopy traits are more important in determining flammability than are leaf traits; total dry mass per 70\,cm branch and canopy density together are the best predictors of heat release in shoot flammability in shrub fuels. Furthermore, I found that shoot flammability in shrub fuel is mostly described by a single axis, represented by flammability metrics related to duration and temperature. This finding illustrates the potential for incorporating canopy traits in fire behavior models and might improve the understanding of fire-fuel feedback in the shrublands of Texas.
 
 \section{Introduction}
 
@@ -210,14 +351,17 @@ The automated model selection result shows that, for canopy traits, the model wi
     \toprule
     \textbf{Fixed terms} & $AIC_{c}$ & \textbf{Weight}\\
     \midrule
-    \textbf{total dry mass + canopy density}    & \textbf{3.7} &  \textbf{0.324}\\
-    total dry mass + canopy density + total dry mass:canopy density & 5.4  & 0.142 \\
-    total dry mass + canopy moisture content + canopy density   & 5.4   & 0.140 \\ 
-    total dry mass + leaf: stem + canopy density  & 5.4 & 0.138  \\
+    \textbf{total dry mass + canopy den.}    & \textbf{3.7} &  \textbf{0.324}\\
+    total dry mass + canopy den. + total dry mass:canopy den. & 5.4  & 0.142 \\
+    total dry mass + moisture content + canopy den.   & 5.4   & 0.140 \\ 
+    total dry mass + leaf ratio + canopy den.  & 5.4 & 0.138  \\
     \bottomrule
   \end{tabular}
   \label{tab:canopy_models}
 \end{table}
+
+%% DWS: ":" in a model specification implies interaction term. You need to call
+%% your leaf:stem ratio something like leaf ratio here,
 
 %[DWS: NO tables or figures of results?]
 
@@ -249,7 +393,7 @@ After getting the best predictors for temperature integration for each type of t
 I tested the significance of the predictors. Total dry mass and canopy density had a significant positive linear effect %[DWS: But I thought variable was lof-scaled?  What do you mean?] 
 on temperature integration above 100 $^{\circ}$C (Fig. \ref{fig:dm-tempint}). Marginal $R^2$ for the model with total dry mass and canopy density without interaction was 0.51 (total dry mass: p $<$ 0.001, canopy density: p = 0.026) (table. \ref{tab:fandpstatfortemp}) (Fig \ref{fig:canopyden-tempint}). LMA had also a significant positive effect on temperature integration above 100 $^{\circ}$C. Marginal $R^2$ for the model with LMA was 0.040 (LMA: p = 0.032). 
 
-The majority of the canopy traits among all the measured canopy traits have higher values for the species from the \emph{Juniperus} taxon, especially \emph{Juniperus ashei} and \emph{Juniperus pinchotii} and the measurements of the leaf traits is also error prone due to having the non--flat leaves for those species. In order to understand how this taxon influenced the results, I removed the species from the \emph{Juniperus} taxon from the analysis and then examined the impact of those traits on the remaining species. After removing the \emph{Juniperus} species from the analysis, the total dry mass still had a strong positive effect (p $<$ 0.001), but canopy density had a marginal effect on temperature integration (p = 0.073). However, LMA didn't have any significant effect on temperature integration for the remaining species (p = .959) 
+The majority of the canopy traits among all the measured canopy traits have higher values for the species from the \emph{Juniperus} taxon, especially \emph{Juniperus ashei} and \emph{Juniperus pinchotii} and the measurements of the leaf traits is also error prone due to having the non--flat leaves for those species. In order to understand how this taxon influenced the results, I removed the species from the \emph{Juniperus} taxon from the analysis and then examined the impact of those traits on the remaining species. After removing the \emph{Juniperus} species from the analysis, the total dry mass still had a strong positive effect (p $<$ 0.001), but canopy density had a marginal effect on temperature integration ($p = 0.073$). However, LMA didn't have any significant effect on temperature integration for the remaining species ($p > 0.5$) 
 
 % I will report this result on supplimentary info.
 
@@ -296,7 +440,6 @@ The majority of the canopy traits among all the measured canopy traits have high
 %[DWS: Three figure you never use? Why? Why three univariate relationships and not figures that better represent the models? Do all of the results basically just show juniperus as biggest effect? I see models without Juniperus in the analysis code.]
 
 
-
 \subsection{Effect of canopy and leaf traits on ignition delay}
 
 %## DWS: why ignition delay? This is all so confusing. You have chosen two traits out of the many you looked at but never explain why. You never explain the approach. Is this based on theory? past work, the PCA? ]
@@ -318,10 +461,11 @@ For ignition delay, the global linear mixed effect model was built without any i
     \toprule
     \textbf{Fixed terms} & $AIC_{c}$ & \textbf{Weight}\\
     \midrule
-    \textbf{canopy density + canopy moisture content}    & \textbf{579.7} & \textbf{0.425} \\
-    canopy density + canopy moisture content + total dry mass   & 580.6   & 0.275 \\
-    canopy density + canopy moisture content + leaf: stem       & 581.6   & 0.166  \\
-    canopy density + canopy moisture content + leaf: stem + total dry mass & 582.7  & 0.095 \\
+    %% DWS; still does not fit. Need to fix or make a landscape table
+    \textbf{canopy den. + moisture content}    & \textbf{579.7} & \textbf{0.425} \\
+    canopy den. + moisture content + total dry mass   & 580.6   & 0.275 \\
+    canopy den. + moisture content + leaf ratio       & 581.6   & 0.166  \\
+    canopy den. + moisture content + leaf ratio + total dry mass & 582.7  & 0.095 \\
     \bottomrule
   \end{tabular}
   \label{tab:canopy_models_ignition_delay}
@@ -357,7 +501,7 @@ After testing the significance of the predictors on ignition delay, I found that
 \begin{table}[ht]
   \centering
   \caption{Mixed effect model coefficients and ANOVA table for the best
-    predictors among the measured canopy and leaf traits for Ignition delay.
+    predictors among the measured canopy and leaf traits for ignition delay.
     The linear mixed model was fitted with lmer() function from \pkg{lme4}
     package \citep{bates2009package}. The \pkg{car} package
     \citep{fox2013hypothesis} was used to calculate the estimated degrees of
@@ -459,7 +603,7 @@ Moreover, some species from this study are well known for the volatile component
 Canopy density influences airflow in the canopy \citep{cionco1978analysis} and might be less effective for a single shoot to understand the impact of the limitation of the airflow and how a large amount of biomass influences the fire spread rate. %[DWS: sentence does not make sense: influential to understand?.
 Therefore, future study is required to investigate to what extent the geometry of a single shoot can capture the structural variation in three-dimensional space in terms of fire behavior. Moreover, in some ecosystems where the forest floor is wet, the fire spread rate in the canopy is high-density limited  \citep{ray2005micrometeorological}. Therefore, although the leaf traits like leaf length per leaflet are less important in shoot-level flammability, in some ecosystems they might be influential in crown fire since species with larger leaves might be more aerated in the canopy, which affects the rate at which fires spread by permitting the flow of the hot, dry air. 
 
-Texas and fire have a long history together \citep{moir1982firehistory, stambaugh2011firehistory,stambaugh2014historicalfirehistory,smeins2005historyoffire1}, and there are fire adapted species in this study (e.g. \emph{Prospis glandulosa}) \citep{glandulosahoney,wright1976effect} %[DWS: hm. debatable!]. 
+Texas and fire have a long history together \citep{moir1982firehistory, stambaugh2011firehistory,stambaugh2014historicalfirehistory,smeins2005historyoffire1}, and there are fire adapted species in this study (e.g. \emph{Prosopis glandulosa}) \citep{glandulosahoney,wright1976effect} %[DWS: hm. debatable!]. 
 Moreover, all of the most flammable shrubs are cone and seed bearing plants in this experiment 
 %[DWS: what do you mean? they had fruits or cones on when burned? Or that they are simple seed plants and no ferns?] 
 and study suggests that fire influences seed coat chemistry \citep{mcinnes2022doesseedcoatchemistry} and in general, most of the flammable plants are reseeders \citep{midgley2011pushingreseeders}. Therefore,  the observed strong positive effect of total dry mass per 70\,cm length and shoot density on flammability might be selected to spread the fire to the surrounding plants because if the subsequent fires kill nearby, less flammable neighbors and also increases fecundity, flammability may improve inclusive fitness \citep{bond1995kill}. However, those structural traits might have other competitive advantages such as light harvesting. Moreover, Texas has a long history with grazing as well and herbivores can also influence the architecture of plants \citep{danell1994browseeffects}. Previous study regarding \emph{Juniperus ashei}, one of the most flammable species in this study, suggested that the enhanced flammability might be the response to herbivores \citep{owens1998seasonal}. Moreover, a recent study also shows that \emph{Juniperus ashei} has an allelopathic relationship with \emph{Bouteloua curtipendula}, a native grass in this ecosystem \citep{young2009assessmentallelopathy}. Therefore, future study is required to investigate whether it is a single evolutionary force or a combination of different selective pressure that drove the enhanced flammability in these ecosystem.
@@ -566,9 +710,8 @@ The result demonstrated that the least preferred species are more flammable than
 
 This study found that there is no statistically significant difference in flammability between unarmed and armed species. However, the mean flammability of unarmed species is marginally higher than armed species. This observation supports the findings from other studies which suggested that the trade-off between different plant defenses is not robust \citep{steward1988there, koricheva2004meta, moles2013correlations}. Moreover, the role of chemical compounds as a defense against insect herbivores' \citep{herms1992dilemma, ohgushi2005indirect} is more pronounced than mammalian herbivores' across literature and studies suggested that the ability of chemical deterrents to stop consuming preferred plant materials for mammalian herbivores is limited \citep{cooper1985condensed, cooper1988foliage}. Therefore, though there might be a significant trade-off between different defense strategies against different kinds of herbivores' in different spatiotemporal scale in plants \citep{eck2001trade, wigley2015mammal, dostalek2016trade}, it is likely that, in mature shrubs, for mammalian herbivores, the trade-off between physical and chemical defense is not strong. Another possibility is that the number of grazing animals per unit of land has decreased drastically in this region in the recent past \citep{wilcox2012historicalgrazing2} and study suggests that the trade-off between plant defenses is dominated by evolutionary constraints \citep{eichenberg2015trade}. Therefore, it is likely that there is a threshold after which the trade-off is more evident, and the studied species didn’t cross that threshold due to the recent decrease in stocking densities in this region.
 
-
+\backmatter
 \bibliographystyle{ecology}
 \bibliography{myref}
-
 
 \end{document}
