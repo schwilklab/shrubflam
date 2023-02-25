@@ -368,10 +368,167 @@ summary(total_dry_mass_leaf_stem_ignition) # total dry mass has
 # significant effect
 # total_dry_mass: p-value = 0.023
 # leaf:stem: p-value = 0.3872
-
+ 
 
 leaf_length_ignition_model <- afex::lmer(ignition_delay ~ leaf_length_per_leaflet +
                                            (1 | analysis_group),
                                          data = model_data, REML = FALSE)
 
 summary(leaf_length_ignition_model) # no effect: p-value = 0.552
+
+###########################################################################################
+# This part is for model building for anova table, first for heat release
+###########################################################################################
+# At first, canopy traits
+# Checking the significance by Kenward-Roger's method
+
+canopy_traits_heat_release_model_mixed <- afex::mixed(degsec_100 ~ total_dry_mass_g + canopy_density_gm_cm3 +
+                                                        (1|analysis_group), data = model_data,
+                                                      method = "KR", REML = TRUE)
+
+
+
+canopy_traits_anova_table_model <- lme4::lmer(degsec_100 ~ total_dry_mass_g + canopy_density_gm_cm3 +
+                                                (1 | analysis_group), data = model_data)
+
+
+canopy_traits_anova <- car::Anova(canopy_traits_anova_table_model, type = 3, test.statistic = "F")
+canopy_anova <- xtable::xtable(canopy_traits_anova, digits = 3)
+
+canopy_anova_coefficients <- summary(canopy_traits_anova_table_model)$coefficients
+canopy_coeff <- xtable::xtable(canopy_anova_coefficients, digits = 3)
+
+
+
+
+###########################################################################################
+# without Juniperus for heat release
+###########################################################################################
+
+
+canopy_traits_heat_release_model_mixed_withoutj <- afex::mixed(degsec_100 ~ total_dry_mass_g + 
+                                                                 canopy_density_gm_cm3 +
+                                                                 (1|analysis_group), 
+                                                               data = without_juniperus,
+                                                               method = "KR", REML = TRUE)
+
+
+
+
+canopy_traits_anova_table_model_withoutj <- lme4::lmer(degsec_100 ~ total_dry_mass_g + 
+                                                         canopy_density_gm_cm3 +
+                                                         (1 | analysis_group), 
+                                                       data = without_juniperus)
+
+
+canopy_traits_anova_withoutj <- car::Anova(canopy_traits_anova_table_model_withoutj, type = 3, 
+                                           test.statistic = "F")
+canopy_anova_withoutj <- xtable::xtable(canopy_traits_anova_withoutj, digits = 3)
+canopy_anova_coefficients <- summary(canopy_traits_anova_table_model)$coefficients
+canopy_coeff <- xtable::xtable(canopy_anova_coefficients, digits = 3)
+
+
+
+############################################################################################
+# Now leaf traits for heat release
+#############################################################################################
+
+leaf_traits_heat_release_model_mixed <- afex::mixed(degsec_100 ~ leaf_mass_per_area +
+                                                      (1|analysis_group), data = model_data,
+                                                    method = "KR", REML = TRUE)
+
+
+
+leaf_traits_anova_table_model <- lme4::lmer(degsec_100 ~ leaf_mass_per_area +
+                                              (1 | analysis_group), data = model_data)
+
+
+leaf_traits_anova <- car::Anova(leaf_traits_anova_table_model, type = 3, 
+                                test.statistic = "F")
+leaf_anova <- xtable::xtable(leaf_traits_anova, digits = 3)
+leaf_anova_coefficients <- summary(leaf_traits_anova_table_model)$coefficients
+leaf_coeff <- xtable::xtable(leaf_anova_coefficients, digits = 3)
+
+############################################################################################
+# leaf traits for heat release without Juniperus
+#############################################################################################
+
+leaf_traits_heat_release_model_mixed_withoutj <- afex::mixed(degsec_100 ~ leaf_mass_per_area +
+                                                               (1|analysis_group), data = without_juniperus,
+                                                             method = "KR", REML = TRUE)
+
+
+
+leaf_traits_anova_table_model_withoutj <- lme4::lmer(degsec_100 ~ leaf_mass_per_area +
+                                                       (1 | analysis_group), data = without_juniperus)
+
+
+leaf_traits_anova_withoutj <- car::Anova(leaf_traits_anova_table_model_withoutj, type = 3, test.statistic = "F")
+leaf_anova_withoutj <- xtable::xtable(leaf_traits_anova_withoutj, digits = 3)
+leaf_anova_coefficients_withoutj <- summary(leaf_traits_anova_table_model_withoutj)$coefficients
+leaf_coeff_withoutj <- xtable::xtable(leaf_anova_coefficients_withoutj, digits = 3)
+
+
+###################################################################################################################
+# Now for ignition delay, at first the canopy traits
+###################################################################################################################
+
+canopy_traits_ignition_model_mixed <- afex::mixed(ignition_delay ~ canopy_density_gm_cm3 + 
+                                                    canopy_moisture_content +
+                                                    (1|analysis_group), data = model_data,
+                                                  method = "KR", REML = TRUE)
+
+canopy_traits_ignition_anova_table_model <- lme4::lmer(ignition_delay ~ canopy_density_gm_cm3 +
+                                                          canopy_moisture_content +
+                                                         (1 | analysis_group), data = model_data)
+
+
+canopy_traits_ignition_anova <- car::Anova(canopy_traits_ignition_anova_table_model, type = 3, 
+                                           test.statistic = "F")
+canopy_ignition_xtable <-  xtable::xtable(canopy_traits_ignition_anova, digits = 3)
+canopy_ignition_anova_coefficients <- summary(canopy_traits_ignition_anova_table_model)$coefficients
+canopy_ignition_coeff <- xtable::xtable(canopy_ignition_anova_coefficients, digits = 3)
+
+
+
+############################################################################################
+# Now leaf traits
+#############################################################################################
+
+leaf_traits_ignition_model_mixed <- afex::mixed(ignition_delay ~ leaf_mass_per_area + leaf_moisture_content +
+                                                  (1|analysis_group), data = model_data,
+                                                method = "KR", REML = TRUE)
+
+
+leaf_traits_ignition_anova_table_model <- lme4::lmer(ignition_delay ~  leaf_mass_per_area + 
+                                                       leaf_moisture_content +
+                                                       (1 | analysis_group), data = model_data)
+
+
+leaf_traits_ignition_anova <- car::Anova(leaf_traits_ignition_anova_table_model, type = 3,
+                                         test.statistic = "F")
+leaf_ignition_xtable <-  xtable::xtable(leaf_traits_ignition_anova, digits = 3)
+leaf_ignition_anova_coefficients <- summary(leaf_traits_ignition_anova_table_model)$coefficients
+leaf_ignition_coeff <- xtable::xtable(leaf_ignition_anova_coefficients, digits = 3)
+########################################################################################
+# Without Juniperus
+########################################################################################
+
+ignition_model_mixed_withoutj <- afex::mixed(ignition_delay ~ canopy_density_gm_cm3 + leaf_mass_per_area + 
+                                               leaf_moisture_content +
+                                                             (1|analysis_group), data = without_juniperus,
+                                                           method = "KR", REML = TRUE)
+
+ignition_anova_table_model_withoutj <- lme4::lmer(ignition_delay ~  canopy_density_gm_cm3 +
+                                                                  leaf_mass_per_area + 
+                                                                  leaf_moisture_content +
+                                                                  (1 | analysis_group), 
+                                                  data = without_juniperus)
+
+ignition_anova_withoutj <- car::Anova(ignition_anova_table_model_withoutj, type = 3,
+                                      test.statistic = "F")
+ignition_xtable_withoutj <-  xtable::xtable(ignition_anova_withoutj, digits = 3)
+ignition_anova_coefficients_withoutj <- summary(ignition_anova_table_model_withoutj)$coefficients
+ignition_coeff_withoutj <- xtable::xtable(ignition_anova_coefficients_withoutj, digits = 3)
+
+
