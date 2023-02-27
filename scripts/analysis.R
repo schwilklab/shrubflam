@@ -74,7 +74,7 @@ dim(model_data)
 ###############################################################################
 
 model_data <- model_data %>%
-  select(degsec_100, field_taxon,
+  dplyr::select(degsec_100, field_taxon,
          ignition_delay, mean_pre_burning_temp,
          windspeed_miles_per_hour,
          display_name, analysis_group, total_dry_mass_g , 
