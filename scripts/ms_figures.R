@@ -68,7 +68,7 @@ predicted_degsec_canopy_plot_data <- best_degsec_canopy_plot_data %>%
 # put the mean value, the bigger dots in the plot
 ###############################################################################
 
-degsec_by_group <- final_data %>% group_by(analysis_group) %>%
+degsec_by_group <- model_data %>% group_by(analysis_group) %>%
   summarize(total_dry_mass_g = mean(total_dry_mass_g), 
             canopy_density_gm_cm3 = mean(canopy_density_gm_cm3),
             degsec_100 = mean(degsec_100))
@@ -79,11 +79,10 @@ degsec_by_group <- final_data %>% group_by(analysis_group) %>%
 # data
 ###############################################################################
 
-total_dry_mass <- ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, degsec_100, 
+total_dry_mass <- ggplot(model_data, aes(total_dry_mass_g, degsec_100, 
                                          color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
-  geom_blank(data = predicted_degsec_canopy_plot_data) + 
-  geom_smooth(method = "lm", se = FALSE, size = 1.5, color = "black") +
+  #geom_blank(data = predicted_degsec_canopy_plot_data) + 
   geom_point(data = degsec_by_group, size = 4.5 , alpha = 1, shape = 16,
              aes(color = analysis_group)) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
@@ -97,7 +96,9 @@ total_dry_mass <- ggplot(best_degsec_canopy_plot_data, aes(total_dry_mass_g, deg
   scale_fill_manual(values = c("maroon2","#7CD5D9", "yellow", "#6FA3CE", "red",
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
-                               "black"))
+                               "black")) +
+  geom_abline(intercept = 1.488, slope = 0.024, size = 1.5, color = "black"
+              )
 
 ggsave("./results/total_dry_mass.pdf",
        plot = total_dry_mass, height = beamer_height,
@@ -107,11 +108,11 @@ ggsave("./results/total_dry_mass.pdf",
 # Same way for canopy density
 ###############################################################################
 
-canopy_density <- ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3, degsec_100, color = analysis_group)) +
+canopy_density <- ggplot(model_data, aes(canopy_density_gm_cm3, degsec_100, color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
-  geom_blank(data = predicted_degsec_canopy_plot_data) +
+  #geom_blank(data = predicted_degsec_canopy_plot_data) +
   # DWS: this is not the model you describe in the methods:
-  geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
+  #geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
   geom_point(data = degsec_by_group, size = 4.5 , alpha = 1, shape = 16,
              aes(color = analysis_group)) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
@@ -125,7 +126,8 @@ canopy_density <- ggplot(best_degsec_canopy_plot_data, aes(canopy_density_gm_cm3
   scale_fill_manual(values = c("maroon2","#7CD5D9", "yellow", "#6FA3CE", "red",
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
-                               "black"))
+                               "black")) +
+  geom_abline(intercept = 1.488, slope = 0.005, size = 1.5, color = "black")
 
 ggsave("./results/canopy_density.pdf",
        plot = canopy_density, height = beamer_height,
@@ -171,7 +173,7 @@ predicted_degsec_leaf_plot_data <- best_degsec_leaf_plot_data %>%
 # will put the mean value, the bigger dots in the plot
 ###############################################################################
 
-degsec_leaf_by_group <- final_data %>% 
+degsec_leaf_by_group <- model_data %>% 
   group_by(analysis_group) %>%
   summarize(leaf_mass_per_area = mean(leaf_mass_per_area),
             degsec_100 = mean(degsec_100))
@@ -180,11 +182,11 @@ degsec_leaf_by_group <- final_data %>%
 # Plotting the lma vs temperature integration
 ####################################################################################
 
-LMA <- ggplot(best_degsec_leaf_plot_data, aes(leaf_mass_per_area, degsec_100,
+LMA <- ggplot(model_data, aes(leaf_mass_per_area, degsec_100,
                                        color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
-  geom_blank(data = predicted_degsec_leaf_plot_data) + 
-  geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
+  #geom_blank(data = predicted_degsec_leaf_plot_data) + 
+  #geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
   geom_point(data = degsec_leaf_by_group, size = 4.5 , alpha = 1, shape = 16,
              aes(color = analysis_group)) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
@@ -198,7 +200,8 @@ LMA <- ggplot(best_degsec_leaf_plot_data, aes(leaf_mass_per_area, degsec_100,
   scale_fill_manual(values = c("maroon2","#7CD5D9", "yellow", "#6FA3CE", "red",
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
-                               "black"))
+                               "black")) +
+  geom_abline(intercept = 1.482, slope = 0.008, size = 1.5, color = "black")
 
 ggsave("./results/LMA.pdf",
        plot = LMA, height = beamer_height,
@@ -242,18 +245,18 @@ predicted_ignition_canopy_plot_data <- best_canopy_ignition_plot_data %>%
 # mean value after summarising them
 ###############################################################################
 
-ignition_delay_by_group <- final_data %>% 
+ignition_delay_by_group <- model_data %>% 
   group_by(analysis_group) %>%
   summarize(canopy_moisture_content = mean(canopy_moisture_content), 
             canopy_density_gm_cm3 = mean(canopy_density_gm_cm3),
             ignition_delay = mean(ignition_delay))
 
 
-canopy_density_ignition <- ggplot(best_canopy_ignition_plot_data, aes(canopy_density_gm_cm3,ignition_delay,
+canopy_density_ignition <- ggplot(model_data, aes(canopy_density_gm_cm3,ignition_delay,
                                            color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
-  geom_blank(data = predicted_ignition_canopy_plot_data) + 
-  geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
+  #geom_blank(data = predicted_ignition_canopy_plot_data) + 
+  #geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
   geom_point(data = ignition_delay_by_group, size = 4.5 , alpha = 1, shape = 16,
              aes(color = analysis_group)) +
   ylab("Ignition delay (s)") +
@@ -267,17 +270,18 @@ canopy_density_ignition <- ggplot(best_canopy_ignition_plot_data, aes(canopy_den
   scale_fill_manual(values = c("maroon2","#7CD5D9", "yellow", "#6FA3CE", "red",
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
-                               "black"))
+                               "black")) +
+  geom_abline(intercept = 2.941, slope = 1.124, size = 1.5, color = "black")
 
 ggsave("./results/canopy_density_ignition.pdf",
        plot = canopy_density_ignition, height = beamer_height,
        width = 10, units = "cm")
 
-canopy_moisture_ignition <- ggplot(best_canopy_ignition_plot_data, aes(canopy_moisture_content,ignition_delay, 
+canopy_moisture_ignition <- ggplot(model_data, aes(canopy_moisture_content,ignition_delay, 
                                            color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
-  geom_blank(data = predicted_ignition_canopy_plot_data) + 
-  geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
+  #geom_blank(data = predicted_ignition_canopy_plot_data) + 
+  #geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
   geom_point(data = ignition_delay_by_group, size = 4.5 , alpha = 1, shape = 16,
              aes(color = analysis_group)) +
   ylab("Ignition delay (s)") +
@@ -291,7 +295,9 @@ canopy_moisture_ignition <- ggplot(best_canopy_ignition_plot_data, aes(canopy_mo
   scale_fill_manual(values = c("maroon2","#7CD5D9", "yellow", "#6FA3CE", "red",
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
-                               "black"))
+                               "black")) +
+  geom_abline(intercept = 2.941, slope = 0.939, size = 1.5, color = "black")
+
 
 ggsave("./results/canopy_moisture_ignition.pdf",
        plot = canopy_moisture_ignition, height = beamer_height,
@@ -328,18 +334,18 @@ predicted_ignition_leaf_plot_data <- best_leaf_ignition_plot_data %>%
 # mean value after summarising them
 ###############################################################################
 
-leaf_ignition_delay_by_group <- final_data %>% 
+leaf_ignition_delay_by_group <- model_data %>% 
   group_by(analysis_group) %>%
   summarize(leaf_moisture_content = mean(leaf_moisture_content), 
             leaf_mass_per_area = mean(leaf_mass_per_area),
             ignition_delay = mean(ignition_delay))
 
 
-LMA_ignition <- ggplot(best_leaf_ignition_plot_data, aes(leaf_mass_per_area,ignition_delay, 
+LMA_ignition <- ggplot(model_data, aes(leaf_mass_per_area,ignition_delay, 
                                          color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
-  geom_blank(data = predicted_ignition_leaf_plot_data) + 
-  geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
+  #geom_blank(data = predicted_ignition_leaf_plot_data) + 
+  #geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
   geom_point(data = leaf_ignition_delay_by_group, size = 4.5 , alpha = 1, shape = 16,
              aes(color = analysis_group)) +
   ylab("Ignition delay (s)") +
@@ -353,17 +359,19 @@ LMA_ignition <- ggplot(best_leaf_ignition_plot_data, aes(leaf_mass_per_area,igni
   scale_fill_manual(values = c("maroon2","#7CD5D9", "yellow", "#6FA3CE", "red",
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
-                               "black"))
+                               "black")) +
+  geom_abline(intercept = 2.756, slope = 1.018, size = 1.5, color = "black")
+
 
 ggsave("./results/LMA_ignition.pdf",
        plot = LMA_ignition, height = beamer_height,
        width = 10, units = "cm")
 
-leaf_moisture_ignition <- ggplot(best_leaf_ignition_plot_data, aes(leaf_moisture_content,ignition_delay, 
+leaf_moisture_ignition <- ggplot(model_data, aes(leaf_moisture_content,ignition_delay, 
                                          color = analysis_group)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
-  geom_blank(data = predicted_ignition_leaf_plot_data) + 
-  geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
+  #geom_blank(data = predicted_ignition_leaf_plot_data) + 
+  #geom_smooth(method = "lm", se = FALSE, size = 1, color = "black") +
   geom_point(data = leaf_ignition_delay_by_group, size = 4.5 , alpha = 1, shape = 16,
              aes(color = analysis_group)) +
   ylab("Ignition delay (s)") +
@@ -377,7 +385,9 @@ leaf_moisture_ignition <- ggplot(best_leaf_ignition_plot_data, aes(leaf_moisture
   scale_fill_manual(values = c("maroon2","#7CD5D9", "yellow", "#6FA3CE", "red",
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
-                               "black"))
+                               "black")) +
+  geom_abline(intercept = 2.756, slope = 0.859, size = 1.5, color = "black")
+
 
 ggsave("./results/leaf_moisture_ignition.pdf",
        plot = leaf_moisture_ignition, height = beamer_height,

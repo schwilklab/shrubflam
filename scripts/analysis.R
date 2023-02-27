@@ -221,7 +221,7 @@ pre_burning_temp_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g
 
 summary(pre_burning_temp_canopy_traits_model) # pre_burning_temp: p-value = 0.231
 
-AIC(best_canopy_pc1_model, pre_burning_temp_canopy_traits_model) # AICc = 3.75,
+AIC(best_canopy_pc1_model, pre_burning_temp_canopy_traits_model) # AICc = 5.73,
 # didn't improve the model.
 
 
@@ -487,7 +487,8 @@ canopy_traits_ignition_model_mixed <- afex::mixed(ignition_delay ~ canopy_densit
 
 canopy_traits_ignition_anova_table_model <- lme4::lmer(ignition_delay ~ canopy_density_gm_cm3 +
                                                           canopy_moisture_content +
-                                                         (1 | analysis_group), data = model_data)
+                                                         (1 | analysis_group), 
+                                                       data = model_data)
 
 
 canopy_traits_ignition_anova <- car::Anova(canopy_traits_ignition_anova_table_model, type = 3, 

@@ -29,7 +29,8 @@ MASS_DISK_2 = 53.21 # g
 ## require columns from multiple files
 
 species <- read_csv("./data/species.csv") %>%
-  mutate(display_name = paste(substr(genus, 1,1), ". ", specific_epithet, sep=""))
+  mutate(display_name = paste(substr(genus, 1,1), ". ", specific_epithet, sep="")) %>%
+  dplyr::select(-notes)
 ## Display name could be function because unknown species sould really be
 ## something like "Senegalia spp". But fine for now because I'm not sure this
 ## will even be used.
@@ -64,10 +65,10 @@ juniperus_leaf_area_2022 <- read_csv("./data/year_2022/juniperus_leaf_area_2022.
 
 samples_2022 <- species %>%
   filter(species %in% samples_2022$field_taxon) %>% 
-  select(species_id, genus, specific_epithet, display_name, analysis_group,
+  dplyr::select(species_id, genus, specific_epithet, display_name, analysis_group,
          herbivore_defense, herbivore_preference) %>% 
   right_join(samples_2022, by = "species_id" ) %>%
-  select(-notes)
+  dplyr::select(-notes)
 
 ## DWS: Note: herbivore_preference column not found anywhere. Original script
 ## broke here anyway.
@@ -98,10 +99,10 @@ any(is.na(samples_2022))
 
 ################################################################################
 
-samples_2022 <- select(samples_2022, -species_id)
-canopy_measurements_2022 <- select(canopy_measurements_2022, -species_id)
-burn_trials_2022 <- select(burn_trials_2022, -species_id)
-moisture_measurements_2022 <- select(moisture_measurements_2022, -species_id)
+samples_2022 <- dplyr::select(samples_2022, -species_id)
+canopy_measurements_2022 <- dplyr::select(canopy_measurements_2022, -species_id)
+burn_trials_2022 <- dplyr::select(burn_trials_2022, -species_id)
+moisture_measurements_2022 <- dplyr::select(moisture_measurements_2022, -species_id)
 
 
 ###############################################################################
@@ -122,7 +123,7 @@ moisture_measurements_2022 <- moisture_measurements_2022 %>%
   mutate(field_moisture_content = ((field_fresh_mass_gm - field_dry_mass_gm)/field_dry_mass_gm)*100,
          canopy_moisture_content = ((canopy_fresh_mass_gm - canopy_dry_mass_gm)/canopy_dry_mass_gm)*100,
          leaf_moisture_content = ((leaf_fresh_mass_gm - leaf_dry_mass_gm)/leaf_dry_mass_gm)*100) %>%
-  select(-field_fresh_mass_gm, -field_dry_mass_gm,
+  dplyr::select(-field_fresh_mass_gm, -field_dry_mass_gm,
          -leaf_fresh_mass_gm)
 
 # Keeping the canopy_fresh_mass and dry_mass and leaf_dry_mass because I will
@@ -148,7 +149,7 @@ dim(moisture_measurements_2022)
 
 samples_2022 <- left_join(samples_2022, moisture_measurements_2022, 
                           by = c("sample_id")) %>%  #"species_id"  should only join by sample id, right? AM: Yes.fixed it
-  left_join(select(burn_trials_2022, sample_id, mass_pre)) %>%
+  left_join(dplyr::select(burn_trials_2022, sample_id, mass_pre)) %>%
   mutate(field_moisture_content = ifelse(site == "Edwards 2020-22", NA, field_moisture_content)) # Replacing field moisture content
 # value of the first field trip with NA since samples for measuring the Field moisture content from the first field trip was biased since the paper towel were heavily soaked.
 
@@ -176,7 +177,7 @@ range(samples_2022$field_moisture_content, na.rm = TRUE)
 
 samples_2022 <- samples_2022 %>%
   mutate(total_dry_mass_gm =mass_pre*(canopy_dry_mass_gm/canopy_fresh_mass_gm)) %>%
-  select(-mass_pre, -canopy_fresh_mass_gm)
+  dplyr::select(-mass_pre, -canopy_fresh_mass_gm)
 
 dim(samples_2022) # 139
 
@@ -199,7 +200,7 @@ cylindrical_shaped <- canopy_measurements_2022 %>%
   mutate(average_diameter = (bottom_diameter_cm + top_diameter_cm + maximum_diameter)/3,
          average_radius = average_diameter/2,
          canopy_volume_cm3 = 3.1416*average_radius^2*70) %>%  #pi*r^2*h
-  select(- average_diameter, -average_radius)
+  dplyr::select(- average_diameter, -average_radius)
   
 names(cylindrical_shaped)
 dim(cylindrical_shaped) # only two
@@ -227,7 +228,8 @@ ziziphus_CD39 <- canopy_measurements_2022 %>%
            (1/3)*3.1416*(70-distance_from_bottom_cm)*(top_radius^2 + top_radius*max_radius + max_radius^2)) %>%
   mutate(total_mass_gm_paired_branch = dry_leaf_weight_gm + dry_stem_weight_gm, # total dry mass of unburned samples
          leaf_stem_mass_ratio = dry_leaf_weight_gm/dry_stem_weight_gm) %>%
-  select(sample_id, total_mass_gm_paired_branch, leaf_stem_mass_ratio, canopy_volume_cm3)
+  dplyr::select(sample_id, total_mass_gm_paired_branch, 
+                leaf_stem_mass_ratio, canopy_volume_cm3)
 
 
 ###############################################################################
@@ -246,11 +248,11 @@ canopy_measurements_2022 <- canopy_measurements_2022 %>%
   mutate(canopy_volume_cm3 = ifelse(type == "truncated_cone", (1/3)*3.1416*70*(bottom_radius^2 + bottom_radius*top_radius + top_radius^2), # volume of truncated cone 1/3*pi*h(r1^2 + r1*r2 + r2^2)
                                         (1/3)*3.1416*distance_from_bottom_cm*(bottom_radius^2 + bottom_radius*max_radius + max_radius^2) + # volume of two truncated cone
                                           (1/3)*3.1416*(70-distance_from_bottom_cm)*(top_radius^2 + top_radius*max_radius + max_radius^2))) %>%
-  select(- bottom_radius, -top_radius, - max_radius) %>%
+  dplyr::select(- bottom_radius, -top_radius, - max_radius) %>%
   rbind(cylindrical_shaped) %>% # binded with cylindrical shaped, Is that ok?
   mutate(total_mass_gm_paired_branch = dry_leaf_weight_gm + dry_stem_weight_gm, # total dry mass of unburned samples
          leaf_stem_mass_ratio = dry_leaf_weight_gm/dry_stem_weight_gm) %>%
-  select(sample_id, total_mass_gm_paired_branch, leaf_stem_mass_ratio, canopy_volume_cm3) %>%
+  dplyr::select(sample_id, total_mass_gm_paired_branch, leaf_stem_mass_ratio, canopy_volume_cm3) %>%
   rbind(ziziphus_CD39) # binded by ziziphus DC39
   
 dim(canopy_measurements_2022) # 139
@@ -277,7 +279,7 @@ samples_2022 <- samples_2022 %>%
   # the dry weight of the few leaves and a twig with few leaves with
   # total_dry_mass_gm since those were separated from the burning samples right
   # before burning to calculate the leaf and canopy moisture content.
-  select(- canopy_volume_cm3, - canopy_dry_mass_gm, leaf_dry_mass_gm) # Removing canopy_volume_cm3
+  dplyr::select(- canopy_volume_cm3, - canopy_dry_mass_gm, leaf_dry_mass_gm) # Removing canopy_volume_cm3
 
 dim(samples_2022) #139
 any(is.na(samples_2022$leaf_stem_mass_ratio)) #FALSE
@@ -332,7 +334,7 @@ leaf_measurements_2022$average_leaf_length_cm <- apply(leaf_measurements_2022[,7
 # some samples have leaf length of three leaves that's why na.rm was used.
 
 leaf_measurements_2022 <- leaf_measurements_2022 %>%
-  select(-leaf1_length_cm, -leaf2_length_cm, -leaf3_length_cm, -leaf4_length_cm,
+  dplyr::select(-leaf1_length_cm, -leaf2_length_cm, -leaf3_length_cm, -leaf4_length_cm,
          -leaf5_length_cm) # Removing leaf length of individual leaf length since we already got the average
 
 
@@ -375,7 +377,7 @@ any(is.na(juniperus_leaf_area_2022$leaf_area_per_leaflet))
 
 only_juniperus <- leaf_measurements_2022 %>%
   filter(species_id %in% c("1022", "2011", "9000")) %>%
-  select(-leaf_area_cm2) %>% # dropping leaf_area_cm2 since I already calculated it in
+  dplyr::select(-leaf_area_cm2) %>% # dropping leaf_area_cm2 since I already calculated it in
 # juniperus_leaf_area_2022
   full_join(juniperus_leaf_area_2022[-311, ], by = c("sample_id")) %>%
   mutate(leaf_mass_per_area = lma_dry_mass_gm/leaf_area_cm2)
@@ -405,7 +407,7 @@ leaf_measurements_2022 <- without_juniperus %>%
   rbind(only_juniperus) %>%
   rename(leaf_length_per_leaflet = average_leaf_length_cm) %>% # renaming the average leaf_length_cm to 
   # leaf_length_per_leaflet
-  select(-lma_fresh_mass_gm, -lma_dry_mass_gm, -leaf_area_cm2, number_of_leaflet)
+  dplyr::select(-lma_fresh_mass_gm, -lma_dry_mass_gm, -leaf_area_cm2, number_of_leaflet)
 
 dim(leaf_measurements_2022) #139
 any(is.na(leaf_measurements_2022$leaf_length_per_leaflet)) #FALSE
@@ -433,7 +435,7 @@ burn_trials_2022 <- burn_trials_2022 %>%
          heat2 = (temp_d2_post - temp_d2_pre) * MASS_DISK_2 * SPECIFIC_HEAT_AL,
          heat_release_j = (heat1 + heat2)/2, # average heat release of two disks
          massconsumed = (mass_pre - mass_post)) %>%
-  select(-temp_d1_post, -temp_d2_post, -date)
+  dplyr::select(-temp_d1_post, -temp_d2_post, -date)
 
 dim(burn_trials_2022) # 139
 
@@ -443,7 +445,7 @@ dim(burn_trials_2022) # 139
 # First, let's get rid of species_id and keeping only sample_id for every merge
 # from now on
 ###############################################################################
-leaf_measurements_2022 <- select(leaf_measurements_2022, -species_id)
+leaf_measurements_2022 <- dplyr::select(leaf_measurements_2022, -species_id)
 
 #burn_trials_2022 <- select(burn_trials_2022, -species_id)
 
@@ -534,6 +536,9 @@ alldata_2022 <- alldata_2022 %>%
 ######################################################################################
 
 rm(samples_2022, canopy_measurements_2022,leaf_measurements_2022, moisture_measurements_2022,
-   burn_trials_2022, juniperus_leaf_area_2022)
+   burn_trials_2022, juniperus_leaf_area_2022,cylindrical_shaped,
+   MASS_DISK_1, MASS_DISK_2, only_juniperus,senegalia_leaf_measurements,
+   species,SPECIFIC_HEAT_AL,without_juniperus,without_senegalia,
+   ziziphus_CD39)
 
 
