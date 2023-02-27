@@ -12,7 +12,7 @@ library(factoextra)
 
 pca_data_2022 <- alldata_2022 %>%
   left_join(hobos_wider_2022, by = "label") %>%
-  select(sample_id, heat_release_j, massconsumed,
+  dplyr::select(sample_id, heat_release_j, massconsumed,
          vol_burned, flame_height, flame_duration, dur_100,
          peak_temp, degsec_100, ignition_delay)
 
@@ -86,7 +86,7 @@ pca_data_2022$PC1 <- flam_pca_2022$x[ ,1]
 pca_data_2022$PC2 <- flam_pca_2022$x[ ,2]
 
 final_data <- alldata_2022 %>%
-  left_join(select(pca_data_2022, sample_id, PC1, PC2, degsec_100), by = "sample_id")
+  left_join(dplyr::select(pca_data_2022, sample_id, PC1, PC2, degsec_100), by = "sample_id")
   
 
 dim(final_data)
@@ -98,5 +98,7 @@ dim(final_data)
 ###############################################################################
 
 rm( "flam_pca_2022", "flam_loadings",
-   "eig_val", "variables_info")
+   "eig_val", "variables_info" ,"contributor_pc1_2022",
+   "contributor_pc2_2022",
+   "var_contr_by_cos2")
 
