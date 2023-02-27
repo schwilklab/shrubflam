@@ -14,7 +14,7 @@ library(stringr)
 # Reading trials data in order to grab the temperatures from hobo data loggers
 ###############################################################################
 
-trials <- read.csv("../data/year_2021/burn_trials.csv",
+trials <- read.csv("./data/year_2021/burn_trials.csv",
                    stringsAsFactors = FALSE)
 
 ###############################################################################
@@ -43,7 +43,7 @@ class(trials$intervals) # as Interval
 read_hobo_file <- function(filename) {
   hobo <- read.csv(filename, skip=2, header=FALSE)
   names(hobo)[1:3] <- c("row", "time", "temp")
-  hobo <- hobo %>% select(time, temp) %>%
+  hobo <- hobo %>% dplyr::select(time, temp) %>%
     # we use floor_date() below to round to seconds so we can line up our
     # measurements across HOBOs
     mutate(time = floor_date(mdy_hms(time, tz=TZ), "second"))
@@ -70,7 +70,7 @@ concat_hobo_files <- function(filelist, label){
 # Grabbing all the hobo files from left
 ########################################################################
 
-flam.left <- concat_hobo_files(list.files("../data/year_2021/burn_trial_hobo_temps",
+flam.left <- concat_hobo_files(list.files("./data/year_2021/burn_trial_hobo_temps",
                                           full.names=TRUE, recursive=TRUE,
                                           pattern = "flam.left*.csv"),
                                "flam.left")
@@ -83,7 +83,7 @@ any(is.na(flam.left$time)) # No missing value in in time
 # Grabbing all the hobo files from mid
 #####################################################################
 
-flam.mid <- concat_hobo_files(list.files("../data/year_2021/burn_trial_hobo_temps",
+flam.mid <- concat_hobo_files(list.files("./data/year_2021/burn_trial_hobo_temps",
                                          full.names=TRUE, recursive=TRUE,
                                          pattern = "flam.mid*.csv"),
                               "flam.mid")
@@ -100,7 +100,7 @@ unique(flam.mid.separate$date) # Nine trials date,
 # Grabbing all the hobo files from right
 #####################################################################
 
-flam.right <- concat_hobo_files(list.files("../data/year_2021/burn_trial_hobo_temps",
+flam.right <- concat_hobo_files(list.files("./data/year_2021/burn_trial_hobo_temps",
                                            full.names=TRUE, recursive=TRUE,
                                            pattern = "flam.right*.csv"),
                                 "flam.right")
@@ -207,7 +207,7 @@ dim(hobos_wider)
 
 pca_data <- alldata %>%
   left_join(hobos_wider, by ="label")%>%
-  select(label, heat_release_J, massconsumed, vol.burned, 
+  dplyr::select(label, heat_release_J, massconsumed, vol.burned, 
   flame.ht, flame.dur, dur.100, peak.temp, degsec.100)
 
 dim(pca_data)
@@ -232,6 +232,7 @@ flam_loadings  # degsec.100 highly correlated with all the variables related to 
 herbivore_2021 <- alldata %>%
   left_join(hobos_wider, by ="label") %>%
   rename(degsec_100 = degsec.100) %>%
+  filter(degsec_100 != 0) %>%
   mutate(display_name = ifelse(display_name == "F. reticulata", "F. pubescens", display_name),
          display_name = ifelse(display_name == "Z. obtusifolia", "S. obtusifolia", display_name),
          display_name = ifelse(display_name == "Q. fusiformis", "Q. virginiana", display_name)) %>%
@@ -241,7 +242,7 @@ herbivore_2021 <- alldata %>%
   
 
 unique(herbivore_2021$display_name)
-dim(herbivore_2021) # 98
+dim(herbivore_2021) # 93
 
 ## This dataset will be used for herbivore analysis.
 
