@@ -62,7 +62,8 @@ model_data <- final_data %>%
   mutate_at(c("total_dry_mass_g", "canopy_density_gm_cm3", "leaf_stem_mass_ratio",
               "canopy_moisture_content","leaf_mass_per_area", 
               "leaf_area_per_leaflet", "leaf_length_per_leaflet",
-              "leaf_moisture_content", "mean_pre_burning_temp"), list(zscore))
+              "leaf_moisture_content", "mean_pre_burning_temp",
+              "windspeed_miles_per_hour"), list(zscore))
 
 names(model_data)
 
@@ -75,6 +76,7 @@ dim(model_data)
 model_data <- model_data %>%
   select(degsec_100, field_taxon,
          ignition_delay, mean_pre_burning_temp,
+         windspeed_miles_per_hour,
          display_name, analysis_group, total_dry_mass_g , 
          canopy_density_gm_cm3 , leaf_stem_mass_ratio , 
          canopy_moisture_content, leaf_mass_per_area , 
@@ -206,12 +208,14 @@ AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 3.18
 # and leaf 76.26
 
 ###############################################################################
-# Does pre_burning temperature improves the best model?
+# Does pre_burning temperature
+# and windspeed improves the best model?
 ###############################################################################
 
 pre_burning_temp_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g +
                                                      canopy_density_gm_cm3 +
                                                      mean_pre_burning_temp +
+                                                     windspeed_miles_per_hour +
                                                      (1 | analysis_group),
                                                    data = model_data, REML = FALSE)
 
@@ -299,19 +303,21 @@ AIC(best_canopy_ignition_model, best_leaf_ignition_model) # canopy 579.15
 # leaf 584.87
 
 ###############################################################################
-# Does pre_burning temperature improves the best model?
+# Does pre_burning temperature
+# and windspeed improves the best model?
 ###############################################################################
 
 pre_burning_ignition_model <- afex::lmer(ignition_delay ~ canopy_density_gm_cm3 +
                                            canopy_moisture_content +
                                            mean_pre_burning_temp +
+                                           windspeed_miles_per_hour +
                                            (1 | analysis_group),
                                          data = model_data, REML = FALSE)
 
 
 AIC(best_canopy_ignition_model, pre_burning_ignition_model) # Didn't improve the model
 
-# AIC for pre burning ignition = 580.9, pretty close
+# AIC for pre burning ignition = 582.2, pretty close
 
 ###############################################################################
 # Without Juniperus, Do the best traits have significant effect on ignition
@@ -445,6 +451,7 @@ leaf_traits_anova_table_model <- lme4::lmer(degsec_100 ~ leaf_mass_per_area +
 
 leaf_traits_anova <- car::Anova(leaf_traits_anova_table_model, type = 3, 
                                 test.statistic = "F")
+
 leaf_anova <- xtable::xtable(leaf_traits_anova, digits = 3)
 leaf_anova_coefficients <- summary(leaf_traits_anova_table_model)$coefficients
 leaf_coeff <- xtable::xtable(leaf_anova_coefficients, digits = 3)

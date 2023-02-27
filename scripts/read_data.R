@@ -505,13 +505,28 @@ any(is.na(alldata_2022$leaf_moisture_content)) #FALSE
 
 
 #####################################################################################
-# Changing the variable names and creating new label
+# Changing the variable names and creating new label 
+# There are three missing data for three trials, trials 81,
+# trials 88 and 130. I am using the average windspeed
+# between trials 80 and 81, trials 87 and 89 and trials 129 and 131
 #####################################################################################
 
 alldata_2022 <- alldata_2022 %>%
   rename(total_dry_mass_g = total_dry_mass_gm) %>%
   mutate(label = paste(sample_id, trials, sep = "_")) %>%
-  mutate(mean_pre_burning_temp = (temp_d1_pre + temp_d2_pre)/2)
+  mutate(mean_pre_burning_temp = (temp_d1_pre + temp_d2_pre)/2) %>%
+  mutate(windspeed_miles_per_hour = ifelse(trials == 81,
+                                           (alldata_2022$windspeed_miles_per_hour[alldata_2022$trials==80] +
+                                              alldata_2022$windspeed_miles_per_hour[alldata_2022$trials==82])/2,
+                                           windspeed_miles_per_hour),
+         windspeed_miles_per_hour = ifelse(trials == 88,
+                                           (alldata_2022$windspeed_miles_per_hour[alldata_2022$trials==87] +
+                                              alldata_2022$windspeed_miles_per_hour[alldata_2022$trials==89])/2,
+                                           windspeed_miles_per_hour),
+         windspeed_miles_per_hour = ifelse(trials == 130,
+                                           (alldata_2022$windspeed_miles_per_hour[alldata_2022$trials== 129] +
+                                              alldata_2022$windspeed_miles_per_hour[alldata_2022$trials==131])/2,
+                                           windspeed_miles_per_hour))
 
  
 ######################################################################################
