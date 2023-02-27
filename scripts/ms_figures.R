@@ -4,7 +4,7 @@
 # canopy and leaf traits on flammability from analysis.R and also model anova
 # and coefficient tables
 
-library(randomcoloR)  ## DWS: Why? You don't want random colors in code!
+#library(randomcoloR)  ## DWS: Why? You don't want random colors in code!
 ## AM: Don't know how to fix the color issue
 
 ## DWS: What is wrong with the suggestions I made in our meeting? "I don't
@@ -23,8 +23,8 @@ source("./scripts/ggplot_theme.R")
 # Generating thirteen disinct color
 ###############################################################################
 
-set.seed(2643598)
-palette <- distinctColorPalette(14)
+#set.seed(2643598)
+#palette <- distinctColorPalette(14)
 
 ## DWS: good god why? If you need 13 colors you are thinking about this wrong.
 
@@ -40,7 +40,7 @@ palette <- distinctColorPalette(14)
 ###############################################################################
 
 best_degsec_canopy_plot_data <- final_data %>% 
-  select(total_dry_mass_g, canopy_density_gm_cm3, degsec_100, analysis_group)
+  dplyr::select(total_dry_mass_g, canopy_density_gm_cm3, degsec_100, analysis_group)
 
 
 ###############################################################################
@@ -58,7 +58,7 @@ best_degsec_canopy_plot_data$predicted_degsec_100 <- predict(best_canopy_pc1_mod
 ###############################################################################
 
 predicted_degsec_canopy_plot_data <- best_degsec_canopy_plot_data %>%
-  select(predicted_degsec_100, total_dry_mass_g, canopy_density_gm_cm3, 
+  dplyr::select(predicted_degsec_100, total_dry_mass_g, canopy_density_gm_cm3, 
          degsec_100, analysis_group)
 
 ###############################################################################
@@ -97,8 +97,7 @@ total_dry_mass <- ggplot(model_data, aes(total_dry_mass_g, degsec_100,
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black")) +
-  geom_abline(intercept = 1.488, slope = 0.024, size = 1.5, color = "black"
-              )
+  geom_abline(intercept = 10.207, slope = 0.258, size = 1.5, color = "black")
 
 ggsave("./results/total_dry_mass.pdf",
        plot = total_dry_mass, height = beamer_height,
@@ -127,10 +126,10 @@ canopy_density <- ggplot(model_data, aes(canopy_density_gm_cm3, degsec_100, colo
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black")) +
-  geom_abline(intercept = 1.488, slope = 0.005, size = 1.5, color = "black")
+  geom_abline(intercept = 10.207, slope = 0.057, size = 1.5, color = "black")
 
 ggsave("./results/canopy_density.pdf",
-       plot = canopy_density, height = beamer_height,
+       plot = canopy_density, height = 7.5,
        width = 10, units = "cm")
 
 ###############################################################################
@@ -145,7 +144,7 @@ ggsave("./results/canopy_density.pdf",
 ###############################################################################
 
 best_degsec_leaf_plot_data <- final_data %>% 
-  select(leaf_mass_per_area, degsec_100, analysis_group)
+  dplyr::select(leaf_mass_per_area, degsec_100, analysis_group)
 
 
 ###############################################################################
@@ -163,7 +162,7 @@ best_degsec_leaf_plot_data$predicted_degsec_100 <- predict(best_leaf_pc1_model,
 ###############################################################################
 
 predicted_degsec_leaf_plot_data <- best_degsec_leaf_plot_data %>%
-  select(predicted_degsec_100, leaf_mass_per_area, degsec_100,
+  dplyr::select(predicted_degsec_100, leaf_mass_per_area, degsec_100,
          analysis_group)
 
 ###############################################################################
@@ -201,10 +200,10 @@ LMA <- ggplot(model_data, aes(leaf_mass_per_area, degsec_100,
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black")) +
-  geom_abline(intercept = 1.482, slope = 0.008, size = 1.5, color = "black")
+  geom_abline(intercept = 10.140, slope = 0.089, size = 1.5, color = "black")
 
 ggsave("./results/LMA.pdf",
-       plot = LMA, height = beamer_height,
+       plot = LMA, height = 7.5,
        width = 10, units = "cm")
 
 ###############################################################################
@@ -220,7 +219,7 @@ ggsave("./results/LMA.pdf",
 
 
 best_canopy_ignition_plot_data <- final_data %>% 
-  select(canopy_moisture_content, canopy_density_gm_cm3, 
+  dplyr::select(canopy_moisture_content, canopy_density_gm_cm3, 
          ignition_delay, analysis_group)
 
 ###############################################################################
@@ -237,7 +236,7 @@ best_canopy_ignition_plot_data$predicted_ignition_delay <- predict(best_canopy_i
 ###############################################################################
 
 predicted_ignition_canopy_plot_data <- best_canopy_ignition_plot_data %>%
-  select(canopy_moisture_content, canopy_density_gm_cm3,
+  dplyr::select(canopy_moisture_content, canopy_density_gm_cm3,
          ignition_delay, analysis_group, predicted_ignition_delay)
 
 ###############################################################################
@@ -307,7 +306,7 @@ ggsave("./results/canopy_moisture_ignition.pdf",
 ###############################################################################
 
 best_leaf_ignition_plot_data <- final_data %>% 
-  select(leaf_moisture_content, leaf_mass_per_area, 
+  dplyr::select(leaf_moisture_content, leaf_mass_per_area, 
          ignition_delay, analysis_group)
 
 
@@ -326,7 +325,7 @@ best_leaf_ignition_plot_data$predicted_ignition_delay <- predict(best_leaf_ignit
 ###############################################################################
 
 predicted_ignition_leaf_plot_data <- best_leaf_ignition_plot_data %>%
-  select(leaf_moisture_content, leaf_mass_per_area,
+  dplyr::select(leaf_moisture_content, leaf_mass_per_area,
          ignition_delay, analysis_group, predicted_ignition_delay)
 
 ###############################################################################
@@ -417,16 +416,82 @@ renamed_pca <- prcomp(pca_data_renamed_2022[,-1], scale = TRUE)
 
 renamed_pca_plot <- fviz_pca_var(renamed_pca,col.var = "cos2",
                                  gradient.cols = c("#00AFBB","#E7B800","#FC4E07"),
-                                 repel = TRUE, col.circle = "white") +
+                                 repel = TRUE) +
   xlab("Principle component 1") +
   ylab("Principle component 2") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_rect(size = 1.6),
-        plot.title = element_blank())
+  theme(plot.title = element_blank())
 
 ggsave("./results/pca_plot.pdf",
-       plot = renamed_pca_plot, height = beamer_height,
+       plot = renamed_pca_plot, height = 10,
        width = 10, units = "cm")
 
- 
+
+######################################################################
+# Herbivore_preference plot
+#######################################################################
+
+herbivore_preference <- ggboxplot(herbivore_preference_data,x = "herbivore_preference",
+          y = "degsec_100",
+          color = "herbivore_preference", 
+          add = "jitter",
+          shape = "herbivore_preference") +
+  ylab("Temperature integration (\u00B0C.s )" ) +
+  xlab("White-tailed deer preference") +
+  labs(color = "",
+       shape = "")
+
+
+ggsave("./results/herbivore_preference.pdf",
+       plot = herbivore_preference, height = 10,
+       width = 10, units = "cm") 
+
+################################################################
+# Creating a map,I learned to create this kind of map from Dr. Van-gestel's
+# R class.
+################################################################
+
+site_map_2021 <- alldata %>%
+  dplyr::select(site, lat_location,
+                long_location) %>%
+  rename(long = long_location,
+         lat = lat_location)
+
+site_map <- alldata_2022 %>%
+  dplyr::select(site, lat, long) %>%
+  rbind(site_map_2021)
+
+unique(site_map$site)
+#View(site_map)
+
+
+texas <- map_data("state") %>%
+  filter(region == "texas")
+
+texas_counties <- map_data("county") %>%
+  filter(region == "texas")
+
+texas_county_names <- texas_counties %>%
+  group_by(subregion) %>%
+  summarise(mean_lat = mean(lat),
+            mean_long = mean(long))
+
+
+
+map_2021_2022 <- ggplot(texas, aes(long, lat)) +
+  geom_polygon(color = "black", fill = "grey") +
+  theme_bw() +
+  geom_polygon(aes(group = group), data = texas_counties,
+               fill = "NA", color = "white") +
+  geom_polygon(color = "black", fill = "NA") +
+  geom_point(color = "black",
+             shape = 21, size = 2, data = site_map) +
+  geom_text(data = texas_county_names,
+            aes(mean_long, mean_lat, label = subregion),
+            color = "white", size = 2, alpha = 0.5) +
+  labs(fill = "",
+       x = expression("Longitude ("*~degree*")"),
+       y = expression("Latitude ("*~degree*")")) +
+  pubtheme
+
+ggsave("./results/map.pdf", map_2021_2022, height = beamer_height,
+       width = 10, units = "cm")
