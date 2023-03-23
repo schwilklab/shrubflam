@@ -435,7 +435,7 @@ herbivore_preference <- ggboxplot(herbivore_preference_data,x = "herbivore_prefe
           color = "herbivore_preference", 
           add = "jitter",
           shape = "herbivore_preference") +
-  ylab("temperature integration (\u00B0C.s )" ) +
+  ylab("Temperature integration (\u00B0C.s )" ) +
   xlab("white-tailed deer preference") +
   labs(color = "",
        shape = "")
