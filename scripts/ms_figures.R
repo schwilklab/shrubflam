@@ -11,6 +11,7 @@
 ## know" is not very useful and doesn't tell me how to help you.
 
 library(ggmap)
+library(xtable)
 
 #library(factoextra) # unnecessary, already loaded in a previous script.
 
@@ -35,11 +36,10 @@ source("./scripts/ggplot_theme.R")
 ###############################################################################
 
 ###############################################################################
-# Selecting unscaled variables from final data to predict from scaled data in
-# model_data
+# Selecting scaled variables from model data 
 ###############################################################################
 
-best_degsec_canopy_plot_data <- final_data %>% 
+best_degsec_canopy_plot_data <- model_data %>% 
   dplyr::select(total_dry_mass_g, canopy_density_gm_cm3, degsec_100, analysis_group)
 
 
@@ -49,17 +49,17 @@ best_degsec_canopy_plot_data <- final_data %>%
 ###############################################################################
 
 
-best_degsec_canopy_plot_data$predicted_degsec_100 <- predict(best_canopy_pc1_model, 
-                                                             newdata = best_degsec_canopy_plot_data)
+#best_degsec_canopy_plot_data$predicted_degsec_100 <- predict(best_canopy_pc1_model, 
+                                                             #newdata = best_degsec_canopy_plot_data)
 
 ###############################################################################
 # Keeping unscled total_dry_mass_gm, canopy density, degsec_100 and predicted
 # degsec _100 to summarise them by group
 ###############################################################################
 
-predicted_degsec_canopy_plot_data <- best_degsec_canopy_plot_data %>%
-  dplyr::select(predicted_degsec_100, total_dry_mass_g, canopy_density_gm_cm3, 
-         degsec_100, analysis_group)
+#predicted_degsec_canopy_plot_data <- best_degsec_canopy_plot_data %>%
+  #dplyr::select(predicted_degsec_100, total_dry_mass_g, canopy_density_gm_cm3, 
+         #degsec_100, analysis_group)
 
 ###############################################################################
 # Summarising the fixed effects by group and making sure that the name of the
@@ -68,6 +68,8 @@ predicted_degsec_canopy_plot_data <- best_degsec_canopy_plot_data %>%
 # put the mean value, the bigger dots in the plot
 ###############################################################################
 
+# Summarised the predictors and response by analysis_group in model_data
+
 degsec_by_group <- model_data %>% group_by(analysis_group) %>%
   summarize(total_dry_mass_g = mean(total_dry_mass_g), 
             canopy_density_gm_cm3 = mean(canopy_density_gm_cm3),
@@ -75,7 +77,7 @@ degsec_by_group <- model_data %>% group_by(analysis_group) %>%
 
 
 ###############################################################################
-# Plotting the predicted vs unscaled total mass and adding layer by summarized
+# Plotting the scaled total mass and adding layer by summarized
 # data
 ###############################################################################
 
@@ -86,7 +88,7 @@ total_dry_mass <- ggplot(model_data, aes(total_dry_mass_g, degsec_100,
   geom_point(data = degsec_by_group, size = 4.5 , alpha = 1, shape = 16,
              aes(color = analysis_group)) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
-  xlab("Total dry mass (g)")  + 
+  xlab("Total dry mass per 70 cm (g)")  + 
   pubtheme +
   theme(legend.position = "none") +
   scale_color_manual(values = c("maroon2", "#7CD5D9", "yellow", "#6FA3CE","red",
@@ -97,7 +99,7 @@ total_dry_mass <- ggplot(model_data, aes(total_dry_mass_g, degsec_100,
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black")) +
-  geom_abline(intercept = 10.207, slope = 0.258, size = 1.5, color = "black")
+  geom_abline(intercept = 14030.747, slope = 14225.509, size = 1.5, color = "black")
 
 ggsave("./results/total_dry_mass.pdf",
        plot = total_dry_mass, height = beamer_height,
@@ -126,7 +128,7 @@ canopy_density <- ggplot(model_data, aes(canopy_density_gm_cm3, degsec_100, colo
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black")) +
-  geom_abline(intercept = 10.207, slope = 0.057, size = 1.5, color = "black")
+  geom_abline(intercept = 14030.747, slope = 2923.113, size = 1.5, color = "black")
 
 ggsave("./results/canopy_density.pdf",
        plot = canopy_density, height = 7.5,
@@ -140,10 +142,10 @@ ggsave("./results/canopy_density.pdf",
 
 
 ###############################################################################
-# Getting the unscaled fixed terms from final_data 
+# Getting the scaled fixed terms from model_data 
 ###############################################################################
 
-best_degsec_leaf_plot_data <- final_data %>% 
+best_degsec_leaf_plot_data <- model_data %>% 
   dplyr::select(leaf_mass_per_area, degsec_100, analysis_group)
 
 
@@ -153,17 +155,17 @@ best_degsec_leaf_plot_data <- final_data %>%
 ###############################################################################
 
 
-best_degsec_leaf_plot_data$predicted_degsec_100 <- predict(best_leaf_pc1_model, 
-                                                           newdata = best_degsec_leaf_plot_data)
+#best_degsec_leaf_plot_data$predicted_degsec_100 <- predict(best_leaf_pc1_model, 
+                                                           #newdata = best_degsec_leaf_plot_data)
 
 ###############################################################################
 # Keeping unscaled leaf_mass_per_area degsec_100 and predicted degsec_100 to
 # summarise them by analysis_group
 ###############################################################################
 
-predicted_degsec_leaf_plot_data <- best_degsec_leaf_plot_data %>%
-  dplyr::select(predicted_degsec_100, leaf_mass_per_area, degsec_100,
-         analysis_group)
+#predicted_degsec_leaf_plot_data <- best_degsec_leaf_plot_data %>%
+  #dplyr::select(predicted_degsec_100, leaf_mass_per_area, degsec_100,
+         #analysis_group)
 
 ###############################################################################
 # Summarising the fixed effects by group and making sure that the name of the
@@ -171,6 +173,7 @@ predicted_degsec_leaf_plot_data <- best_degsec_leaf_plot_data %>%
 # so that we can use them another layer in the plot as geom_point() where we
 # will put the mean value, the bigger dots in the plot
 ###############################################################################
+# Summarising the LMA and temp. integration by analysis_group from model_data
 
 degsec_leaf_by_group <- model_data %>% 
   group_by(analysis_group) %>%
@@ -200,7 +203,7 @@ LMA <- ggplot(model_data, aes(leaf_mass_per_area, degsec_100,
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black")) +
-  geom_abline(intercept = 10.140, slope = 0.089, size = 1.5, color = "black")
+  geom_abline(intercept = 10419.262, slope = 4823.194, size = 1.5, color = "black")
 
 ggsave("./results/LMA.pdf",
        plot = LMA, height = 7.5,
@@ -213,12 +216,11 @@ ggsave("./results/LMA.pdf",
 
 
 ###############################################################################
-# Selecting unscaled variables from final data to predict from scaled data in
-# model_data
+# Selecting scaled variables from model data 
 ###############################################################################
 
 
-best_canopy_ignition_plot_data <- final_data %>% 
+best_canopy_ignition_plot_data <- model_data %>% 
   dplyr::select(canopy_moisture_content, canopy_density_gm_cm3, 
          ignition_delay, analysis_group)
 
@@ -227,21 +229,20 @@ best_canopy_ignition_plot_data <- final_data %>%
 # predicted_ignition_delay
 ###############################################################################
 
-best_canopy_ignition_plot_data$predicted_ignition_delay <- predict(best_canopy_ignition_model, 
-                                                                   newdata = best_canopy_ignition_plot_data)
+#best_canopy_ignition_plot_data$predicted_ignition_delay <- predict(best_canopy_ignition_model, 
+                                                                   #newdata = best_canopy_ignition_plot_data)
 
 ###############################################################################
 # Keeping unscled canopy moisture content, canopy density, ignition delay and
 # predicted ignition delay to summarise them by group
 ###############################################################################
 
-predicted_ignition_canopy_plot_data <- best_canopy_ignition_plot_data %>%
-  dplyr::select(canopy_moisture_content, canopy_density_gm_cm3,
-         ignition_delay, analysis_group, predicted_ignition_delay)
+#predicted_ignition_canopy_plot_data <- best_canopy_ignition_plot_data %>%
+  #dplyr::select(canopy_moisture_content, canopy_density_gm_cm3,
+         #ignition_delay, analysis_group, predicted_ignition_delay)
 
 ###############################################################################
-# Summarising the fixed effects by group and making sure that the name of the
-# mean value after summarising them
+# Summarising the fixed effects and response variables by group 
 ###############################################################################
 
 ignition_delay_by_group <- model_data %>% 
@@ -305,7 +306,7 @@ ggsave("./results/canopy_moisture_ignition.pdf",
 # Leaf traits vs ignition delay
 ###############################################################################
 
-best_leaf_ignition_plot_data <- final_data %>% 
+best_leaf_ignition_plot_data <- model_data %>% 
   dplyr::select(leaf_moisture_content, leaf_mass_per_area, 
          ignition_delay, analysis_group)
 
@@ -316,21 +317,20 @@ best_leaf_ignition_plot_data <- final_data %>%
 ###############################################################################
 
 
-best_leaf_ignition_plot_data$predicted_ignition_delay <- predict(best_leaf_ignition_model, 
-                                                                 newdata = best_leaf_ignition_plot_data)
+#best_leaf_ignition_plot_data$predicted_ignition_delay <- predict(best_leaf_ignition_model, 
+                                                                 #newdata = best_leaf_ignition_plot_data)
 
 ###############################################################################
 # Keeping unscaled canopy moisture content, canopy density, ignition delay and
 # predicted ignition delay to summarise them by group
 ###############################################################################
 
-predicted_ignition_leaf_plot_data <- best_leaf_ignition_plot_data %>%
-  dplyr::select(leaf_moisture_content, leaf_mass_per_area,
-         ignition_delay, analysis_group, predicted_ignition_delay)
+#predicted_ignition_leaf_plot_data <- best_leaf_ignition_plot_data %>%
+  #dplyr::select(leaf_moisture_content, leaf_mass_per_area,
+         #ignition_delay, analysis_group, predicted_ignition_delay)
 
 ###############################################################################
-# Summarising the fixed effects by group and making sure that the name of the
-# mean value after summarising them
+# Summarising the fixed effects and response variable by group 
 ###############################################################################
 
 leaf_ignition_delay_by_group <- model_data %>% 
@@ -435,8 +435,8 @@ herbivore_preference <- ggboxplot(herbivore_preference_data,x = "herbivore_prefe
           color = "herbivore_preference", 
           add = "jitter",
           shape = "herbivore_preference") +
-  ylab("Temperature integration (\u00B0C.s )" ) +
-  xlab("White-tailed deer preference") +
+  ylab("temperature integration (\u00B0C.s )" ) +
+  xlab("white-tailed deer preference") +
   labs(color = "",
        shape = "")
 
@@ -495,3 +495,35 @@ map_2021_2022 <- ggplot(texas, aes(long, lat)) +
 
 ggsave("./results/map.pdf", map_2021_2022, height = beamer_height,
        width = 10, units = "cm")
+
+############################################################################
+# Saving model table as html from anova table, at first 
+# temperature ingtegration for predictors from best
+# canopy traits and best leaf traits model
+############################################################################
+
+print(canopy_anova, type = "html", file = "./results/canopy_anova_table.html")
+
+print(canopy_coeff, type = "html", file = "./results/canopy_anova_coefficients.html")
+
+print(leaf_anova, type = "html", file = "./results/leaf_anova_table.html")
+
+print(leaf_coeff, type = "html", file = "./results/leaf_anova_coefficients.html")
+
+################################################################################
+# Now for Ignition for both canopy and leaf traits
+################################################################################
+
+
+print(canopy_ignition_xtable, type = "html", 
+      file = "./results/canopy_ignition_anova_table.html")
+
+
+print(canopy_ignition_coeff, type = "html", 
+      file = "./results/canopy_ignition_coeff.html")
+
+print(leaf_ignition_xtable, type = "html",
+      file = "./results/leaf_ignition_anova_table.html")
+
+print(leaf_ignition_coeff, type = "html",
+      file = "./results/leaf_ignition_coeff.html")
