@@ -40,7 +40,7 @@ herbivore_data <- herbivore_data_2022 %>%
                 herbivore_preference,
                 herbivore_defense, site) %>%
   rbind(herbivore_2021) %>%
-  mutate(herbivore_defense = ifelse(herbivore_defense == "non_armed",
+  mutate(herbivore_defense = ifelse(herbivore_defense == "non armed",
                                     "unarmed", herbivore_defense)) %>%
   mutate( display_name = ifelse(display_name == "R. micrphylla",
                                 "R. microphylla", display_name)) %>%
@@ -212,18 +212,18 @@ site_effect <- sapply(split(herbivore_site_effect,
                             })
 
 site_effect
-#  Prosopis glandulosa, Sophora secundiflora, Juniperus virginiana
+# Ilex vomitoria, Sophora secundiflora, Juniperus virginiana
 # Forestiera pubescens varies among sites
 
 
 ########################################################################################################
-# Model without Prosopis glandulosa, Sophora secundiflora, Juniperus virginiana
+# Model without Ilex Vomitoria, Sophora secundiflora, Juniperus virginiana
 # Forestiera pubescens
 
 ####################################################################################################
 
 herbivore_preference_data_without_site_effect <- herbivore_preference_data %>%
-  filter(! display_name %in% c("P. glandulosa", "J. virginiana",
+  filter(! display_name %in% c("I. vomitoria", "J. virginiana",
                           "F. pubescens", "S. secundiflora"))
 
 unique(herbivore_preference_data_without_site_effect$display_name)
