@@ -24,9 +24,11 @@ trials <- read.csv("./data/year_2021/burn_trials.csv",
 trials <- trials%>%
   mutate(start.time = mdy_hm(str_c(burn.date, " ",
                                    start.time),tz=TZ))%>%
-  mutate(end.time=as.POSIXct(start.time+130+flame.dur),
-         format="%m-%d-%y %H:%M:%S",tz=TZ)%>% # Two minutes
+  mutate(start.time = as.POSIXct(start.time + 130,
+                                 format="%m-%d-%y %H:%M:%S",tz=TZ)) %>% # Two minutes
   #pre-heating and ten seconds ignition period, 130s in total
+  mutate(end.time = as.POSIXct(start.time + flame.dur),
+         format="%m-%d-%y %H:%M:%S",tz=TZ)%>% 
   mutate(intervals=interval(start.time,end.time))%>%
   mutate(label=paste(sample_id,species_id,sep = "_"))
 
@@ -205,6 +207,7 @@ dim(hobos_wider)
 # the PCA.
 #####################################################################
 
+
 pca_data <- alldata %>%
   left_join(hobos_wider, by ="label")%>%
   dplyr::select(label, heat_release_J, massconsumed, vol.burned, 
@@ -232,7 +235,7 @@ flam_loadings  # degsec.100 highly correlated with all the variables related to 
 herbivore_2021 <- alldata %>%
   left_join(hobos_wider, by ="label") %>%
   rename(degsec_100 = degsec.100) %>%
-  filter(degsec_100 != 0) %>%
+  #filter(degsec_100 != 0) %>%
   mutate(display_name = ifelse(display_name == "F. reticulata", "F. pubescens", display_name),
          display_name = ifelse(display_name == "Z. obtusifolia", "S. obtusifolia", display_name),
          display_name = ifelse(display_name == "Q. fusiformis", "Q. virginiana", display_name)) %>%
@@ -242,7 +245,7 @@ herbivore_2021 <- alldata %>%
   
 
 unique(herbivore_2021$display_name)
-dim(herbivore_2021) # 93
+dim(herbivore_2021) 
 
 ## This dataset will be used for herbivore analysis.
 
