@@ -28,7 +28,9 @@ trials_2022 <- trials_2022 %>%
   # it has self ignition and has existing flame(descriptions on notes in flam_trials_2022,csv.)
   mutate(start_time = mdy_hm(str_c(date, " ",
                                    trial_time), tz = TZ))%>%
-  mutate(end_time = as.POSIXct(start_time + 120 + ignition_delay + flame_duration),
+  mutate(start_time = as.POSIXct(start_time + 120  + ignition_delay,
+                                 format = "%m-%d-%y %H:%M:%S", tz = TZ )) %>%
+  mutate(end_time = as.POSIXct(start_time  + flame_duration),
          format = "%m-%d-%y %H:%M:%S", tz = TZ)%>% # Two minutes
   #pre-heating and ignition period,  plus flame_duration
   mutate(intervals = interval(start_time, end_time))%>%
