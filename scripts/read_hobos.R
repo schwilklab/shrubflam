@@ -19,48 +19,46 @@ trials_2022 <- read.csv("./data/year_2022/flam_trials_2022.csv",
                         stringsAsFactors = FALSE)
 
 
+
 #####################################################################
-# Getting the end trial time, converting the time zone of trials data
+# Getting the end trial time, converting the time zone of trials data.
+# Some samples got ignited during pre-heating phase. For those
+# samples, the start time will trial_time + self_ig_starting_time
+# self_ig_starting time is the time when the samples caught fire
+# during pre-heating phase.
 #####################################################################
 
-trials_2022 <- trials_2022 %>%
-  filter( ! sample_id %in% c("KD07", "UV01")) %>% # KD07 has missing values of flammability measurements and mistakenly, UV01 has ignited with blow torch though 
-  # it has self ignition and has existing flame(descriptions on notes in flam_trials_2022,csv.)
+trials_2022_exceptions <- trials_2022 %>%
+  filter( ! sample_id %in% c("KD07", "UV01")) %>%
+  filter( sample_id %in% c("UV19", "DK35", "KD10", "DC31", "VZ06", "ED45",
+                           "DC26")) %>%
   mutate(start_time = mdy_hm(str_c(date, " ",
-                                   trial_time), tz = TZ))%>%
-  mutate(start_time = as.POSIXct(start_time + 120  + ignition_delay,
-                                 format = "%m-%d-%y %H:%M:%S", tz = TZ )) %>%
-  mutate(end_time = as.POSIXct(start_time  + flame_duration),
-         format = "%m-%d-%y %H:%M:%S", tz = TZ)%>% # Two minutes
-  #pre-heating and ignition period,  plus flame_duration
+                                   trial_time), tz = TZ)) %>%
+  mutate(start_time = as.POSIXct(start_time + self_ig_starting_time, 
+                                 format = "%m-%d-%y %H:%M:%S", tz = TZ)) %>%
+  mutate(end_time = as.POSIXct(start_time +  flame_duration),
+         format = "%m-%d-%y %H:%M:%S", tz = TZ)%>% 
   mutate(intervals = interval(start_time, end_time))%>%
   mutate(label = paste(sample_id, trials, sep = "_"))
 
+
+#################################################################################
+# Those didn't ignite during pre-heating phase
+#################################################################################
+
+trials_2022 <- trials_2022 %>%
+  filter( ! sample_id %in% c("KD07", "UV01", "UV19", "DK35", "KD10", "DC31", "VZ06")) %>% 
+  mutate(start_time = mdy_hm(str_c(date, " ",
+                                   trial_time), tz = TZ)) %>%
+  mutate(start_time = as.POSIXct(start_time  + 120 + ignition_delay,
+                                 format = "%m-%d-%y %H:%M:%S", tz = TZ)) %>%
+  mutate(end_time = as.POSIXct(start_time +  flame_duration),
+         format = "%m-%d-%y %H:%M:%S", tz = TZ)%>% 
+  mutate(intervals = interval(start_time, end_time))%>%
+   mutate(label = paste(sample_id, trials, sep = "_")) %>%
+  rbind(trials_2022_exceptions)
+
 dim(trials_2022)
-
-
-
-################################################################################
-# Getting alldata_2022 from read_data.R, labeled by sample_id and trials
-# since I already removed the species_id. I hope it will make sense!
-################################################################################
-
-#hobo_thermocouples_data <- burn_trials_2022 %>%
-  #mutate(burn_date <- as.Date(burn_date, "%Y-%m-%d")) %>%
-  #mutate(trial_time <- hms(trial_time)) %>%
-  #mutate(start_time = as.POSIXct(paste(burn_date, trial_time), tz = TZ)) %>%
-  #mutate(end_time = as.POSIXct(start_time + 120 + ignition_delay + flame_duration),
-         #format = "%m-%d-%y %H:%M:%S", tz = TZ)%>% # Two minutes
-  #pre-heating and ignition period,  plus flame_duration
-  #mutate(intervals = interval(start_time, end_time))%>%
-  #mutate(label = paste(sample_id, trials, sep = "_"))
-
-
-#class(hobo_thermocouples_data$start_time)
-
-
-#class(hobo_thermocouples_data$end_time)
-
 
 
 
@@ -105,11 +103,6 @@ flam_left <- concat_hobo_files(list.files("./data/year_2022/hobos_2022",
 
 
 
-class(flam_left$time) 
-any(is.na(flam_left$flam.left))
-any(is.na(flam_left$time)) 
-flam.left <- separate(flam_left, time, into = c("date", "time"), sep = " ")
-unique(flam.left$date)
 
 
 #####################################################################
@@ -121,12 +114,7 @@ flam_mid <- concat_hobo_files(list.files("./data/year_2022/hobos_2022",
                                          pattern = "flam.mid*.csv"),
                               "flam_mid")
 
-class(flam_mid$time) 
-any(is.na(flam_mid$flam.mid))
-any(is.na(flam_mid$time)) 
-flam.mid <- separate(flam_mid,time, into = c("date","time"),
-                     sep = " ")
-unique(flam.mid$date)
+
 
 #####################################################################
 # Grabbing all the hobo files from right
@@ -138,24 +126,14 @@ flam_right <- concat_hobo_files(list.files("./data/year_2022/hobos_2022",
                                 "flam_right")
 
 
-class(flam_right$time)
-any(is.na(flam_right$flam.right))
-any(is.na(flam_right$time))
-flam.right <- separate(flam_right, time, into =  c("date", "time"), 
-                       sep = " ")
-unique(flam.right$date)
+
 
 #####################################################################
-# Getting all the hob files in a single data frame
+# Getting all the hobo files in a single data frame
 #####################################################################
 
 hobos <- full_join(flam_left, flam_mid, by = "time") %>% 
   full_join(flam_right,  by = "time")
-class(hobos$time)
-hobos_separate <- separate(hobos, time, into = c("date", "time"),
-                           sep= " ")
-
-unique(hobos_separate$date)
 
 
 
@@ -193,19 +171,17 @@ hobos_long <- hobos %>%
 # Summarising the hobo data
 #####################################################################
 
-hobo_temp_sum <- hobos_long %>% group_by(label, position) %>%
+hobo_temp_sum <- hobos_long %>% 
+  group_by(label, position) %>%
   summarise(dur_100 = sum(temperature > 100),
             degsec_100= sum(temperature[temperature >100]),
             peak_temp = max(temperature),
             peak_time = time[which(peak_temp == temperature)[1]],
-            hobo.left = max(temperature),
-            hobo.right = max(temperature),
-            hob.mid = max(temperature),
             num_NA = sum(is.na(temperature))) %>% ungroup()%>%
   filter(label != "NA")
 
-dim(trials_2022) #137
-dim(hobo_temp_sum) # 137*3 = 411
+dim(trials_2022) 
+dim(hobo_temp_sum) 
 
 
 ###############################################################################
@@ -215,9 +191,9 @@ dim(hobo_temp_sum) # 137*3 = 411
 ###############################################################################
 hobos_wider_2022 <- hobo_temp_sum %>%
   group_by(label) %>%
-  summarise(dur_100=mean(dur_100),
-            peak_temp=max(peak_temp),
-            degsec_100=max(degsec_100))
+  summarise(dur_100 = mean(dur_100),
+            peak_temp = max(peak_temp),
+            degsec_100 = max(degsec_100))
 
 dim(hobos_wider_2022)
 
@@ -233,12 +209,6 @@ hobo_plots <- alldata_2022 %>%
 ## DWS: this produces a warning.
 
 
-
-dim(alldata_2022) # 116
-dim(hobo_plots) # 116*3 = 348
-any(is.na(hobo_plots$dur_100)) #FALSE
-any(is.na(hobo_plots$degsec_100)) #FALSE
-any(is.na(hobo_plots$peak_temp)) #FALSE
 
 ########################################################################
 # Plot for the summary
