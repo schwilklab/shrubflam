@@ -186,7 +186,7 @@ leaf_mod_table <- model.sel(leaf_pc1_models)
 leaf_mod_table[1:8,]
 
 
-best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[4]] 
+#best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[4]] 
 
 
 summary(best_leaf_pc1_model) # Leaf mass per area is the best model 

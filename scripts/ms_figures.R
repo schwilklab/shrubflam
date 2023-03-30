@@ -99,7 +99,7 @@ total_dry_mass <- ggplot(model_data, aes(total_dry_mass_g, degsec_100,
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black")) +
-  geom_abline(intercept = 14030.747, slope = 14225.509, size = 1.5, color = "black")
+  geom_abline(intercept = 14051.178, slope = 14075.406, size = 1.5, color = "black")
 
 ggsave("./results/total_dry_mass.pdf",
        plot = total_dry_mass, height = beamer_height,
@@ -128,7 +128,7 @@ canopy_density <- ggplot(model_data, aes(canopy_density_gm_cm3, degsec_100, colo
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black")) +
-  geom_abline(intercept = 14030.747, slope = 2923.113, size = 1.5, color = "black")
+  geom_abline(intercept = 14051.178, slope = 3054.810, size = 1.5, color = "black")
 
 ggsave("./results/canopy_density.pdf",
        plot = canopy_density, height = 7.5,
@@ -203,7 +203,7 @@ LMA <- ggplot(model_data, aes(leaf_mass_per_area, degsec_100,
                                "#D6E2A6", "#73E17B", "lightblue",
                                "#D1A7D6", "#DA61C2", "#C9E558", "blue", "orange",
                                "black")) +
-  geom_abline(intercept = 10419.262, slope = 4823.194, size = 1.5, color = "black")
+  geom_abline(intercept = 10446.180, slope = 4810.533 , size = 1.5, color = "black")
 
 ggsave("./results/LMA.pdf",
        plot = LMA, height = 7.5,
