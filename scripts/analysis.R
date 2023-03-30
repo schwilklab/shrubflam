@@ -186,7 +186,7 @@ leaf_mod_table <- model.sel(leaf_pc1_models)
 leaf_mod_table[1:8,]
 
 
-best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]] 
+best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[4]] 
 
 
 summary(best_leaf_pc1_model) # Leaf mass per area is the best model 
@@ -434,8 +434,8 @@ canopy_traits_anova_table_model_withoutj <- lme4::lmer(degsec_100 ~ total_dry_ma
 canopy_traits_anova_withoutj <- car::Anova(canopy_traits_anova_table_model_withoutj, type = 2, 
                                            test.statistic = "F")
 canopy_anova_withoutj <- xtable::xtable(canopy_traits_anova_withoutj, digits = 3)
-canopy_anova_coefficients <- summary(canopy_traits_anova_table_model)$coefficients
-canopy_coeff <- xtable::xtable(canopy_anova_coefficients, digits = 3)
+canopy_anova_coefficients_withoutj <- summary(canopy_traits_anova_table_model)$coefficients
+canopy_coeff_withoutj <- xtable::xtable(canopy_anova_coefficients, digits = 3)
 
 
 
@@ -465,16 +465,19 @@ leaf_coeff <- xtable::xtable(leaf_anova_coefficients, digits = 3)
 #############################################################################################
 
 leaf_traits_heat_release_model_mixed_withoutj <- afex::mixed(degsec_100 ~ leaf_mass_per_area +
-                                                               (1|analysis_group), data = without_juniperus,
+                                                               (1|analysis_group), 
+                                                             data = without_juniperus,
                                                              method = "KR", REML = TRUE)
 
 
 
 leaf_traits_anova_table_model_withoutj <- lme4::lmer(degsec_100 ~ leaf_mass_per_area +
-                                                       (1 | analysis_group), data = without_juniperus)
+                                                       (1 | analysis_group),
+                                                     data = without_juniperus)
 
 
-leaf_traits_anova_withoutj <- car::Anova(leaf_traits_anova_table_model_withoutj, type = 2, test.statistic = "F")
+leaf_traits_anova_withoutj <- car::Anova(leaf_traits_anova_table_model_withoutj, type = 2, 
+                                         test.statistic = "F")
 leaf_anova_withoutj <- xtable::xtable(leaf_traits_anova_withoutj, digits = 3)
 leaf_anova_coefficients_withoutj <- summary(leaf_traits_anova_table_model_withoutj)$coefficients
 leaf_coeff_withoutj <- xtable::xtable(leaf_anova_coefficients_withoutj, digits = 3)
