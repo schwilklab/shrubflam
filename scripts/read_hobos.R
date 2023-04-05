@@ -19,44 +19,20 @@ trials_2022 <- read.csv("./data/year_2022/flam_trials_2022.csv",
                         stringsAsFactors = FALSE)
 
 
-
 #####################################################################
-# Getting the end trial time, converting the time zone of trials data.
-# Some samples got ignited during pre-heating phase. For those
-# samples, the start time will trial_time + self_ig_starting_time
-# self_ig_starting time is the time when the samples caught fire
-# during pre-heating phase.
+# Getting the end trial time, converting the time zone of trials data
 #####################################################################
-
-trials_2022_exceptions <- trials_2022 %>%
-  filter( ! sample_id %in% c("KD07", "UV01")) %>%
-  filter( sample_id %in% c("UV19", "DK35", "KD10", "DC31", "VZ06", "ED45",
-                           "DC26")) %>%
-  mutate(start_time = mdy_hm(str_c(date, " ",
-                                   trial_time), tz = TZ)) %>%
-  mutate(start_time = as.POSIXct(start_time + self_ig_starting_time, 
-                                 format = "%m-%d-%y %H:%M:%S", tz = TZ)) %>%
-  mutate(end_time = as.POSIXct(start_time +  flame_duration),
-         format = "%m-%d-%y %H:%M:%S", tz = TZ)%>% 
-  mutate(intervals = interval(start_time, end_time))%>%
-  mutate(label = paste(sample_id, trials, sep = "_"))
-
-
-#################################################################################
-# Those didn't ignite during pre-heating phase
-#################################################################################
 
 trials_2022 <- trials_2022 %>%
-  filter( ! sample_id %in% c("KD07", "UV01", "UV19", "DK35", "KD10", "DC31", "VZ06")) %>% 
+  filter( ! sample_id %in% c("KD07", "UV01")) %>% # KD07 has missing values of flammability measurements and mistakenly, UV01 has ignited with blow torch though 
+  # it has self ignition and has existing flame(descriptions on notes in flam_trials_2022,csv.)
   mutate(start_time = mdy_hm(str_c(date, " ",
-                                   trial_time), tz = TZ)) %>%
-  mutate(start_time = as.POSIXct(start_time  + 120 + ignition_delay,
-                                 format = "%m-%d-%y %H:%M:%S", tz = TZ)) %>%
-  mutate(end_time = as.POSIXct(start_time +  flame_duration),
-         format = "%m-%d-%y %H:%M:%S", tz = TZ)%>% 
+                                   trial_time), tz = TZ))%>%
+  mutate(end_time = as.POSIXct(start_time + 120 + ignition_delay + flame_duration),
+         format = "%m-%d-%y %H:%M:%S", tz = TZ)%>% # Two minutes
+  #pre-heating and ignition period,  plus flame_duration
   mutate(intervals = interval(start_time, end_time))%>%
-   mutate(label = paste(sample_id, trials, sep = "_")) %>%
-  rbind(trials_2022_exceptions)
+  mutate(label = paste(sample_id,species_id, sep = "_"))
 
 dim(trials_2022)
 
