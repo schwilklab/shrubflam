@@ -253,7 +253,7 @@ saveRDS(hobos_wider_2022, file.path(DATA_CACHE_DIR, "hobos_wider_2022"))
 # Cleaning the environment
 ########################################################################
 rm("concat_hobo_files", "get_trial_label", "read_hobo_file",
-   "hobos_long","hobo_plots", "flam.right","flam.mid","flam.left",
-   "flam_right","flam_mid","flam_left","trials_2022","TZ","hobos_separate",
+   "hobos_long","hobo_plots", 
+   "flam_right","flam_mid","flam_left","trials_2022","TZ",
    "hobo_temp_sum", "hobos")
 
