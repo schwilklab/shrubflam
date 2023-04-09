@@ -88,7 +88,7 @@ dim(model_data)
 
 any(is.na(model_data)) # FALSE
 
-#model_data$degsec_100 <- log10(model_data$degsec_100 + 1) # log transformation of
+model_data$degsec_100 <- log(model_data$degsec_100) # log transformation of
                                                     # response variable
 
 ## DWS: So you are making z score and then taking log. How will you graph this?
