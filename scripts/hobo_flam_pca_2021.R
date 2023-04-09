@@ -24,18 +24,15 @@ trials <- read.csv("./data/year_2021/burn_trials.csv",
 trials <- trials%>%
   mutate(start.time = mdy_hm(str_c(burn.date, " ",
                                    start.time),tz=TZ))%>%
-  mutate(start.time = as.POSIXct(start.time + 130,
-                                 format="%m-%d-%y %H:%M:%S",tz=TZ)) %>% # Two minutes
+  #mutate(start.time = as.POSIXct(start.time + 130,
+                                 #format="%m-%d-%y %H:%M:%S",tz=TZ)) %>% # Two minutes
   #pre-heating and ten seconds ignition period, 130s in total
-  mutate(end.time = as.POSIXct(start.time + flame.dur),
+  mutate(end.time = as.POSIXct(start.time + 130 +flame.dur),
          format="%m-%d-%y %H:%M:%S",tz=TZ)%>% 
   mutate(intervals=interval(start.time,end.time))%>%
   mutate(label=paste(sample_id,species_id,sep = "_"))
 
-unique(trials$label) # 118 labels
-class(trials$start.time) # as POSIXct
-class(trials$end.time) # as POSIXct
-class(trials$intervals) # as Interval
+
 
 
 ####################################################################
@@ -77,9 +74,7 @@ flam.left <- concat_hobo_files(list.files("./data/year_2021/burn_trial_hobo_temp
                                           pattern = "flam.left*.csv"),
                                "flam.left")
 
-class(flam.left$time) # As POSIXct
-any(is.na(flam.left$flam.left)) # No missing value in flam.left
-any(is.na(flam.left$time)) # No missing value in in time
+
 
 #####################################################################
 # Grabbing all the hobo files from mid
@@ -90,13 +85,7 @@ flam.mid <- concat_hobo_files(list.files("./data/year_2021/burn_trial_hobo_temps
                                          pattern = "flam.mid*.csv"),
                               "flam.mid")
 
-class(flam.mid$time) # As POSIXct
-any(is.na(flam.mid$flam.mid)) # No NA in flam.mid
-any(is.na(flam.mid$time)) # No NA 
-flam.mid.separate <- separate(flam.mid,time, into = c("date","time"),
-                              sep = " ")
-unique(flam.mid.separate$date) # Nine trials date, 
-# data from mid.hobo from 2021-06-04 is absent
+
 
 #####################################################################
 # Grabbing all the hobo files from right
@@ -107,9 +96,7 @@ flam.right <- concat_hobo_files(list.files("./data/year_2021/burn_trial_hobo_tem
                                            pattern = "flam.right*.csv"),
                                 "flam.right")
 
-class(flam.right$time) # As POSIXct
-any(is.na(flam.right$flam.right)) # No NA
-any(is.na(flam.right$time)) # No NA
+
 
 #####################################################################
 # Getting all the hob files in a single data frame
@@ -118,15 +105,7 @@ any(is.na(flam.right$time)) # No NA
 hobos <- full_join(flam.left,flam.mid,by = "time") %>% 
   full_join(flam.right,by="time")
 
-class(hobos$time) # As POSIXct
-any(is.na(hobos)) # Yes, hobos has NA
-#View(hobos) 
-hobos_separate <- separate(hobos,time, into = c("date","time"),
-                           sep= " ")
 
-
-hobos_separate <- hobos_separate %>%
-  filter(date == "2021-06-04")
 
 
 #####################################################################
@@ -185,9 +164,9 @@ hobo_temp_sum <- hobos_long %>% group_by(label, position) %>%
 
 hobos_wider <- hobo_temp_sum%>%
   group_by(label)%>%
-  summarise(dur.100=mean(dur.100, na.rm = TRUE),
-            peak.temp=max(peak.temp, na.rm = TRUE),
-            degsec.100=max(degsec.100, na.rm = TRUE))
+  summarise(dur.100 = mean(dur.100, na.rm = TRUE),
+            peak.temp = max(peak.temp, na.rm = TRUE),
+            degsec.100 = max(degsec.100, na.rm = TRUE))
 
 # 16 samples from day 2021-06-04 showed NA for missing
 
@@ -235,7 +214,7 @@ flam_loadings  # degsec.100 highly correlated with all the variables related to 
 herbivore_2021 <- alldata %>%
   left_join(hobos_wider, by ="label") %>%
   rename(degsec_100 = degsec.100) %>%
-  #filter(degsec_100 != 0) %>%
+  filter(degsec_100 != 0) %>%
   mutate(display_name = ifelse(display_name == "F. reticulata", "F. pubescens", display_name),
          display_name = ifelse(display_name == "Z. obtusifolia", "S. obtusifolia", display_name),
          display_name = ifelse(display_name == "Q. fusiformis", "Q. virginiana", display_name)) %>%
