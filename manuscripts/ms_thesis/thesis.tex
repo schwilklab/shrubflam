@@ -140,13 +140,12 @@ May 2023
 \chapter{\textbf{Acknowledgements}}
 \noindent First and foremost, I want to sincerely thank Dr. Dylan Schwilk, my M.S. advisor, for his unwavering support. I couldn't have finished my thesis without his guidance and encouragement. For my M.S., I can't think of a better mentor and advisor. I also want to thank the other members of my thesis committee, Nathan S Gill, Ph.D., and Nicholas G. Smith, Ph.D., for their support and time.
 
-Despite the fact that we have shared our lab for a short period, I especially want to thank Dr. Xiulin Gao. I believe that without the R scripts in Dr. Gao's GitHub projects, I couldn't complete my analysis in R. A special thanks to Muhammad Usman , Keely Ussery , Hampton Heath, Benjamin Harrington , Mark Bazemore, Ashlyn Sneed, Bittnah Kim,  Adriana Botero and  Caden M Casanova , Hector Maynes
-. Without you guys, it would be impossible for me to collect the samples and do the burning.
+Despite the fact that we have shared our lab for a short period, I especially want to thank Dr. Xiulin Gao. I believe that without the R scripts in Dr. Gao's GitHub projects, I couldn't complete my analysis in R. A special thanks to Muhammad Usman, Keely Ussery, Hampton Heath, Benjamin Harrington, Mark Bazemore, Ashlyn Sneed, Bittnah Kim,  Adriana Botero,  Caden M Casanova and Hector Maynes. Without you guys, it would be impossible for me to collect the samples and do the burning.
 
-I want to thank my labmate Peter Eludini for being a friend and a brother. I also like to thank all the memebers of Ecohealth lab. Spcecial thanks to Pawan Devkota and  Rakesh Singh and Yanni Chen for the field trip. Thank you Evan Perkowski, Ezinwanne Ezekannagha,  Snehanjan Chatterjee, Eve Gray, Monika Kelley, David Bowers, Isabella Beltran Triana, Rafael Freitas, Sara Bohi Goulart for your friendship and for making our lab home. Special thanks to Brad Posch, Kate Fuller,  Jeffrey Chieppa for your friendship. 
+I want to thank my labmate Peter Eludini for being a friend and a brother. I also like to thank all the memebers of Ecohealth lab. Spcecial thanks to Pawan Devkota and  Rakesh Singh and Yanni Chen for the field trip. Thank you Evan Perkowski, Ezinwanne Ezekannagha,  Snehanjan Chatterjee, Eve Gray, Monika Kelley, David Bowers, Isabella Beltran Triana, Rafael Freitas and Sara Bohi Goulart for your friendship and for making our lab home. Special thanks to Brad Posch, Kate Fuller and Jeffrey Chieppa for your friendship. 
 
 Special thanks to  Sharandeep Chahal. I couldn't have completed the sample collection in 2022 without your help. I would also like to thank to Imtiaz Qavi,  Md Wahiduzzaman,
-Md Towhidul Islam Tareqe, Syed Ehsan Ar Rafi, Md Faiyaz Kabir, Mohammad Tarak Aziz, Shaikh Sadiqur Rahman Golam Rabbani, Sowrav Barua for your help and friendship.
+Md Towhidul Islam Tareqe, Syed Ehsan Ar Rafi, Md Faiyaz Kabir, Mohammad Tarak Aziz, Shaikh Sadiqur Rahman, Golam Rabbani and Sowrav Barua for your help and friendship.
 
 I would like to thank the Bangladeshi community in Lubbock for their help. Last but not least, I'd  also like to thank my family and friends for helping me along the way. Special thanks to my parents for believing in me. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -163,6 +162,10 @@ I would like to thank the Bangladeshi community in Lubbock for their help. Last 
 \noindent Flammability is a trait of land plants, and an understanding of this trait is important to comprehend the ecological and evolutionary consequences of fire on plant species in fire-prone ecosystems. Numerous plant traits can influence flammability. Although many studies have examined the flammability of individual leaves, fewer have examined how entire canopies behave as fuel because quantifying plant flammability by burning whole plants is expensive. However, a recent study has suggested that burning shoots can predict plant flammability. %With the development of 
 In this study, I used a new plant flammability device that allows standardized measurements of canopy flammability of portions up to 70\,cm long. %and in the light of a recent study regarding the effectiveness of burning shoots to predict plant flammability;
  I burned 70\,cm branches from at least three samples per species of 16 native shrubs of Texas and measured four canopy traits: total dry mass per 70\,cm, canopy density, leaf: stem (in dry mass basis) and canopy moisture content and four common leaf traits: leaf mass per area (LMA), leaf area per leaflet, leaf length per leaflet and leaf moisture content. I used these data to answer two questions: 1) Are canopy traits more important than leaf traits in shoot flammability? 2) Are heat release and flame spread rate independent axes of flammability in shrub fuels? I found that canopy traits are more important in determining flammability than are leaf traits; total dry mass per 70\,cm branch and canopy density together were the best predictors of temperature integration in shoot flammability in shrub fuels. Furthermore, I found that shoot flammability in shrub fuel is mostly described by a single axis, represented by flammability metrics related to duration. This finding illustrates the potential for incorporating canopy traits in fire behavior models and might improve the understanding of fire-fuel feedback in the shrublands of Texas.
+ 
+Grazing and fire have a long history in Texas. Fire and herbivores can both increase plant flammability and alter the composition of biomes. Flammability and the extent of herbivores' ingestion are influenced by plant functional traits. A plant can defend itself from herbivores' that browse by using physical defense, chemical defense, or a combination of the two and can persist in fire-prone ecosystems through their different life history strategies. In light of the recent advancement in our understanding of the trade-off among different types of plant defense against herbivores and the relationship between plant flammability and palatability, I tested the difference in flammability between armed and unarmed species as well as two groups of shrubs based on white-tailed deer preference to answer two questions: 1) Are the least preferred shrubs for white-tailed deer more flammable than moderate to low preferred shrubs? 2) Do armed plants have lower flammability than unarmed plants? I found that the least preferred shrubs are more flammable than moderate to low preferred shrubs. However, I haven't found any significant difference in flammability between
+unarmed and armed species. This study might help to improve the understanding of the trade-off between the physical and chemical defense of plants against herbivores and the unified framework for fire and herbivores' effects on plant life history. 
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -376,7 +379,7 @@ The automated model selection result shows that, for canopy traits, the model wi
     \textbf{total dry mass + canopy den.}    & \textbf{3.7} &  \textbf{0.324}\\
     total dry mass + canopy den. + total dry mass:canopy den. & 5.4  & 0.142 \\
     total dry mass + moisture content + canopy den.   & 5.4   & 0.140 \\ 
-    total dry mass + leaf ratio + canopy den.  & 5.4 & 0.138  \\
+    total dry mass + leaf stem mass ratio + canopy den.  & 5.4 & 0.138  \\
     \bottomrule
   \end{tabular}
   \label{tab:canopy_models}
@@ -449,13 +452,13 @@ The majority of the canopy traits among all the measured canopy traits had highe
 \begin{figure}[ht]
     \centering
     \includegraphics[width = \textwidth]{../../results/canopy_density.pdf}
-    \caption[short version]{\label{fig:canopyden-tempint} Relationship between canopy density and temperature integration above 100 $^{\circ}$C. The line indicates the best-fitted linear mixed model with genus as a random intercept effect ($p = 0.026$). The independent variable was standardized  as z-score and the response variable was log transformed. Small points in the background are individual observations, and large points are taxon's mean. The red dots are \emph{Juniperus} taxon.}
+    \caption[Canopy density effect on temperature integration]{\label{fig:canopyden-tempint} Relationship between canopy density and temperature integration above 100 $^{\circ}$C. The line indicates the best-fitted linear mixed model with genus as a random intercept effect ($p = 0.026$). The independent variable was standardized  as z-score and the response variable was log transformed. Small points in the background are individual observations, and large points are taxon's mean. The red dots are \emph{Juniperus} taxon.}
 \end{figure}
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width = \textwidth]{../../results/LMA.pdf}
-    \caption[short version]{\label{fig:LMA-tempint} Relationship between LMA and temperature integration above 100 $^{\circ}$C. The line indicates the best-fitted linear mixed model with genus as a random intercept effect ($p = 0.032$). The independent variable was standardized  as z-score and the response variable was log transformed. Small points in the background are individual observations, and large points are taxon's mean. The red dots are \emph{Juniperus} taxon.}
+    \caption[LMA effect on temperature integration]{\label{fig:LMA-tempint} Relationship between LMA and temperature integration above 100 $^{\circ}$C. The line indicates the best-fitted linear mixed model with genus as a random intercept effect ($p = 0.032$). The independent variable was standardized  as z-score and the response variable was log transformed. Small points in the background are individual observations, and large points are taxon's mean. The red dots are \emph{Juniperus} taxon.}
 \end{figure}
 
 
@@ -486,8 +489,8 @@ For ignition delay, the global linear mixed effect model was built without any i
     %% DWS; still does not fit. Need to fix or make a landscape table
     \textbf{canopy den. + moisture content}    & \textbf{579.7} & \textbf{0.425} \\
     canopy den. + moisture content + total dry mass   & 580.6   & 0.275 \\
-    canopy den. + moisture content + leaf ratio       & 581.6   & 0.166  \\
-    canopy den. + moisture content + leaf ratio + total dry mass & 582.7  & 0.095 \\
+    canopy den. + moisture content + leaf stem mass ratio       & 581.6   & 0.166  \\
+    canopy den. + moisture content + leaf stem mass ratio + total dry mass & 582.7  & 0.095 \\
     \bottomrule
   \end{tabular}
   \label{tab:canopy_models_ignition_delay}
@@ -557,22 +560,21 @@ LMA: $p = 0.330$, leaf moisture content: $p = 0.048$). Leaves are one of the fir
 \begin{figure}[ht]
     \centering
     \includegraphics[width = \textwidth]{../../results/canopy_density_ignition.pdf}
-    \caption{Relationship between canopy density and ignition delay. The line indicates the best-fitted linear mixed model with genus as a random intercept effect ($p  = 0.003$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's mean. The red dots are \emph{Juniperus} taxon.}
-    \label{fig:canopy_density_ig_delay}
+    \caption[Canopy density effect on ignition delay]{\label{fig:canopy_density_ig_delay} Relationship between canopy density and ignition delay. The line indicates the best-fitted linear mixed model with genus as a random intercept effect ($p  = 0.003$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's mean. The red dots are \emph{Juniperus} taxon.}
 \end{figure}
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width = \textwidth]{../../results/canopy_moisture_ignition.pdf}
-    \caption{Relationship between canopy moisture content and ignition delay. The line indicates the best-fitted linear mixed model with genus as random intercept effect ($p = 0.006$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's mean. The red dots are \emph{Juniperus} taxon.}
-    \label{fig:canopy_moisture_ig_delay}
+    \caption[Canopy moisture effect on ignition delay]{\label{fig:canopy_moisture_ig_delay}Relationship between canopy moisture content and ignition delay. The line indicates the best-fitted linear mixed model with genus as random intercept effect ($p = 0.006$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's mean. The red dots are \emph{Juniperus} taxon.}
+    
 \end{figure}
 
 \begin{figure}[ht]
   \centering \includegraphics[width =
   \textwidth]{../../results/LMA_ignition.pdf}
-  \caption{Relationship between LMA and ignition delay. The line indicates the best-fitted linear mixed model with genus as a random intercept effect ($p = 0.004$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's means. The red dots are \emph{Juniperus} taxon.}
-  \label{fig:lma_ig_delay}
+  \caption[LMA effect on ignition delay]{\label{fig:lma_ig_delay} Relationship between LMA and ignition delay. The line indicates the best-fitted linear mixed model with genus as a random intercept effect ($p = 0.004$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's means. The red dots are \emph{Juniperus} taxon.}
+  
 \end{figure}
 
 
@@ -580,8 +582,8 @@ LMA: $p = 0.330$, leaf moisture content: $p = 0.048$). Leaves are one of the fir
 \begin{figure}[ht]
   \centering \includegraphics[width =
   \textwidth]{../../results/leaf_moisture_ignition.pdf}
-  \caption{Relationship between leaf moisture content and ignition delay. The line indicates the best-fitted linear mixed model with genus as random intercept effect ($p = 0.010$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's means. The red dots are \emph{Juniperus} taxon.}
-  \label{fig:leafmc_ig_delay}
+  \caption[Leaf moisture content effect on ignition delay]{\label{fig:leafmc_ig_delay}Relationship between leaf moisture content and ignition delay. The line indicates the best-fitted linear mixed model with genus as random intercept effect ($p = 0.010$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's means. The red dots are \emph{Juniperus} taxon.}
+  
 \end{figure}
 
 
@@ -635,10 +637,6 @@ and study suggests that fire influences seed coat chemistry \citep{mcinnes2022do
 
 \chapter{Exploring the relationship between plant defense strategies, white-tailed deer preference, and flammability in native shrub species in Texas} 
 
-\section{Abstract}
-
-Grazing and fire have a long history in Texas. Fire and herbivores can both increase plant flammability and alter the composition of biomes. Flammability and the extent of herbivores' ingestion are influenced by plant functional traits. A plant can defend itself from herbivores' that browse by using physical defense, chemical defense, or a combination of the two and can persist in fire-prone ecosystems through their different life history strategies. In light of the recent advancement in our understanding of the trade-off among different types of plant defense against herbivores and the relationship between plant flammability and palatability, I tested the difference in flammability between armed and unarmed species as well as two groups of shrubs based on white-tailed deer preference to answer two questions: 1) Are the least preferred shrubs for white-tailed deer more flammable than moderate to low preferred shrubs? 2) Do armed plants have lower flammability than unarmed plants? I found that the least preferred shrubs are more flammable than moderate to low preferred shrubs. However, I haven't found any significant difference in flammability between
-unarmed and armed species. This study might help to improve the understanding of the trade-off between the physical and chemical defense of plants against herbivores and the unified framework for fire and herbivores' effects on plant life history. 
 
 
 \section{Introduction}
@@ -722,7 +720,7 @@ for both 2021 and 2022. Therefore, temperature integration over 100 $^{\circ}$C 
 \section{Results}
 
 The linear mixed--effect model with herbivore defense as fixed term showed that there is no statistically significant (F-value = 2.79, p-value = 0.111) difference in flammability between unarmed and armed species. %However, Tukey contrasts Post-hoc Test for multiple comparisons showed that the mean value of flammability of unarmed species is marginally higher than the armed species (p.adj = 0.094, 95\% C.I = [-1876.76, 23599.91]).
-The linear mixed effect model with herbivore preference as fixed effect showed that there is a significant difference in flammability between least and moderate to low preferred shrub species (F-value = 9.08, p-value = 0.006)
+The linear mixed effect model with herbivore preference as fixed effect showed that there is a significant difference in flammability between least and moderate to low preferred shrub species (F-value = 9.08, p-value $<$ 0.05)
 (Figure \ref{fig:herbivore_pref}). 
 
 %Tukey contrasts Post-hoc Test for multiple comparisons found that the mean value of flammability of moderate to low  preferred species is significantly lower than the least preferred species for White-tailed deer (p.adj = 0.002, 95\% C.I = [-36854.25, -7811.29])
@@ -737,7 +735,7 @@ The linear mixed effect model with herbivore preference as fixed effect showed t
      \label{fig:herbivore_pref}   
  \end{figure}
 
-All the collected species were not available in every collection properties during sampling and some of them found only in a single property, and considering the difference in flammability that could arise due to the difference of collection properties for the unmeasured variables, I filtered the species which were found in at least two different collection properties. Then, I tested the difference in flammability among properties for each species and found that flammability in \emph{Prosopis glandulosa} marginally varies among properties (p = 0.09) and \emph{Sophora secundiflora}, \emph{Juniperus virginiana} and \emph{Forestiera pubescens} significantly varies in their flammability among properties (\emph{Sophora secundiflora}: p = 0.027, \emph{Juniperus virginiana}: p = 0.002, \emph{Forestiera pubescens}: p = 0.001). However, considering the limited number of samples and species for each group after removing those four species from the analysis, I included those species that found in a single property for the test of difference of mean flammability between groups for rest of the species and found that the relationships held true for the difference in flammability between the least and moderate to low preferred species (F = 13.20, p = 0.005).\
+%All the collected species were not available in every collection properties during sampling and some of them found only in a single property, and considering the difference in flammability that could arise due to the difference of collection properties for the unmeasured variables, I filtered the species which were found in at least two different collection properties. Then, I tested the difference in flammability among properties for each species and found that flammability in \emph{Prosopis glandulosa} marginally varies among properties (p = 0.09) and \emph{Sophora secundiflora}, \emph{Juniperus virginiana} and \emph{Forestiera pubescens} significantly varies in their flammability among properties (\emph{Sophora secundiflora}: p = 0.027, \emph{Juniperus virginiana}: p = 0.002, \emph{Forestiera pubescens}: p = 0.001). However, considering the limited number of samples and species for each group after removing those four species from the analysis, I included those species that found in a single property for the test of difference of mean flammability between groups for rest of the species and found that the relationships held true for the difference in flammability between the least and moderate to low preferred species (F = 13.20, p = 0.005).\
 
 \section{Discussion}
 
