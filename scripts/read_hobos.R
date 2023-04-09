@@ -32,7 +32,7 @@ trials_2022 <- trials_2022 %>%
          format = "%m-%d-%y %H:%M:%S", tz = TZ)%>% # Two minutes
   #pre-heating and ignition period,  plus flame_duration
   mutate(intervals = interval(start_time, end_time))%>%
-  mutate(label = paste(sample_id,species_id, sep = "_"))
+  mutate(label = paste(sample_id, trials, sep = "_"))
 
 dim(trials_2022)
 
