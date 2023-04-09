@@ -12,6 +12,7 @@
 -   To test whether the flammability of those species which have
     chemical defense against herbivore are more flammable than those
     species which have physical defense or not.
+-  To test whether the least preferred shurb species for white tailed deer are more flammable than moderate to low preferred shrub species or not.
 
 ## Methods
 
