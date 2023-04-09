@@ -212,7 +212,7 @@ site_effect <- sapply(split(herbivore_site_effect,
                             })
 
 site_effect
-# Ilex vomitoria, Sophora secundiflora, Juniperus virginiana
+# Prospis glandulosa, Sophora secundiflora, Juniperus virginiana
 # Forestiera pubescens varies among sites
 
 
@@ -222,21 +222,21 @@ site_effect
 
 ####################################################################################################
 
-herbivore_preference_data_without_site_effect <- herbivore_preference_data %>%
-  filter(! display_name %in% c("I. vomitoria", "J. virginiana",
-                          "F. pubescens", "S. secundiflora"))
+#herbivore_preference_data_without_site_effect <- herbivore_preference_data %>%
+  #filter(! display_name %in% c("P. glandulosa", "J. virginiana",
+                          #"F. pubescens", "S. secundiflora"))
 
-unique(herbivore_preference_data_without_site_effect$display_name)
+#unique(herbivore_preference_data_without_site_effect$display_name)
 
-xtabs(~ herbivore_preference, data = herbivore_preference_data_without_site_effect)
+#xtabs(~ herbivore_preference, data = herbivore_preference_data_without_site_effect)
 
 
-nested_without_site_efffect <- lme(degsec_100 ~ herbivore_preference, weights = varIdent(form = ~ 1|herbivore_preference),
-                                   random = ~1|display_name, data = herbivore_preference_data_without_site_effect, method = "REML")  
+#nested_without_site_efffect <- lme(degsec_100 ~ herbivore_preference, weights = varIdent(form = ~ 1|herbivore_preference),
+                                   #random = ~1|display_name, data = herbivore_preference_data_without_site_effect, method = "REML")  
 
-summary(nested_without_site_efffect) # p = 0.003
+#summary(nested_without_site_efffect) # p = 0.003
 
-anova(nested_without_site_efffect)
+#anova(nested_without_site_efffect)
 
 #car::Anova(nested_without_site_efffect, type = 3, test.statistic = "F") # 0.0002
 
