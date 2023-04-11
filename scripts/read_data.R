@@ -539,6 +539,6 @@ rm(samples_2022, canopy_measurements_2022,leaf_measurements_2022, moisture_measu
    burn_trials_2022, juniperus_leaf_area_2022,cylindrical_shaped,
    MASS_DISK_1, MASS_DISK_2, only_juniperus,senegalia_leaf_measurements,
    species,SPECIFIC_HEAT_AL,without_juniperus,without_senegalia,
-   ziziphus_CD39)
+   ziziphus_CD39, herbivore_2022)
 
 
