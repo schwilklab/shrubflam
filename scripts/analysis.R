@@ -204,8 +204,7 @@ summary(best_leaf_pc1_model) # Leaf mass per area is the best model
 ###############################################################################
 
 
-AIC(best_canopy_pc1_model, best_leaf_pc1_model) # AIC for canopy 3.18
-# and leaf 76.26
+AIC(best_canopy_pc1_model, best_leaf_pc1_model) 
 
 ###############################################################################
 # Does pre_burning temperature
@@ -219,9 +218,9 @@ pre_burning_temp_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g
                                                      (1 | analysis_group),
                                                    data = model_data, REML = FALSE)
 
-summary(pre_burning_temp_canopy_traits_model) # pre_burning_temp: p-value = 0.231
+summary(pre_burning_temp_canopy_traits_model) 
 
-AIC(best_canopy_pc1_model, pre_burning_temp_canopy_traits_model) # AICc = 5.73,
+AIC(best_canopy_pc1_model, pre_burning_temp_canopy_traits_model) 
 # didn't improve the model.
 
 
@@ -245,9 +244,7 @@ heat_release_without_juniperus <- afex::lmer(degsec_100 ~ total_dry_mass_g +
 
 summary(heat_release_without_juniperus)
 anova(heat_release_without_juniperus)
-## Total dry mass is stiatistically significant, p < 0.001
-## canopy density is marginally significant p = 0.073
-## and LMA is not significant at all p = .959
+
 
 ###############################################################################
 # A global model of canopy traits and leaf traits without interaction (to avoid
@@ -331,7 +328,7 @@ ignition_delay_without_juniperus <- afex::lmer(ignition_delay ~ canopy_density_g
                                                  (1 | analysis_group), data = without_juniperus,
                                                REML = FALSE)
 
-summary(ignition_delay_without_juniperus) # Only moisture content , p = 0.027
+summary(ignition_delay_without_juniperus) 
 anova(ignition_delay_without_juniperus)
 
 ###############################################################################
@@ -346,20 +343,14 @@ leaf_stem_canopy_mc_heat_release_model <- afex::lmer(degsec_100 ~ leaf_stem_mass
                                                        (1 | analysis_group),
                                                      data = model_data, REML = FALSE)
 
-summary(leaf_stem_canopy_mc_heat_release_model) # none of them have any
-# significant effect on heat release
-# leaf:stem: p- value = 0.113
-# canopy_mc: p-value = 0.592
+summary(leaf_stem_canopy_mc_heat_release_model) 
 
 leaf_length_leaf_mc_heat_release_model <- afex::lmer(degsec_100 ~ leaf_length_per_leaflet +
                                                        leaf_moisture_content +
                                                        (1 | analysis_group),
                                                      data = model_data, REML = FALSE)
 
-summary(leaf_length_leaf_mc_heat_release_model) # none of them had any 
-# significant effect!!
-# leaf_mc: p-value = 0.374
-# leaf_length: p-value = 0.786
+summary(leaf_length_leaf_mc_heat_release_model) 
 
 ###############################################################################
 # Same for ignition delay
@@ -370,17 +361,14 @@ total_dry_mass_leaf_stem_ignition <- afex::lmer(ignition_delay ~ total_dry_mass_
                                                   (1|analysis_group),
                                                 data = model_data, REML = FALSE)
 
-summary(total_dry_mass_leaf_stem_ignition) # total dry mass has
-# significant effect
-# total_dry_mass: p-value = 0.023
-# leaf:stem: p-value = 0.3872
+summary(total_dry_mass_leaf_stem_ignition) 
  
 
 leaf_length_ignition_model <- afex::lmer(ignition_delay ~ leaf_length_per_leaflet +
                                            (1 | analysis_group),
                                          data = model_data, REML = FALSE)
 
-summary(leaf_length_ignition_model) # no effect: p-value = 0.552
+summary(leaf_length_ignition_model) 
 
 ###########################################################################################
 # This part is for model building for anova table, first for heat release
