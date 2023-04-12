@@ -9,10 +9,6 @@
     flame spread rate are relatively independent axes of flammability in
     shrub fuels.
 
--   To test whether the flammability of those species which have
-    chemical defense against herbivore are more flammable than those
-    species which have physical defense or not.
-
 ## Methods
 
 We have collected 23 shrub species from multiple counties in Texas
