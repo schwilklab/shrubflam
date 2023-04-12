@@ -404,8 +404,9 @@ canopy_coeff <- xtable::xtable(canopy_anova_coefficients, digits = 3)
 ###########################################################################################
 
 
-canopy_traits_heat_release_model_mixed_withoutj <- afex::mixed(degsec_100 ~ total_dry_mass_g + 
+canopy_leaf_traits_heat_release_model_mixed_withoutj <- afex::mixed(degsec_100 ~ total_dry_mass_g + 
                                                                  canopy_density_gm_cm3 +
+                                                                 leaf_mass_per_area +
                                                                  (1|analysis_group), 
                                                                data = without_juniperus,
                                                                method = "KR", REML = TRUE)
@@ -413,18 +414,19 @@ canopy_traits_heat_release_model_mixed_withoutj <- afex::mixed(degsec_100 ~ tota
 
 
 
-canopy_traits_anova_table_model_withoutj <- lme4::lmer(degsec_100 ~ total_dry_mass_g + 
-                                                         canopy_density_gm_cm3 +
+canopy_leaf_traits_anova_table_model_withoutj <- lme4::lmer(degsec_100 ~ total_dry_mass_g + 
+                                                         canopy_density_gm_cm3 + 
+                                                         leaf_mass_per_area +
                                                          (1 | analysis_group), 
                                                        data = without_juniperus)
 
 
-canopy_traits_anova_withoutj <- car::Anova(canopy_traits_anova_table_model_withoutj, type = 2, 
+canopy_leaf_traits_anova_withoutj <- car::Anova(canopy_leaf_traits_anova_table_model_withoutj, 
+                                                type = 2, 
                                            test.statistic = "F")
-canopy_anova_withoutj <- xtable::xtable(canopy_traits_anova_withoutj, digits = 3)
-canopy_anova_coefficients_withoutj <- summary(canopy_traits_anova_table_model)$coefficients
-canopy_coeff_withoutj <- xtable::xtable(canopy_anova_coefficients, digits = 3)
-
+canopy_leaf_anova_withoutj <- xtable::xtable(canopy_leaf_traits_anova_withoutj, digits = 3)
+canopy_leaf_anova_coefficients_withoutj <- summary(canopy_leaf_traits_anova_table_model_withoutj)$coefficients
+canopy_leaf_coeff_withoutj <- xtable::xtable(canopy_leaf_anova_coefficients_withoutj, digits = 3)
 
 
 ############################################################################################
@@ -447,28 +449,6 @@ leaf_traits_anova <- car::Anova(leaf_traits_anova_table_model, type = 2,
 leaf_anova <- xtable::xtable(leaf_traits_anova, digits = 3)
 leaf_anova_coefficients <- summary(leaf_traits_anova_table_model)$coefficients
 leaf_coeff <- xtable::xtable(leaf_anova_coefficients, digits = 3)
-
-############################################################################################
-# leaf traits for heat release without Juniperus
-#############################################################################################
-
-leaf_traits_heat_release_model_mixed_withoutj <- afex::mixed(degsec_100 ~ leaf_mass_per_area +
-                                                               (1|analysis_group), 
-                                                             data = without_juniperus,
-                                                             method = "KR", REML = TRUE)
-
-
-
-leaf_traits_anova_table_model_withoutj <- lme4::lmer(degsec_100 ~ leaf_mass_per_area +
-                                                       (1 | analysis_group),
-                                                     data = without_juniperus)
-
-
-leaf_traits_anova_withoutj <- car::Anova(leaf_traits_anova_table_model_withoutj, type = 2, 
-                                         test.statistic = "F")
-leaf_anova_withoutj <- xtable::xtable(leaf_traits_anova_withoutj, digits = 3)
-leaf_anova_coefficients_withoutj <- summary(leaf_traits_anova_table_model_withoutj)$coefficients
-leaf_coeff_withoutj <- xtable::xtable(leaf_anova_coefficients_withoutj, digits = 3)
 
 
 ###################################################################################################################
