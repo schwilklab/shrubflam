@@ -2,29 +2,26 @@
 
 # Shrub Flammability
 # Summer 2022
-
+# This script will produce results of analysis related to
+# supplimentary information
 # All scripts in source are required to run before running
 # this script.
 
 library(car)
 library(corrplot)
 library(maps)
-
-source("../flam_pca_2022.R") # script that did the pca analysis.
-source("../analysis_2022.R") # script that did the model selection
-
+library(glmmTMB) # The package is needed to get the output
+# as pdf or in latex format from sjPlot object
 
 
-# Rscript for analysing to test whether the experimental design has
-# effect on flammability or not!! The correlation matrix of flammability
-# traits and morphological traits
+
 
 #########################################################################
 # Checking whether each species has at least three samples or not
 ##########################################################################
 
 three_samples_check <- final_data %>%
-  select(species_id, genus, windspeed_miles_per_hour,
+  select(genus, windspeed_miles_per_hour,
          total_dry_mass_g, canopy_density_gm_cm3, leaf_stem_mass_ratio,
          canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
          leaf_length_per_leaflet, leaf_moisture_content, PC1, PC2, degsec_100,
@@ -32,53 +29,9 @@ three_samples_check <- final_data %>%
 
 dim(three_samples_check)
 
-xtabs(~species_id, three_samples_check) # Yes, each species at 
+xtabs(~ genus, three_samples_check) # Yes, each species at 
 # least three samples.
 
-################################################################
-# Creating a map
-################################################################
-
-site_map_2021 <- alldata %>%
-  select(property, lat_location,
-         long_location) %>%
-  rename(site = property,
-         long = long_location,
-         lat = lat_location)
-
-site_map <- alldata_2022 %>%
-  select(site, lat, long) %>%
-  rbind(site_map_2021) %>%
-  mutate(site = ifelse(site == "Dickens Park",
-                       "Dickens spring", site))
-
-View(site_map)
-
-texas <- map_data("state") %>%
-  filter(region == "texas")
-
-texas_counties <- map_data("county") %>%
-  filter(region == "texas")
-
-texas_county_names <- texas_counties %>%
-  group_by(subregion) %>%
-  summarise(mean_lat = mean(lat),
-            mean_long = mean(long))
-
-ggplot(texas, aes(long, lat)) +
-  geom_polygon(color = "black", fill = "grey") +
-  theme_bw() +
-  geom_polygon(aes(group = group), data = texas_counties,
-               fill = "NA", color = "white") +
-  geom_polygon(color = "black", fill = "NA") +
-  geom_point(aes(fill = site), color = "black",
-             shape = 21, size = 2, data = site_map) +
-  geom_text(data = texas_county_names,
-            aes(mean_long, mean_lat, label = subregion),
-            color = "white", size = 2, alpha = 0.5) +
-  labs(fill = "",
-       x = expression("Longitude ("*~degree*")"),
-       y = expression("Latitude ("*~degree*")"))
 
 ########################################################################
 # Creating a separate data set with flammability traits and morphological
@@ -87,9 +40,6 @@ ggplot(texas, aes(long, lat)) +
 
 
 cor_data <- alldata_2022 %>%
-  filter(! sample_id %in% c("KD18", "DK34", "KD15", "UV04",
-                            "DK30")) %>%
-  mutate(label=paste(sample_id,species_id,sep = "_")) %>%
   left_join(hobos_wider_2022, by = "label") %>%
   select(heat_release_j, massconsumed, windspeed_miles_per_hour,
          vol_burned, flame_height, flame_duration, dur_100,
@@ -102,6 +52,8 @@ dim(cor_data)
 
 ####################################################################################################################################
 # Correlation of all morphological traits
+# ggplot2 code for corrplot, source: https://dk81.github.io/
+# dkmathstats_site/rvisual-corrplots.html
 #############################################################################################################################
 
 
@@ -114,14 +66,36 @@ morphological_traits_cor_data <- cor_data %>%
 morphological_traits_cor <- cor(morphological_traits_cor_data, method = "kendall",
                                 use = "pairwise")
 
-corrplot::corrplot(morphological_traits_cor, method = "number")
+#morphological_traits_cor_plot <- corrplot::corrplot(morphological_traits_cor, 
+                                                    #method = "number")
+
+morphological_traits_cor_plot_melted <- reshape2::melt(morphological_traits_cor)
+
+morphological_traits_cor_plot_ggplot2 <- ggplot(morphological_traits_cor_plot_melted, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(midpoint = 0.5, mid ="grey70", limits = c(-1, +1)) +
+  labs(x = "", y = "", fill = "Correlation \n Measure") +
+  theme(plot.title = element_text(hjust = 0.5, colour = "blue"),
+        axis.title.x = element_text(face="bold", colour="darkgreen", size = 12),
+        axis.title.y = element_text(face="bold", colour="darkgreen", size = 12),
+        axis.text.x = element_text(angle = 45, hjust = 1,
+                                   margin = margin(t = 0, r = 5, b = 0, l = 0)),
+        legend.title = element_text(face="bold", colour="brown", size = 10)) +
+  geom_text(aes(x = Var1, y = Var2, label = round(value, 2)), color = "black",
+            fontface = "bold", size = 5)
+
+ggsave("./results/morphological_traits_correlation_plot.pdf",
+       plot = morphological_traits_cor_plot_ggplot2,
+       width = 18, height = 15, units = "cm")
+
+
 
 # morphological_traits_cor
 # Kendall rank correlation coefficient between canopy_moisture_content and 
 # leaf_moisture_content is 0.64, not a problem since they will be used
 # in two different model.
 # Kendall rank correlation coefficient between leaf_area_per_leaflet and 
-# leaf_length_per_leaflet is 0.67
+# leaf_length_per_leaflet is 0.65
 
 
 
@@ -140,7 +114,8 @@ canopy_flam_cor <- cor(canopy_flam_data, method = "kendall",
                        use = "pairwise")
 
 
-corrplot::corrplot(canopy_flam_cor, method = "number", type = "upper")
+#canopy_flam_cor_plot <- corrplot::corrplot(canopy_flam_cor, method = "number", 
+                                           #type = "upper")
 
 ###########################################################################################################
 # Correlation of leaf  traits and flammability traits
@@ -157,113 +132,179 @@ leaf_flam_cor <- cor(leaf_flam_data, method = "kendall",
                      use = "pairwise")
 
 
-corrplot::corrplot(leaf_flam_cor, method = "number", type = "upper")
+#leaf_flam_cor_plot <- corrplot::corrplot(leaf_flam_cor, method = "number",
+                                         #type = "upper")
 
 #################################################################################
-# Does disks temperature influenced self_ignition?
+# Saving the anova table of the best models without Juniperus
+# using Kenward_Roger approximation
 #################################################################################
 
-three_samples_check$average_disk_temp <- (three_samples_check$temp_d1_pre + three_samples_check$temp_d2_pre)/2
+print(canopy_leaf_anova_withoutj, type = "html",
+      file = "./results/canopy_anova_table_withoutj.html")
+
+print(canopy_leaf_coeff_withoutj, type = "html",
+      file = "./results/canopy_anova_coeff_table_withoutj.html")
 
 
-
-self_ig_disc_av <- glm(self_ignition ~ average_disk_temp,
-                       data = three_samples_check, family = binomial(link = "cloglog"))
-
-summary(self_ig_disc_av) # p = 0.491
+print(ignition_xtable_withoutj, type = "html",
+      file = "./results/ignition_anova_table_without_juniperus.html")
 
 
-################################################################################
-# Does disk temperature influence flammability?
-################################################################################
+print(ignition_coeff_withoutj, type = "html",
+      file = "./results/ignition_coeff_table_without_juniperus.html")
 
 
-pc1_disc_avg <- afex::lmer(degsec_100 ~ average_disk_temp + (1|genus),
-                           data = three_samples_check, REML = FALSE)
+#########################################################################
+# Saving the Marginal R2 and conditional R2 of the best models
+#########################################################################
 
-summary(pc1_disc_avg) 
+# Source: https://stackoverflow.com/questions/62197268/knitting-
+# output-from-sjplottab-model-or-other-html-tables-into-pdf-document
 
-pc1_av_lm <- lm(degsec_100 ~ average_disk_temp, 
-                data = three_samples_check) 
+#########################################################################
+# best canopy traits model first fitted by by Kenward-Roger's method
+# by afex package
+# sjPlot creates object as list
+#########################################################################
 
-summary(pc1_av_lm) 
+best_canopy_traits_model_as_list <- sjPlot::tab_model(canopy_traits_heat_release_model_mixed)
 
+# Creating vector containing HTML code
 
-pc2_disc_avg <- afex::lmer(flame_height ~ average_disk_temp + (1|genus),
-                           data = three_samples_check, REML = FALSE)
+null_vector <- c() 
+for (i in 1:3) {
+  null_vector[i] <- best_canopy_traits_model_as_list[[i]]
+}
 
-summary(pc2_disc_avg) # p value 0.365
+# Reading into data frame.
 
-pc2_av_lm <- lm(flame_height ~ average_disk_temp, 
-                data = three_samples_check)
+best_canopy_traits_model_as_data_frame <- XML::readHTMLTable(null_vector, as.data.frame = TRUE)
 
-summary(pc2_av_lm) 
+# Data frame is retrieved as repeated items in list. 
+# Keeping only one.
 
+best_canopy_traits_model_as_data_frame <- best_canopy_traits_model_as_data_frame[[1]]
 
-################################################################################################
-# Does weather during burning influence flammability? Wind speed, particularly flame
-# height
-#################################################################################################
+# Setting column names correctly.
 
-three_samples_check <- three_samples_check %>%
-  na.omit()
+colnames(best_canopy_traits_model_as_data_frame) <- best_canopy_traits_model_as_data_frame[1,]
 
-#three_samples_check$degsec_100 <- log(three_samples_check$degsec_100)
+# The first row apperaed twice
 
-ws <- lm(flame_height ~ windspeed_miles_per_hour, 
-         data = three_samples_check)
+best_canopy_traits_model_as_data_frame <- best_canopy_traits_model_as_data_frame[-1,]
 
-summary(ws) # p 0.846
+best_canopy_traits_model_as_xtable <- xtable::xtable(best_canopy_traits_model_as_data_frame)
 
-ws_degsec <- lm(degsec_100 ~ windspeed_miles_per_hour , 
-                data = three_samples_check)
-
-summary(ws_degsec) # p is 0.329
-
-##############################################################################
-# Does different method influence the flammability ?
-###############################################################################
-
-# Filtered the burning date where the air_fuel mixture was different than other 
-# burning days
-
-third_trial <- final_data %>%
-  filter(burn_date == "2022-06-21") %>%
-  filter(species_id != 1009 ) %>% # Removing mimosa spp since I have collected only one sample and couldn't compare.
-  filter(! sample_id %in% c("DC38", "DC37", "DC39",
-  "DC32", "DC25", "DC29")) # Last six sample burnt the same way like other burning day.
-
-trial_species <- unique(third_trial$species_id) # getting the unique species that
-# got burnt during that trial.
-
-# Separate data frame for common species
-
-subgroup <- final_data %>%
-  filter(species_id %in% trial_species) %>%
-  mutate(method = ifelse(burn_date == "2022-06-21", "method1","method2"))
+print(best_canopy_traits_model_as_xtable,
+      type = "html", file = "./results/best_canopy_traits_model_r2.html")
 
 
-# Does temperature integration influenced by methods?
+#########################################################################################
+# Now the best leaf traits model for temperature integration
+#########################################################################################
 
-method1_mod <- lme4::lmer(degsec_100 ~ method + (1|species_id), data = subgroup ,
-                          REML = TRUE)
+best_leaf_traits_model_as_list <- sjPlot::tab_model(leaf_traits_heat_release_model_mixed)
 
-Anova(method1_mod, test.statistic = "F") # p value 0.457
+# Creating vector containing HTML code
+
+null_vector2 <- c() 
+for (i in 1:3) {
+  null_vector2[i] <- best_leaf_traits_model_as_list[[i]]
+}
+
+# Reading into data frame.
+
+best_leaf_traits_model_as_data_frame <- XML::readHTMLTable(null_vector2, as.data.frame = TRUE)
+
+# Data frame is retrieved as repeated items in list. 
+# Keeping only one.
+
+best_leaf_traits_model_as_data_frame <- best_leaf_traits_model_as_data_frame[[1]]
+
+# Setting column names correctly.
+
+colnames(best_leaf_traits_model_as_data_frame) <- best_leaf_traits_model_as_data_frame[1,]
+
+# The first row apperaed twice
+
+best_leaf_traits_model_as_data_frame <- best_leaf_traits_model_as_data_frame[-1,]
+
+best_leaf_traits_model_as_xtable <- xtable::xtable(best_leaf_traits_model_as_data_frame)
+
+print(best_leaf_traits_model_as_xtable,
+      type = "html", file = "./results/best_leaf_traits_model_r2.html")
 
 
+####################################################################################
+# Now the best models for ignition delay
+####################################################################################
 
-################################################################################
-# Does flammability varies across sites among samples of  species?
-#################################################################################
+best_canopy_traits_ignition_model_as_list <- sjPlot::tab_model(canopy_traits_ignition_model_mixed)
 
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1022))) # p 0.59 # Juniperus ashei
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1036))) # p 0.226 # Rhus virens
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1000))) # 554 # Diospyros texana
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1002))) # p 0.522 # Mahonia trifoliolata
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1021))) # p 0.0.037  # Sophora secundiflora
-summary(aov(PC1 ~ site, data = filter(final_data, species_id == 1113))) # p 0.709 # Prospis glandulosa
+# Creating vector containing HTML code
+
+null_vector3 <- c() 
+for (i in 1:3) {
+  null_vector3[i] <- best_canopy_traits_ignition_model_as_list[[i]]
+}
+
+# Reading into data frame.
+
+best_canopy_traits_ignition_model_as_data_frame <- XML::readHTMLTable(null_vector3, as.data.frame = TRUE)
+
+# Data frame is retrieved as repeated items in list. 
+# Keeping only one.
+
+best_canopy_traits_ignition_model_as_data_frame <- best_canopy_traits_ignition_model_as_data_frame[[1]]
+
+# Setting column names correctly.
+
+colnames(best_canopy_traits_ignition_model_as_data_frame) <- best_canopy_traits_ignition_model_as_data_frame[1,]
+
+# The first row apperaed twice
+
+best_canopy_traits_ignition_model_as_data_frame <- best_canopy_traits_ignition_model_as_data_frame[-1,]
+
+best_canopy_traits_ignition_model_as_xtable <- xtable::xtable(best_canopy_traits_ignition_model_as_data_frame)
+
+print(best_canopy_traits_ignition_model_as_xtable,
+      type = "html", file = "./results/best_canopy_traits_ignition_model_r2.html")
+
+#######################################################################################
+# Now best leaf traits model for ignition delay
+########################################################################################
 
 
+best_leaf_traits_ignition_model_as_list <- sjPlot::tab_model(leaf_traits_ignition_model_mixed)
 
-################################################################################################
+# Creating vector containing HTML code
+
+null_vector4 <- c() 
+for (i in 1:3) {
+  null_vector4[i] <- best_leaf_traits_ignition_model_as_list[[i]]
+}
+
+# Reading into data frame.
+
+best_leaf_traits_ignition_model_as_data_frame <- XML::readHTMLTable(null_vector4, as.data.frame = TRUE)
+
+# Data frame is retrieved as repeated items in list. 
+# Keeping only one.
+
+best_leaf_traits_ignition_model_as_data_frame <- best_leaf_traits_ignition_model_as_data_frame[[1]]
+
+# Setting column names correctly.
+
+colnames(best_leaf_traits_ignition_model_as_data_frame) <- best_leaf_traits_ignition_model_as_data_frame[1,]
+
+# The first row apperaed twice
+
+best_leaf_traits_ignition_model_as_data_frame <- best_leaf_traits_ignition_model_as_data_frame[-1,]
+
+best_leaf_traits_ignition_model_as_xtable <- xtable::xtable(best_leaf_traits_ignition_model_as_data_frame)
+
+print(best_leaf_traits_ignition_model_as_xtable,
+      type = "html", file = "./results/best_leaf_traits_ignition_model_r2.html")
+
 
