@@ -23,7 +23,7 @@ trials_2022 <- read.csv("./data/year_2022/flam_trials_2022.csv",
 #####################################################################
 # Getting the end trial time, converting the time zone of trials data.
 # Some samples got ignited during pre-heating phase. For those
-# samples, the start time will trial_time + self_ig_starting_time
+# samples, the start time will be trial_time + self_ig_starting_time
 # self_ig_starting time is the time when the samples caught fire
 # during pre-heating phase.
 #####################################################################
@@ -255,5 +255,5 @@ saveRDS(hobos_wider_2022, file.path(DATA_CACHE_DIR, "hobos_wider_2022"))
 rm("concat_hobo_files", "get_trial_label", "read_hobo_file",
    "hobos_long","hobo_plots", 
    "flam_right","flam_mid","flam_left","trials_2022","TZ",
-   "hobo_temp_sum", "hobos")
+   "hobo_temp_sum", "hobos", "trials_2022_exceptions")
 
