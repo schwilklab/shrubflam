@@ -38,16 +38,18 @@ source("./scripts/read_hobos.R")  ## Do this once
 source("./scripts/flam_pca.R") 
 source("./scripts/analysis.R")
 
-
 # run alldata from the 2021
-source("./scripts/read_data_2021.R")
+#source("./scripts/read_data_2021.R")
 
 # read hobos data for 2021
-source("./scripts/hobo_flam_pca_2021.R")
+#source("./scripts/hobo_flam_pca_2021.R")
 
 # read herbivore analysis script
 
-source("./scripts/herbivore_analysis.R")
+#source("./scripts/herbivore_analysis.R")
 
 # figures
 source("./scripts/ms_figures.R")
+
+# Supplimentary info
+source("./scripts/supplementary_analysis_2022.R")
