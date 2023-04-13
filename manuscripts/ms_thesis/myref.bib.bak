@@ -4,6 +4,119 @@
   title     = {Vascular plants of Texas: a comprehensive checklist including synonymy, bibliography, and index},
   year      = {2011},
 }
+@article{wyse2018shoot,
+  title={Shoot-level flammability of species mixtures is driven by the most flammable species: implications for vegetation-fire feedbacks favouring invasive species},
+  author={Wyse, Sarah V and Perry, George LW and Curran, Timothy J},
+  journal={Ecosystems},
+  volume={21},
+  number={5},
+  pages={886--900},
+  year={2018},
+  publisher={Springer}
+}
+
+@article{changyong2014log,
+  title={Log-transformation and its implications for data analysis},
+  author={Changyong, FENG and Hongyue, WANG and Naiji, LU and Tian, CHEN and Hua, HE and Ying, LU and others},
+  journal={Shanghai archives of psychiatry},
+  volume={26},
+  number={2},
+  pages={105},
+  year={2014},
+  publisher={Shanghai Mental Health Center}
+}
+
+@article{mccuen1990problems,
+  title={Problems with logarithmic transformations in regression},
+  author={McCuen, Richard H and Leahy, Rita B and Johnson, Peggy A},
+  journal={Journal of Hydraulic Engineering},
+  volume={116},
+  number={3},
+  pages={414--428},
+  year={1990},
+  publisher={American Society of Civil Engineers}
+}
+
+@article{packard2008model,
+  title={Model selection and logarithmic transformation in allometric analysis},
+  author={Packard, Gary C and Boardman, Thomas J},
+  journal={Physiological and Biochemical Zoology},
+  volume={81},
+  number={4},
+  pages={496--507},
+  year={2008},
+  publisher={The University of Chicago Press}
+}
+
+@article{o2010not,
+  title={Do not log-transform count data},
+  author={O'Hara, Robert and Kotze, Johan},
+  journal={Nature Precedings},
+  pages={1--1},
+  year={2010},
+  publisher={Nature Publishing Group UK London}
+}
+
+@article{st2018count,
+  title={Count data in biology—Data transformation or model reformation?},
+  author={St-Pierre, Anne P and Shikon, Violaine and Schneider, David C},
+  journal={Ecology and evolution},
+  volume={8},
+  number={6},
+  pages={3077--3085},
+  year={2018},
+  publisher={Wiley Online Library}
+}
+
+@article{mason2016fire,
+  title={Fire form and function: evidence for exaptive flammability in the New Zealand flora},
+  author={Mason, Norman WH and Frazao, Cyril and Buxton, Rowan P and Richardson, Sarah J},
+  journal={Plant Ecology},
+  volume={217},
+  pages={645--659},
+  year={2016},
+  publisher={Springer}
+}
+
+@article{felsenstein1985phylogenies,
+  title={Phylogenies and the comparative method},
+  author={Felsenstein, Joseph},
+  journal={The American Naturalist},
+  volume={125},
+  number={1},
+  pages={1--15},
+  year={1985},
+  publisher={University of Chicago Press}
+}
+
+
+@article{heady1964palatability,
+  title={Palatability of herbage and animal preference},
+  author={Heady, Harold F},
+  year={1964},
+  publisher={Society for Range Management}
+}
+
+@article{ivins1952relative,
+  title={The relative palatability of herbage plants.},
+  author={Ivins, JD and others},
+  journal={Journal of the British Grassland Society},
+  volume={7},
+  pages={43--54},
+  year={1952}
+}
+
+@article{mayntz2005nutrient,
+  title={Nutrient-specific foraging in invertebrate predators},
+  author={Mayntz, David and Raubenheimer, David and Salomon, Mor and Toft, S{\o}ren and Simpson, Stephen J},
+  journal={Science},
+  volume={307},
+  number={5706},
+  pages={111--113},
+  year={2005},
+  publisher={American Association for the Advancement of Science}
+}
+
 @article{cornelissen2009hypothesized,
   title={A hypothesized triangular model combining tradeoffs of foliar defence quality and quantity: support from subarctic seed plant species.},
   author={Cornelissen, JHC and Gwynn-Jones, D and van Logtestijn, RSP and Quested, HM and Callaghan, TV and Aerts, R},
@@ -12,6 +125,7 @@
   year={2009},
   publisher={Southwest China Normal University Press}
 }
+
 @article{iddles2003potentialnegativecorrelation,
   title={The potential contribution of biomechanical properties to anti-herbivore defence in seedlings of six Australian rainforest trees},
   author={Iddles, Tracey L and Read, Jennifer and Sanson, Gordon D},
@@ -23,16 +137,7 @@
   publisher={CSIRO Publishing}
 }
 
-@article{pausas2012flammability,
-  title={Flammability as a biological concept},
-  author={Pausas, Juli G and Moreira, Bruno},
-  journal={New Phytologist},
-  volume={194},
-  number={3},
-  pages={610--613},
-  year={2012},
-  publisher={JSTOR}
-}
+
 @article{cooper1985condensed,
   title={Condensed tannins deter feeding by browsing ruminants in a South African savanna},
   author={Cooper, Susan M and Owen-Smith, N},
@@ -42,6 +147,7 @@
   year={1985},
   publisher={Springer}
 }
+
 @article{cooper1988foliage,
   title={Foliage acceptability to browsing ruminants in relation to seasonal changes in the leaf chemistry of woody plants in a South African savanna},
   author={Cooper, Susan M and Owen-Smith, Norman and Bryant, John P},
@@ -51,6 +157,7 @@
   year={1988},
   publisher={Springer}
 }
+
 @article{moles2013correlations,
   title={Correlations between physical and chemical defences in plants: tradeoffs, syndromes, or just many different ways to skin a herbivorous cat?},
   author={Moles, Angela T and Peco, Bego{\~n}a and Wallis, Ian R and Foley, William J and Poore, Alistair GB and Seabloom, Eric W and Vesk, Peter A and Bisigato, Alejandro J and Cella-Pizarro, Lucrecia and Clark, Connie J and others},
@@ -61,6 +168,7 @@
   year={2013},
   publisher={Wiley Online Library}
 }
+
 @article{koricheva2004metanegativecorrelation,
   title={Meta-analysis of trade-offs among plant antiherbivore defenses: are plants jacks-of-all-trades, masters of all?},
   author={Koricheva, Julia and Nyk{\"a}nen, Heli and Gianoli, Ernesto},
@@ -71,12 +179,14 @@
   year={2004},
   publisher={The University of Chicago Press}
 }
+
 @article{blanca2017non,
   title={Non-normal data: Is ANOVA still a valid option?},
   author={Blanca Mena, Mar{\'\i}a Jos{\'e} and Alarc{\'o}n Postigo, Rafael and Arnau Gras, Jaume and Bono Cabr{\'e}, Roser and Bendayan, Rebecca and others},
   journal={Psicothema},
   year={2017}
 }
+
 @article{bartlett1937properties,
   title={Properties of sufficiency and statistical tests},
   author={Bartlett, Maurice Stevenson},
@@ -107,6 +217,7 @@
   year={2009},
   publisher={Wiley Online Library}
 }
+
 @article{archibald2005shaping,
   title={Shaping the landscape: fire--grazer interactions in an African savanna},
   author={Archibald, S and Bond, WJ and Stock, WD and Fairbanks, DHK},
@@ -117,6 +228,7 @@
   year={2005},
   publisher={Wiley Online Library}
 }
+
 @article{donaldson2018ecological,
   title={Ecological engineering through fire-herbivory feedbacks drives the formation of savanna grazing lawns},
   author={Donaldson, Jason E and Archibald, Sally and Govender, Navashni and Pollard, Drew and Luhdo, Zo{\"e} and Parr, Catherine L},
@@ -127,6 +239,7 @@
   year={2018},
   publisher={Wiley Online Library}
 }
+
 @article{holdo2009grazers,
   title={Grazers, browsers, and fire influence the extent and spatial pattern of tree cover in the Serengeti},
   author={Holdo, Ricardo M and Holt, Robert D and Fryxell, John M},
@@ -171,6 +284,7 @@
   volume    = {65},
   publisher = {Wiley Online Library},
 }
+
 @article{o2020browsingandfire,
   title={Browsing and fire decreases dominance of a resprouting shrub in woody encroached grassland},
   author={O’Connor, Rory C and Taylor, Jeffrey H and Nippert, Jesse B},
@@ -181,6 +295,7 @@
   year={2020},
   publisher={Wiley Online Library}
 }
+
 @article{staver2012top,
   title={Top-down determinants of niche structure and adaptation among African Acacias},
   author={Staver, A Carla and Bond, William J and Cramer, Michael D and Wakeling, Julia L},
@@ -209,6 +324,7 @@
   year={2015},
   publisher={Wiley Online Library}
 }
+
 @article{pausas2016secondary,
   title={Secondary compounds enhance flammability in a Mediterranean plant},
   author={Pausas, JG and Alessio, Giorgio A and Moreira, Bruno and Segarra-Moragues, Jos{\'e} G},
@@ -228,6 +344,7 @@
   pages     = {151},
   publisher = {Citeseer},
 }
+
 @article{moncrieff2011tree,
   title={Tree allometries reflect a lifetime of herbivory in an African savanna},
   author={Moncrieff, Glenn R and Chamaill{\'e}-Jammes, Simon and Higgins, Steven I and O'Hara, Robert B and Bond, William J},
@@ -425,16 +542,6 @@
   publisher = {Wiley Online Library},
 }
 
-@article{globalherbivore,
-  title={Fire as a global ‘herbivore’: the ecology and evolution of flammable ecosystems},
-  author={Bond, William J and Keeley, Jon E},
-  journal={Trends in ecology \& evolution},
-  volume={20},
-  number={7},
-  pages={387--394},
-  year={2005},
-  publisher={Elsevier}
-}
 
 
 @Article{bond1995kill,
@@ -506,6 +613,7 @@
   pages={1--189},
   year={2016}
 }
+
 @article{kassambara2020package,
   title={Package ‘ggpubr’},
   author={Kassambara, Alboukadel and Kassambara, Maintainer Alboukadel},
@@ -521,6 +629,7 @@
   number={2},
   year={2017}
 }
+
 @article{verdu2007ecologicalfilter,
   title={Fire drives phylogenetic clustering in Mediterranean Basin woody plant communities},
   author={Verd{\'u}, Miguel and Pausas, JG},
@@ -1286,12 +1395,14 @@
   year={2009},
   publisher={Springer}
 }
+
 @Article{snyder1984role,
   author  = {Snyder, JR},
   journal = {Oikos (Denmark)},
   title   = {The role of fire: Mutch ado about nothing?[flammability, communities]},
   year    = {1984},
 }
+
 @article{masters1986prescribed,
   title={Prescribed burning with a helitorch on the Texas rolling plains.},
   author={Masters, Robert A and Rasmussen, G Allen and McPherson, Guy R},
@@ -1301,6 +1412,7 @@
   pages={173--176},
   year={1986}
 }
+
 @Article{kerr1999rekindling,
   author    = {Kerr, Benjamin and Schwilk, Dylan W and Bergman, Aviv and Feldman, Marcus W},
   journal   = {Evolutionary Ecology Research},
@@ -1311,6 +1423,7 @@
   volume    = {1},
   publisher = {Evolutionary Ecology, Ltd.},
 }
+
 @article{noy1995interactive,
   title={Interactive effects of fire and grazing on structure and diversity of Mediterranean grasslands},
   author={Noy-Meir, Imanuel},
@@ -1333,7 +1446,7 @@
   publisher = {Wiley Online Library},
 }
 
-@Article{pausas2012fires,
+@Article{pausas2012firesulex,
   author    = {Pausas, Juli G and Alessio, Giorgio A and Moreira, Bruno and Corcobado, Guadalupe},
   journal   = {New Phytologist},
   title     = {Fires enhance flammability in Ulex parviflorus},
@@ -1380,16 +1493,7 @@
   publisher = {Wiley Online Library},
 }
 
-@Article{Ulex,
-  author    = {Pausas, Juli G and Alessio, Giorgio A and Moreira, Bruno and Corcobado, Guadalupe},
-  journal   = {New Phytologist},
-  title     = {Fires enhance flammability in Ulex parviflorus},
-  year      = {2012},
-  number    = {1},
-  pages     = {18--23},
-  volume    = {193},
-  publisher = {JSTOR},
-}
+
 @article{mcinnes2022doesseedcoatchemistry,
   title={Does fire drive fatty acid composition in seed coats of physically dormant species?},
   author={McInnes, SJ and Tangney, R and Brophy, JJ and Thordarson, P and Ooi, MKJ},
@@ -1893,6 +1997,7 @@
   year={2014},
   publisher={Springer}
 }
+
 @article{buechner1950lifegrazing,
   title={Life history, ecology, and range use of the pronghorn antelope in Trans-Pecos Texas},
   author={Buechner, Helmut K},
@@ -1901,6 +2006,7 @@
   year={1950},
   publisher={JSTOR}
 }
+
 @article{everitt1974springfoodhabit,
   title={Spring food habits of white-tailed deer in the South Texas Plains.},
   author={Everitt, James H and Drawe, D Lynn},
@@ -2055,6 +2161,7 @@
   volume    = {15},
   publisher = {Springer},
 }
+
 @article{muller1966role,
   title={The role of chemical inhibition (allelopathy) in vegetational composition},
   author={Muller, Cornelius H},
@@ -2063,6 +2170,7 @@
   year={1966},
   publisher={JSTOR}
 }
+
 @article{rhoades1979evolution,
   title={Evolution of plant chemical defense against herbivores},
   author={Rhoades, David F},
@@ -2113,6 +2221,7 @@
   year={1994},
   publisher={Springer}
 }
+
 @article{twigg1996physicalchemical,
   title={Physical versus chemical defence mechanisms in toxic Gastrolobium},
   author={Twigg, LE and Socha, LV},
@@ -2123,6 +2232,7 @@
   year={1996},
   publisher={Springer}
 }
+
 @article{van1988defence,
   title={Defence and regrowth, alternative plant strategies in the struggle against herbivores},
   author={van der Meijden, Ed and Wijn, Marijke and Verkaar, Henricus J},
@@ -2142,6 +2252,7 @@
   year={2009},
   publisher={Elsevier}
 }
+
 @article{allelopathic,
   title={Allelopathic control of herb growth in the fire cycle of California chaparral},
   author={Muller, Cornelius H and Hanawalt, Ronald B and McPherson, James K},
