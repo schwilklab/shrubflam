@@ -573,7 +573,7 @@ LMA: $p = 0.330$, leaf moisture content: $p = 0.048$). Leaves are one of the fir
 \begin{figure}[ht]
   \centering \includegraphics[width =
   \textwidth]{../../results/LMA_ignition.pdf}
-  \caption[LMA effect{\label{fig:lma_ig_delay} Relationship between LMA and ignition delay. The line indicates the best-fitted linear mixed model with genus as a random intercept effect ($p = 0.004$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's means. The red dots are \emph{Juniperus} taxon.}
+  \caption[LMA effect on ignition delay]{\label{fig:lma_ig_delay} Relationship between LMA and ignition delay. The line indicates the best-fitted linear mixed model with genus as a random intercept effect ($p = 0.004$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's means. The red dots are \emph{Juniperus} taxon.}
   
 \end{figure}
 
@@ -582,8 +582,8 @@ LMA: $p = 0.330$, leaf moisture content: $p = 0.048$). Leaves are one of the fir
 \begin{figure}[ht]
   \centering \includegraphics[width =
   \textwidth]{../../results/leaf_moisture_ignition.pdf}
-  \caption{Relationship between leaf moisture content and ignition delay. The line indicates the best-fitted linear mixed model with genus as random intercept effect ($p = 0.010$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's means. The red dots are \emph{Juniperus} taxon.}
-  \label{fig:leafmc_ig_delay}
+  \caption[Leaf moisture content effect on ignition delay]{\label{fig:leafmc_ig_delay}Relationship between leaf moisture content and ignition delay. The line indicates the best-fitted linear mixed model with genus as random intercept effect ($p = 0.010$). The independent variable was standardized  as z-score. Small points in the background are individual observations, and large points are taxon's means. The red dots are \emph{Juniperus} taxon.}
+  
 \end{figure}
 
 
