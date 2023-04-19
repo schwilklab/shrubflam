@@ -66,8 +66,6 @@ morphological_traits_cor_data <- cor_data %>%
 morphological_traits_cor <- cor(morphological_traits_cor_data, method = "kendall",
                                 use = "pairwise")
 
-#morphological_traits_cor_plot <- corrplot::corrplot(morphological_traits_cor, 
-                                                    #method = "number")
 
 morphological_traits_cor_plot_melted <- reshape2::melt(morphological_traits_cor)
 
@@ -114,9 +112,6 @@ canopy_flam_cor <- cor(canopy_flam_data, method = "kendall",
                        use = "pairwise")
 
 
-#canopy_flam_cor_plot <- corrplot::corrplot(canopy_flam_cor, method = "number", 
-                                           #type = "upper")
-
 ###########################################################################################################
 # Correlation of leaf  traits and flammability traits
 ###########################################################################################################
@@ -132,8 +127,7 @@ leaf_flam_cor <- cor(leaf_flam_data, method = "kendall",
                      use = "pairwise")
 
 
-#leaf_flam_cor_plot <- corrplot::corrplot(leaf_flam_cor, method = "number",
-                                         #type = "upper")
+
 
 #################################################################################
 # Saving the anova table of the best models without Juniperus
@@ -307,4 +301,26 @@ best_leaf_traits_ignition_model_as_xtable <- xtable::xtable(best_leaf_traits_ign
 print(best_leaf_traits_ignition_model_as_xtable,
       type = "html", file = "./results/best_leaf_traits_ignition_model_r2.html")
 
+
+#############################################################################
+# The next part will produce the maximum ignition delay, 
+# maximum leaf moisture content of the final data
+# the result will be reported in the discussion
+#############################################################################
+
+which.max(final_data$ignition_delay) #33
+which.max(final_data$leaf_moisture_content) # 80
+
+mositure_content_ignition_data <- final_data[c(33,80), ] %>%
+  select(sample_id, specific_epithet, display_name,
+         leaf_moisture_content, ignition_delay)
+
+
+maximum_moisture_ignition_delay_xtable <- xtable::xtable(mositure_content_ignition_data)
+
+print(maximum_moisture_ignition_delay_xtable,
+            type = "html", 
+      file = "./results/maximum_moisture_ignition_delay_xtable.html")
+
+####################################################################################      
 
