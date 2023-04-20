@@ -1,9 +1,27 @@
 \documentclass[12pt]{report}
 \usepackage{graphicx}
 
+\usepackage{titling}
+
+\pretitle{\begin{center}\Large\bfseries}
+\posttitle{\par\end{center}\vspace{2em}}
+
+\preauthor{\begin{center}\large}
+\postauthor{\par\end{center}\vspace{1em}}
+
+\title{Canopy traits drive plant flammability: shoot flammability of Texas shrubs}
+\author{Azaj Mahmud\textsuperscript{1} and Dylan W. Schwilk, Ph.D.\textsuperscript{2,*}\\
+\textsuperscript{1}Department of Biological Sciences, Texas Tech University, Lubbock, Texas, USA\\
+\textsuperscript{2,*}Associate Professor, Department of Biological Sciences, Texas Tech University, Lubbock, Texas, USA\\
+\vspace{1em}
+\textsuperscript{*}Corresponding author: dylan.schwilk@ttu.edu}
+\date{}
 
 
 \begin{document}
+\maketitle
+
+
 \begin{figure}
 \centering
 \caption{Kendall rank correlation coefficient plot for all the measured morphological traits.}
@@ -20,17 +38,15 @@
  & Predictors & Estimates & CI & p
  \\ 
   \hline
- & (Intercept) & 14076.90 & 10088.13 – 18065.68 & $<$0.001 \\ 
-
-3 & canopy density (g/{$cm^3$}) & 3056.44 & 764.99 – 5347.88 & 0.009 \\ 
-  4 & total dry mass (g) & 14124.57 & 11458.83 – 16790.31 & $<$0.001 \\ 
+ & (Intercept) & 14051.18 & 9946.05 – 18156.31 & $<$0.001 \\ 
+  3 & total dry mass per 70\,cm (g) & 14075.41 & 11404.63 – 16746.19 & $<$0.001 \\ 
+  4 & canopy density (g/{$cm^3$}) & 3054.81 & 763.97 – 5345.65 & $<$0.001 \\ 
   5 & Random Effects &  &  &  \\ 
-  6 & $\sigma^2$ & 95352706.42 &  &  \\ 
-  7 & $\tau_{00genus}$ & 42595543.69 &  &  \\ 
-  8 & ICC & 0.31 &  &  \\ 
+  6 & $\sigma^2$ & 97196044.34 &  &  \\ 
+  7 & $\tau_{00 genus}$ & 46961553.69 &  &  \\ 
+  8 & ICC & 0.33 &  &  \\ 
   9 & $N_{genus}$ & 14 &  &  \\ 
-  10 & Observations & 116 &  &  \\ 
-  11 & Marginal $R^2$ / Conditional $R^2$ & \textbf{.650} / \textbf{.758} &  &  \\ 
+  10 & Marginal $R^2$ / Conditional $R^2$ & \textbf{0.639} / \textbf{0.756} &  &  \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -62,14 +78,14 @@
  & Predictors & Estimates & CI & p \\ 
   \hline
 2 & (Intercept) & 2.94 & 2.17 – 3.72 & $<$0.001 \\ 
-  3 & canopy density (g/{$cm^3$}) & 1.12 & 0.56 – 1.68 & $<$0.001 \\ 
-  4 & canopy moisture content & 0.94 & 0.33 – 1.55 & $<$0.001 \\ 
+3 & canopy density (g/{$cm^3$}) & 1.12 & 0.56 – 1.68 & $<$0.001 \\ 
+  4 & canopy moisture content (\%) & 0.94 & 0.33 – 1.55 & $<$0.001 \\ 
   5 & Random Effects &  &  &  \\ 
   6 & $\sigma^2$ & 7.38 &  &  \\ 
   7 & $\tau_{00 genus}$ & 1.17 &  &  \\ 
   8 & ICC & 0.14 &  &  \\ 
   9 & $N_{genus}$ & 14 &  &  \\ 
-  10 & Marginal $R^2$ / Conditional $R^2$ & \textbf{.201} / \textbf{.311} &  &  \\ 
+  10 & Marginal $R^2$ / Conditional $R^2$ & \textbf{0.201} / \textbf{.311} &  &  \\  
    \hline
 \end{tabular}
 \end{table}
@@ -126,6 +142,24 @@
    \hline
 \end{tabular}
 \end{table}
+
+\begin{table}[ht]
+\centering
+\caption{The maximum leaf moisture content (\%) and maximum ignition delay in seconds in this experiment with their corresponding species.}
+\begin{tabular}{lrr}
+  \hline
+  \textbf{species name} & \textbf{leaf moisture content} & \textbf{ignition delay} \\ 
+  \hline
+  \emph{Juniperus pinchotii} & 58.03 & 18.00 \\ 
+  \emph{Forestiera pubescens} & 108.05 & 2.00 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+
+
+
 
 \end{document}
 
