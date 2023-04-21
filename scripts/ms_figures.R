@@ -41,28 +41,19 @@ degsec_by_group_withoutj <- without_juniperus %>%
 # data
 ###############################################################################
 
-total_dry_mass <- ggplot(without_juniperus, aes(total_dry_mass_g, degsec_100, 
-                                         color = analysis_group)) +
+total_dry_mass <- ggplot(without_juniperus, aes(total_dry_mass_g, degsec_100)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
-  geom_point(data = degsec_by_group_withoutj, size = 4.5 , alpha = 1, shape = 16,
-             aes(color = analysis_group)) +
+  geom_point(data = degsec_by_group_withoutj, size = 4.5 , alpha = 1,
+             shape = 16) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
   xlab("Total dry mass per 70 cm (g)")  + 
   pubtheme +
   theme(legend.position = "none") +
-  scale_color_manual(values = c("maroon2", "yellow", "#6FA3CE",
-                                "#D6E2A6", "#73E17B", "lightblue",
-                                "#D1A7D6", "#DA61C2", "#C9E558", 
-                                "blue", "orange","red","black")) +
-  scale_fill_manual(values = c("maroon2", "yellow", "#6FA3CE", 
-                               "#D6E2A6", "#73E17B", "lightblue",
-                               "#D1A7D6", "#DA61C2", "#C9E558", 
-                               "blue", "orange", "red", "black")) +
   geom_abline(intercept = 9549.250, slope = 6582.310, size = 1.5, color = "black")
 
 ggsave("./results/total_dry_mass.pdf",
-       plot = total_dry_mass, height = beamer_height,
-       width = 10, units = "cm")
+       plot = total_dry_mass, height = 180,
+       width = 170, units = "mm", dpi = 300)
 
 ###############################################################################
 # Leaf moisture content vs ignition delay without juniperus
@@ -82,29 +73,19 @@ leaf_ignition_delay_by_group <- without_juniperus %>%
             ignition_delay = mean(ignition_delay))
 
 
-leaf_moisture_ignition <- ggplot(without_juniperus, aes(leaf_moisture_content,ignition_delay, 
-                                         color = analysis_group)) +
+leaf_moisture_ignition <- ggplot(without_juniperus, aes(leaf_moisture_content,ignition_delay)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
-  geom_point(data = leaf_ignition_delay_by_group, size = 4.5 , alpha = 1, shape = 16,
-             aes(color = analysis_group)) +
+  geom_point(data = leaf_ignition_delay_by_group, size = 4.5 , alpha = 1, shape = 16) +
   ylab("Ignition delay (s)") +
   xlab("Leaf moisture content (%)")  + 
   pubtheme +
   theme(legend.position = "none") +
-  scale_color_manual(values = c("maroon2", "yellow", "#6FA3CE",
-                                "#D6E2A6", "#73E17B", "lightblue",
-                                "#D1A7D6", "red", "#DA61C2", "#C9E558", 
-                                "blue", "orange", "black")) +
-  scale_fill_manual(values = c("maroon2", "yellow", "#6FA3CE", 
-                               "#D6E2A6", "#73E17B", "lightblue",
-                               "#D1A7D6", "red", "#DA61C2", "#C9E558", 
-                               "blue", "orange", "black")) +
   geom_abline(intercept = 2.439 , slope = 0.446, size = 1.5, color = "black")
 
 
 ggsave("./results/leaf_moisture_ignition.pdf",
-       plot = leaf_moisture_ignition, height = beamer_height,
-       width = 10, units = "cm")
+       plot = leaf_moisture_ignition, height = 180,
+       width = 170, units = "mm", dpi = 300)
 
 
 ###############################################################################
@@ -130,14 +111,17 @@ renamed_pca <- prcomp(pca_data_renamed_2022[,-1], scale = TRUE)
 
 renamed_pca_plot <- fviz_pca_var(renamed_pca,col.var = "cos2",
                                  gradient.cols = c("#00AFBB","#E7B800","#FC4E07"),
-                                 repel = TRUE) +
+                                 repel = TRUE, col.circle = "white") +
   xlab("Principle component 1") +
   ylab("Principle component 2") +
-  theme(plot.title = element_blank())
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(),
+        plot.title = element_blank()) 
 
 ggsave("./results/pca_plot.pdf",
-       plot = renamed_pca_plot, height = 10,
-       width = 10, units = "cm")
+       plot = renamed_pca_plot, height = 180,
+       width = 170, units = "mm", dpi = 300)
 
 ############################################################################
 # Saving model table as html from anova table, at first 
