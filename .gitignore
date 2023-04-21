@@ -34,6 +34,3 @@ vignettes/*.html vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-# Latex object in manuscripts
-*.bak *.gz
-
