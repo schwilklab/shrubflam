@@ -60,7 +60,11 @@ dim(cor_data)
 morphological_traits_cor_data <- cor_data %>%
   select(total_dry_mass_g, canopy_density_gm_cm3, leaf_stem_mass_ratio,
          canopy_moisture_content, leaf_mass_per_area, leaf_area_per_leaflet,
-         leaf_length_per_leaflet, leaf_moisture_content)
+         leaf_length_per_leaflet, leaf_moisture_content) %>%
+  rename(leaf_length_per_leaf = leaf_length_per_leaflet,
+         leaf_area_per_leaf = leaf_area_per_leaflet) %>%
+  rename(total_dry_mass = total_dry_mass_g,
+         canopy_density = canopy_density_gm_cm3)
 
 
 morphological_traits_cor <- cor(morphological_traits_cor_data, method = "kendall",
@@ -310,17 +314,19 @@ print(best_leaf_traits_ignition_model_as_xtable,
 
 which.max(final_data$ignition_delay) #33
 which.max(final_data$leaf_moisture_content) # 80
+which.max(final_data$canopy_moisture_content) # 50
 
-mositure_content_ignition_data <- final_data[c(33,80), ] %>%
+moisture_content_ignition_data <- final_data[c(33,80, 50), ] %>%
   select(sample_id, specific_epithet, display_name,
-         leaf_moisture_content, ignition_delay)
+         leaf_moisture_content, canopy_moisture_content, ignition_delay)
 
 
-maximum_moisture_ignition_delay_xtable <- xtable::xtable(mositure_content_ignition_data)
+maximum_moisture_ignition_delay_xtable <- xtable::xtable(moisture_content_ignition_data)
 
 print(maximum_moisture_ignition_delay_xtable,
             type = "html", 
       file = "./results/maximum_moisture_ignition_delay_xtable.html")
 
 ####################################################################################      
+
 
