@@ -97,6 +97,7 @@ ggsave("./results/leaf_moisture_ignition.pdf",
 ###############################################################################
 
 pca_data_renamed_2022 <- pca_data_2022 %>%
+  select(-PC1, -PC2) %>%
   rename(ID = ignition_delay,
          FH = flame_height,
          FD = flame_duration,
