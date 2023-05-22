@@ -223,6 +223,19 @@ summary(pre_burning_temp_canopy_traits_model)
 AIC(best_canopy_pc1_model, pre_burning_temp_canopy_traits_model) 
 # didn't improve the model.
 
+################################################################################
+# Adding LMA to the best canopy traits model
+################################################################################
+
+lma_plus_best_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g +
+                                                  canopy_density_gm_cm3 +
+                                                  leaf_mass_per_area +
+                                                  (1 | analysis_group),
+                                                data = model_data, REML = FALSE)
+
+
+
+AIC(best_canopy_pc1_model, lma_plus_best_canopy_traits_model)
 
 ###############################################################################
 # Does the best canopy traits and leaf traits have significant effect on heat
