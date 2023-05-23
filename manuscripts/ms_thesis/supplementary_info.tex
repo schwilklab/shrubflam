@@ -40,7 +40,7 @@
   \hline
  & (Intercept) & 14051.18 & 9946.05 – 18156.31 & $<$0.001 \\ 
   3 & total dry mass per 70\,cm (g) & 14075.41 & 11404.63 – 16746.19 & $<$0.001 \\ 
-  4 & canopy density (g/{$cm^3$}) & 3054.81 & 763.97 – 5345.65 & $<$0.001 \\ 
+  4 & canopy density per 70\,cm (g/{$cm^3$}) & 3054.81 & 763.97 – 5345.65 & $<$0.001 \\ 
   5 & Random Effects &  &  &  \\ 
   6 & $\sigma^2$ & 97196044.34 &  &  \\ 
   7 & $\tau_{00 genus}$ & 46961553.69 &  &  \\ 
@@ -59,13 +59,13 @@
  & Predictors & Estimates & CI & p \\ 
   \hline
 2 & (Intercept) & 10446.18 & 2785.32 – 18107.04 & $<$0.001 \\ 
-  3 & LMA & 4810.53 & 920.53 – 8700.53 & $<$0.001 \\ 
+  3 & LMA (g/{$cm^2$}) & 4810.53 & 920.53 – 8700.53 & $<$0.001 \\ 
   4 & Random Effects &  &  &  \\ 
   5 & $\sigma^2$ & 206214897.13 &  &  \\ 
   6 & $\tau_{00 genus}$ & 184480723.11 &  &  \\ 
   7 & ICC & 0.47 &  &  \\ 
   8 & $N_{genus}$ & 14 &  &  \\ 
-  9 & Marginal $R^2$ / Conditional $R^2$ & \textbf{.056} / \textbf{.502} &  &  \\ 
+  9 & Marginal $R^2$ / Conditional $R^2$ & \textbf{0.056} / \textbf{0.502} &  &  \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -78,14 +78,14 @@
  & Predictors & Estimates & CI & p \\ 
   \hline
 2 & (Intercept) & 2.94 & 2.17 – 3.72 & $<$0.001 \\ 
-3 & canopy density (g/{$cm^3$}) & 1.12 & 0.56 – 1.68 & $<$0.001 \\ 
+3 & canopy density per 70\,cm (g/{$cm^3$}) & 1.12 & 0.56 – 1.68 & $<$0.001 \\ 
   4 & canopy moisture content (\%) & 0.94 & 0.33 – 1.55 & $<$0.001 \\ 
   5 & Random Effects &  &  &  \\ 
   6 & $\sigma^2$ & 7.38 &  &  \\ 
   7 & $\tau_{00 genus}$ & 1.17 &  &  \\ 
   8 & ICC & 0.14 &  &  \\ 
   9 & $N_{genus}$ & 14 &  &  \\ 
-  10 & Marginal $R^2$ / Conditional $R^2$ & \textbf{0.201} / \textbf{.311} &  &  \\  
+  10 & Marginal $R^2$ / Conditional $R^2$ & \textbf{0.201} / \textbf{0.311} &  &  \\  
    \hline
 \end{tabular}
 \end{table}
@@ -99,14 +99,14 @@
  & Predictors & Estimates & CI & p \\ 
   \hline
 2 & (Intercept) & 2.76 & 1.94 – 3.58 & $<$0.001 \\ 
-  3 & LMA & 1.02 & 0.39 – 1.65 & $<$0.001 \\ 
-  4 & leaf moisture content & 0.86 & 0.22 – 1.49 & $<$0.001 \\ 
+  3 & LMA (g/{$cm^2$}) & 1.02 & 0.39 – 1.65 & $<$0.001 \\ 
+  4 & leaf moisture content (\%) & 0.86 & 0.22 – 1.49 & $<$0.001 \\ 
   5 & Random Effects &  &  &  \\ 
   6 & $\sigma^2$ & 7.68 &  &  \\ 
   7 & $\tau_{00 genus}$ & 1.40 &  &  \\ 
   8 & ICC & 0.15 &  &  \\ 
   9 & $N_{genus}$ & 14 &  &  \\ 
-  10 & Marginal $R^2$ / Conditional $R^2$ & \textbf{.143} / \textbf{.275} &  &  \\ 
+  10 & Marginal $R^2$ / Conditional $R^2$ & \textbf{0.143} / \textbf{0.275} &  &  \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -119,9 +119,9 @@
   \hline
  &  Estimate & F  & Df.res & Pr($>$F) \\ 
   \hline 
-  total dry mass (g) & 9549.250 & 40.881  & 85.225 & \textbf{$<$0.001} \\ 
-  canopy density (g/{$cm^3$}) & 6582.310 & 0.824  & 80.418 & \textbf{0.367} \\ 
-  LMA & 99.640 & 0.016 &  86.503 & \textbf{0.901} \\ 
+  total dry mass per 70\,cm (g) & 9549.250 & 40.881  & 85.225 & \textbf{$<$0.001} \\ 
+  canopy density per 70\,cm (g/{$cm^3$}) & 6582.310 & 0.824  & 80.418 & \textbf{0.367} \\ 
+  LMA (g/{$cm^2$}) & 99.640 & 0.016 &  86.503 & \textbf{0.901} \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -136,9 +136,9 @@
   \hline
  &  Estimate & F  & Df.res & Pr($>$F) \\ 
   \hline 
-  canopy density (g/{$cm^3$}) & 0.199 &  0.647 & 85.732 & \textbf{0.423} \\ 
-  LMA  & 0.238 & 0.965 & 66.079 & \textbf{0.330} \\ 
-  leaf moisture content & 0.446 & 4.037 & 80.261  & \textbf{0.048} \\ 
+  canopy density per 70\,cm (g/{$cm^3$}) & 0.199 &  0.647 & 85.732 & \textbf{0.423} \\ 
+  LMA (g/{$cm^2$}) & 0.238 & 0.965 & 66.079 & \textbf{0.330} \\ 
+  leaf moisture content (\%) & 0.446 & 4.037 & 80.261  & \textbf{0.048} \\ 
    \hline
 \end{tabular}
 \end{table}
@@ -152,13 +152,25 @@
   \hline
   \emph{Juniperus pinchotii} & 58.03 & 18.00 \\ 
   \emph{Forestiera pubescens} & 108.05 & 2.00 \\ 
+  \emph{Rhus trilobata}  & 81.21 & 2.00\\
    \hline
 \end{tabular}
 \end{table}
 
 
 
-
+\begin{table}
+  \centering
+  \caption{Model comparison results between best canopy traits model and the model after adding LMA to the best canopy traits model for temperature integration with their corresponding $AIC_{c}$ value.}
+  \vspace{0.5 cm}
+  \begin{tabular}{lr}
+    \hline
+    \textbf{Fixed terms} & $AIC_{c}$ \\
+    \hline
+    total dry mass + canopy density & \textbf{2491.8}  \\
+    total dry mass + canopy density + LMA  & \textbf{2492.5}  \\
+  \end{tabular}
+\end{table}
 
 
 \end{document}
