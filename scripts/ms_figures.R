@@ -49,6 +49,7 @@ total_dry_mass <- ggplot(without_juniperus, aes(total_dry_mass_g, degsec_100)) +
   xlab("Total dry mass per 70 cm (g)")  + 
   pubtheme +
   theme(legend.position = "none") +
+  ## DWS: hard coding the values below is not ideal. This is fragile code.
   geom_abline(intercept = 9549.250, slope = 6582.310, size = 1.5, color = "black")
 
 ggsave("./results/total_dry_mass.pdf",
