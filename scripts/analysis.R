@@ -213,6 +213,8 @@ AIC(best_canopy_pc1_model, best_leaf_pc1_model)
 
 pre_burning_temp_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g +
                                                      canopy_density_gm_cm3 +
+                                                     leaf_stem_mass_ratio +
+                                                     canopy_density_gm_cm3:leaf_stem_mass_ratio +
                                                      mean_pre_burning_temp +
                                                      windspeed_miles_per_hour +
                                                      (1 | analysis_group),
@@ -229,6 +231,8 @@ AIC(best_canopy_pc1_model, pre_burning_temp_canopy_traits_model)
 
 lma_plus_best_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g +
                                                   canopy_density_gm_cm3 +
+                                                  leaf_stem_mass_ratio +
+                                                  canopy_density_gm_cm3:leaf_stem_mass_ratio +
                                                   leaf_mass_per_area +
                                                   (1 | analysis_group),
                                                 data = model_data, REML = FALSE)
@@ -252,6 +256,8 @@ any(is.na(without_juniperus)) # FALSE
 
 heat_release_without_juniperus <- afex::lmer(degsec_100 ~ total_dry_mass_g +
                                                canopy_density_gm_cm3 +
+                                               leaf_stem_mass_ratio +
+                                               canopy_density_gm_cm3:leaf_stem_mass_ratio +
                                                leaf_mass_per_area + (1 | analysis_group),
                                              data = without_juniperus, REML = FALSE)
 
@@ -310,7 +316,7 @@ summary(best_leaf_ignition_model) # LMA and leaf_moisture_content
 #sjPlot::tab_model(best_leaf_ignition_model)
 
 AIC(best_canopy_ignition_model, best_leaf_ignition_model) # canopy 579.15
-# leaf 584.87
+# leaf 583.6
 
 ###############################################################################
 # Does pre_burning temperature
@@ -344,44 +350,7 @@ ignition_delay_without_juniperus <- afex::lmer(ignition_delay ~ canopy_density_g
 summary(ignition_delay_without_juniperus) 
 anova(ignition_delay_without_juniperus)
 
-###############################################################################
-# Does remaining less important traits have any significant effect on heat
-# release and ignition delay? The reason for creating separate model for canopy
-# traits and leaf traits is that some of the traits are correlated with each
-# other.
-###############################################################################
 
-leaf_stem_canopy_mc_heat_release_model <- afex::lmer(degsec_100 ~ leaf_stem_mass_ratio +
-                                                       canopy_moisture_content +
-                                                       (1 | analysis_group),
-                                                     data = model_data, REML = FALSE)
-
-summary(leaf_stem_canopy_mc_heat_release_model) 
-
-leaf_length_leaf_mc_heat_release_model <- afex::lmer(degsec_100 ~ leaf_length_per_leaflet +
-                                                       leaf_moisture_content +
-                                                       (1 | analysis_group),
-                                                     data = model_data, REML = FALSE)
-
-summary(leaf_length_leaf_mc_heat_release_model) 
-
-###############################################################################
-# Same for ignition delay
-###############################################################################
-
-total_dry_mass_leaf_stem_ignition <- afex::lmer(ignition_delay ~ total_dry_mass_g +
-                                                  leaf_stem_mass_ratio +
-                                                  (1|analysis_group),
-                                                data = model_data, REML = FALSE)
-
-summary(total_dry_mass_leaf_stem_ignition) 
- 
-
-leaf_length_ignition_model <- afex::lmer(ignition_delay ~ leaf_length_per_leaflet +
-                                           (1 | analysis_group),
-                                         data = model_data, REML = FALSE)
-
-summary(leaf_length_ignition_model) 
 
 ###########################################################################################
 # This part is for model building for anova table, first for heat release
@@ -391,6 +360,8 @@ summary(leaf_length_ignition_model)
 
 
 canopy_traits_heat_release_model_mixed <- afex::mixed(degsec_100 ~ total_dry_mass_g + canopy_density_gm_cm3 +
+                                                        leaf_stem_mass_ratio +
+                                                        canopy_density_gm_cm3:leaf_stem_mass_ratio +
                                                         (1|analysis_group), data = model_data,
                                                       method = "KR", REML = TRUE)
 
@@ -398,6 +369,8 @@ canopy_traits_heat_release_model_mixed <- afex::mixed(degsec_100 ~ total_dry_mas
 
 canopy_traits_anova_table_model <- lme4::lmer(degsec_100 ~ total_dry_mass_g + 
                                                 canopy_density_gm_cm3 +
+                                                leaf_stem_mass_ratio +
+                                                canopy_density_gm_cm3:leaf_stem_mass_ratio +
                                                 (1 | analysis_group),
                                               data = model_data)
 
@@ -419,16 +392,20 @@ canopy_coeff <- xtable::xtable(canopy_anova_coefficients, digits = 3)
 
 canopy_leaf_traits_heat_release_model_mixed_withoutj <- afex::mixed(degsec_100 ~ total_dry_mass_g + 
                                                                  canopy_density_gm_cm3 +
+                                                                 leaf_stem_mass_ratio +
+                                                                 canopy_density_gm_cm3:leaf_stem_mass_ratio +
                                                                  leaf_mass_per_area +
                                                                  (1|analysis_group), 
-                                                               data = without_juniperus,
-                                                               method = "KR", REML = TRUE)
+                                                                 data = without_juniperus,
+                                                                 method = "KR", REML = TRUE)
 
 
 
 
 canopy_leaf_traits_anova_table_model_withoutj <- lme4::lmer(degsec_100 ~ total_dry_mass_g + 
                                                          canopy_density_gm_cm3 + 
+                                                         leaf_stem_mass_ratio +
+                                                         canopy_density_gm_cm3:leaf_stem_mass_ratio +
                                                          leaf_mass_per_area +
                                                          (1 | analysis_group), 
                                                        data = without_juniperus)
