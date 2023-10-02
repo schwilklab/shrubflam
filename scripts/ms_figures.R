@@ -50,7 +50,7 @@ total_dry_mass <- ggplot(without_juniperus, aes(total_dry_mass_g, degsec_100)) +
   pubtheme +
   theme(legend.position = "none") +
   ## DWS: hard coding the values below is not ideal. This is fragile code.
-  geom_abline(intercept = 9549.250, slope = 6582.310, size = 1.5, color = "black")
+  geom_abline(intercept = canopy_leaf_coeff_withoutj$Estimate[1], slope = canopy_leaf_coeff_withoutj$Estimate[2], size = 1.5, color = "black")
 
 ggsave("./results/total_dry_mass.pdf",
        plot = total_dry_mass, height = 180,
@@ -76,14 +76,16 @@ leaf_ignition_delay_by_group <- without_juniperus %>%
 
 leaf_moisture_ignition <- ggplot(without_juniperus, aes(leaf_moisture_content,ignition_delay)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
+  geom_jitter() +
   geom_point(data = leaf_ignition_delay_by_group, size = 4.5 , alpha = 1, shape = 16) +
   ylab("Ignition delay (s)") +
   xlab("Leaf moisture content (%)")  + 
   pubtheme +
   theme(legend.position = "none") +
-  geom_abline(intercept = 2.439 , slope = 0.446, size = 1.5, color = "black")
+  geom_abline(intercept = ignition_coeff_withoutj$Estimate[1] , slope = ignition_coeff_withoutj$Estimate[4], size = 1.5, color = "black")
 
 
+leaf_moisture_ignition
 ggsave("./results/leaf_moisture_ignition.pdf",
        plot = leaf_moisture_ignition, height = 180,
        width = 170, units = "mm", dpi = 300)
@@ -106,13 +108,11 @@ pca_data_renamed_2022 <- pca_data_2022 %>%
          DH = dur_100,
          PT = peak_temp,
          MC = massconsumed,
-         VB = vol_burned,
-         HR = heat_release_j)
+         VB = vol_burned)
 
 renamed_pca <- prcomp(pca_data_renamed_2022[,-1], scale = TRUE)
 
-renamed_pca_plot <- fviz_pca_var(renamed_pca,col.var = "cos2",
-                                 gradient.cols = c("#00AFBB","#E7B800","#FC4E07"),
+renamed_pca_plot <- fviz_pca_var(renamed_pca,
                                  repel = TRUE, col.circle = "white") +
   xlab("Principle component 1") +
   ylab("Principle component 2") +
