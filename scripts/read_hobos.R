@@ -192,8 +192,8 @@ dim(hobo_temp_sum)
 hobos_wider_2022 <- hobo_temp_sum %>%
   group_by(label) %>%
   summarise(dur_100 = mean(dur_100),
-            peak_temp = max(peak_temp),
-            degsec_100 = max(degsec_100))
+            peak_temp = mean(peak_temp),
+            degsec_100 = mean(degsec_100))
 
 dim(hobos_wider_2022)
 
