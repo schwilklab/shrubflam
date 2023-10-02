@@ -12,7 +12,7 @@ library(factoextra)
 
 pca_data_2022 <- alldata_2022 %>%
   left_join(hobos_wider_2022, by = "label") %>%
-  dplyr::select(sample_id, heat_release_j, massconsumed,
+  dplyr::select(sample_id, massconsumed,
          vol_burned, flame_height, flame_duration, dur_100,
          peak_temp, degsec_100, ignition_delay)
 
@@ -48,7 +48,7 @@ head(variables_info$contrib) # Contributions of variables
 
 # Will remove the plots and take them to results_2022.R later.
 
-var_contr_by_cos2 <- fviz_pca_var(flam_pca_2022,col.var = "cos2",
+var_contr_by_cos2 <- fviz_pca_var(flam_pca_2022, col.var = "cos2",
                                            gradient.cols = c("#00AFBB","#E7B800","#FC4E07"),
                                           repel = TRUE, col.circle = "white") +
   xlab("Principle component 1") +
