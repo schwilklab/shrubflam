@@ -360,7 +360,7 @@ juniperus_leaf_area_2022 <- juniperus_leaf_area_2022[-311, ] %>%
   mutate(leaf_radius_cm = leaf_diameter_cm/2,  
          leaf_length_cm = leaf_length_cm + 0.04, # Adding the 0.04 same way did with length of individual leaflet.
   # turning diameter into radius
-  leaf_area_per_leaflet = 2*pi*leaf_radius_cm*leaf_length_cm) %>% # pi*D*L/2*pi*r*L
+  leaf_area_per_leaflet = pi*leaf_radius_cm*leaf_length_cm) %>% # pi*D*L/2 as one sided
   group_by(sample_id) %>%
   summarise(leaf_area_cm2 = sum(leaf_area_per_leaflet), # Total leaf area which will be 
             # used to calculate LMA  
