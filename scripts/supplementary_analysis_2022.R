@@ -64,7 +64,7 @@ morphological_traits_cor_data <- cor_data %>%
   rename(leaf_length_per_leaf = leaf_length_per_leaflet,
          leaf_area_per_leaf = leaf_area_per_leaflet) %>%
   rename(total_dry_mass = total_dry_mass_g,
-         canopy_density = canopy_density_gm_cm3)
+         canopy_bulk_density = canopy_density_gm_cm3)
 
 
 morphological_traits_cor <- cor(morphological_traits_cor_data, method = "kendall",
@@ -138,19 +138,19 @@ leaf_flam_cor <- cor(leaf_flam_data, method = "kendall",
 # using Kenward_Roger approximation
 #################################################################################
 
-print(canopy_leaf_anova_withoutj, type = "html",
-      file = "./results/canopy_anova_table_withoutj.html")
+#print(canopy_leaf_anova_withoutj, type = "html",
+      #file = "./results/canopy_anova_table_withoutj.html")
 
-print(canopy_leaf_coeff_withoutj, type = "html",
-      file = "./results/canopy_anova_coeff_table_withoutj.html")
-
-
-print(ignition_xtable_withoutj, type = "html",
-      file = "./results/ignition_anova_table_without_juniperus.html")
+#print(canopy_leaf_coeff_withoutj, type = "html",
+      #file = "./results/canopy_anova_coeff_table_withoutj.html")
 
 
-print(ignition_coeff_withoutj, type = "html",
-      file = "./results/ignition_coeff_table_without_juniperus.html")
+#print(ignition_xtable_withoutj, type = "html",
+      #file = "./results/ignition_anova_table_without_juniperus.html")
+
+
+#print(ignition_coeff_withoutj, type = "html",
+      #file = "./results/ignition_coeff_table_without_juniperus.html")
 
 
 #########################################################################
@@ -194,8 +194,8 @@ best_canopy_traits_model_as_data_frame <- best_canopy_traits_model_as_data_frame
 
 best_canopy_traits_model_as_xtable <- xtable::xtable(best_canopy_traits_model_as_data_frame)
 
-print(best_canopy_traits_model_as_xtable,
-      type = "html", file = "./results/best_canopy_traits_model_r2.html")
+#print(best_canopy_traits_model_as_xtable,
+      #type = "html", file = "./results/best_canopy_traits_model_r2.html")
 
 
 #########################################################################################
@@ -230,8 +230,8 @@ best_leaf_traits_model_as_data_frame <- best_leaf_traits_model_as_data_frame[-1,
 
 best_leaf_traits_model_as_xtable <- xtable::xtable(best_leaf_traits_model_as_data_frame)
 
-print(best_leaf_traits_model_as_xtable,
-      type = "html", file = "./results/best_leaf_traits_model_r2.html")
+#print(best_leaf_traits_model_as_xtable,
+      #type = "html", file = "./results/best_leaf_traits_model_r2.html")
 
 
 ####################################################################################
@@ -266,8 +266,8 @@ best_canopy_traits_ignition_model_as_data_frame <- best_canopy_traits_ignition_m
 
 best_canopy_traits_ignition_model_as_xtable <- xtable::xtable(best_canopy_traits_ignition_model_as_data_frame)
 
-print(best_canopy_traits_ignition_model_as_xtable,
-      type = "html", file = "./results/best_canopy_traits_ignition_model_r2.html")
+#print(best_canopy_traits_ignition_model_as_xtable,
+      #type = "html", file = "./results/best_canopy_traits_ignition_model_r2.html")
 
 #######################################################################################
 # Now best leaf traits model for ignition delay
@@ -302,8 +302,8 @@ best_leaf_traits_ignition_model_as_data_frame <- best_leaf_traits_ignition_model
 
 best_leaf_traits_ignition_model_as_xtable <- xtable::xtable(best_leaf_traits_ignition_model_as_data_frame)
 
-print(best_leaf_traits_ignition_model_as_xtable,
-      type = "html", file = "./results/best_leaf_traits_ignition_model_r2.html")
+#print(best_leaf_traits_ignition_model_as_xtable,
+      #type = "html", file = "./results/best_leaf_traits_ignition_model_r2.html")
 
 
 #############################################################################

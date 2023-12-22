@@ -37,16 +37,9 @@ source("./scripts/read_hobos.R")  ## Do this once
 # run PCAs requires alldata_2022 and hobos_wider_2022 to exist:
 source("./scripts/flam_pca.R") 
 source("./scripts/analysis.R")
+source("./scripts/analysis_with_conifers.R")
+source("./scripts/within_10_seconds_ignition.R")
 
-# run alldata from the 2021
-#source("./scripts/read_data_2021.R")
-
-# read hobos data for 2021
-#source("./scripts/hobo_flam_pca_2021.R")
-
-# read herbivore analysis script
-
-#source("./scripts/herbivore_analysis.R")
 
 # figures
 source("./scripts/ms_figures.R")

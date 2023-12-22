@@ -100,7 +100,7 @@ canopy_mod_table[1:8,]
 summary(best_canopy_pc1_model)
 
 
-sjPlot::tab_model(best_canopy_pc1_model)
+#sjPlot::tab_model(best_canopy_pc1_model)
 
 ###############################################################################
 # A global model of leaf traits with two way interaction for heat release
@@ -130,14 +130,14 @@ leaf_mod_table[1:8,]
 summary(best_leaf_pc1_model) 
 
 
-sjPlot::tab_model(best_leaf_pc1_model)
+#sjPlot::tab_model(best_leaf_pc1_model)
 
 ###############################################################################
 # Comparison between best canopy and leaf model for temperature integration
 ###############################################################################
 
 
-AIC(best_canopy_pc1_model, best_leaf_pc1_model) 
+AICc(best_canopy_pc1_model, best_leaf_pc1_model) 
 
 ###############################################################################
 # Does pre_burning temperature
@@ -152,7 +152,7 @@ pre_burning_temp_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g
 
 summary(pre_burning_temp_canopy_traits_model) 
 
-AIC(best_canopy_pc1_model, pre_burning_temp_canopy_traits_model) 
+AICc(best_canopy_pc1_model, pre_burning_temp_canopy_traits_model) 
 # didn't improve the model.
 
 pre_burning_temp_leaf_traits_model <- afex::lmer(degsec_100 ~ leaf_length_per_leaflet +
@@ -164,7 +164,7 @@ pre_burning_temp_leaf_traits_model <- afex::lmer(degsec_100 ~ leaf_length_per_le
                                                 data = model_data, REML = FALSE)
 
 
-AIC(best_leaf_pc1_model, pre_burning_temp_leaf_traits_model) # Didn't improve the model
+AICc(best_leaf_pc1_model, pre_burning_temp_leaf_traits_model) # Didn't improve the model
 
 ################################################################################
 # Combination of leaf and canopy traits
@@ -180,7 +180,7 @@ leaf_plus_best_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g +
 
 
 
-AIC(leaf_plus_best_canopy_traits_model, best_canopy_pc1_model) # didn't improve the model
+AICc(leaf_plus_best_canopy_traits_model, best_canopy_pc1_model) # didn't improve the model
 
 ###############################################################################
 # Ignition delay vs canopy traits
@@ -207,7 +207,7 @@ summary(best_canopy_ignition_model)
 
 
 
-sjPlot::tab_model(best_canopy_ignition_model)
+#sjPlot::tab_model(best_canopy_ignition_model)
 
 ###############################################################################
 # Ignition delay vs leaf traits
@@ -232,9 +232,9 @@ leaf_ignition_mod_table[1:8,]
 
 summary(best_leaf_ignition_model) 
 
-sjPlot::tab_model(best_leaf_ignition_model)
+#sjPlot::tab_model(best_leaf_ignition_model)
 
-AIC(best_canopy_ignition_model, best_leaf_ignition_model) 
+AICc(best_canopy_ignition_model, best_leaf_ignition_model) 
 
 ###############################################################################
 # Combination of leaf and canopy traits on ignition delay
@@ -251,7 +251,7 @@ best_canopy_leaf_traits_ignition_model <- afex::lmer(ignition_delay ~ total_dry_
 
 
 
-AIC(best_canopy_ignition_model, best_canopy_leaf_traits_ignition_model) # Didn't improve
+AICc(best_canopy_ignition_model, best_canopy_leaf_traits_ignition_model) # Didn't improve
 
 ###############################################################################
 # Does pre_burning temperature
@@ -267,7 +267,7 @@ pre_burning_plus_canopy_ignition_model <- afex::lmer(ignition_delay ~ total_dry_
                                            data = model_data, REML = FALSE)
 
 
-AIC(best_canopy_ignition_model, pre_burning_plus_canopy_ignition_model) # Didn't improve the model
+AICc(best_canopy_ignition_model, pre_burning_plus_canopy_ignition_model) # Didn't improve the model
 
 
 
@@ -283,7 +283,7 @@ pre_burning_plus_leaf_ignition_model <- afex::lmer(ignition_delay ~ leaf_length_
 
 
 
-AIC(best_leaf_ignition_model, pre_burning_plus_leaf_ignition_model) # Didn't improve
+AICc(best_leaf_ignition_model, pre_burning_plus_leaf_ignition_model) # Didn't improve
 
 ###########################################################################################
 # This part is for model building for anova table, first for heat release

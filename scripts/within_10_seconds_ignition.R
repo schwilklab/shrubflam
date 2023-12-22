@@ -81,7 +81,7 @@ canopy_mod_table_within10seconds[1:8,]
 summary(best_canopy_pc1_model_within10seconds)
 
 
-sjPlot::tab_model(best_canopy_pc1_model_within10seconds)
+#sjPlot::tab_model(best_canopy_pc1_model_within10seconds)
 
 ###############################################################################
 # A global model of leaf traits with two way interaction for heat release
@@ -105,14 +105,14 @@ leaf_mod_table_within10seconds[1:8,]
 
 summary(best_leaf_pc1_model_within10seconds) 
 
-sjPlot::tab_model(best_leaf_pc1_model_within10seconds)
+#sjPlot::tab_model(best_leaf_pc1_model_within10seconds)
 
 ###############################################################################
 # Comparison between best canopy and leaf model for temperature integration
 ###############################################################################
 
 
-AIC(best_canopy_pc1_model_within10seconds, best_leaf_pc1_model_within10seconds) 
+AICc(best_canopy_pc1_model_within10seconds, best_leaf_pc1_model_within10seconds) 
 
 
 ################################################################################
@@ -129,7 +129,7 @@ leaf_plus_best_canopy_traits_model_within10seconds <- afex::lmer(degsec_100 ~ to
 
 
 
-AIC(best_canopy_pc1_model_within10seconds, leaf_plus_best_canopy_traits_model_within10seconds) # Didn't improve
+AICc(best_canopy_pc1_model_within10seconds, leaf_plus_best_canopy_traits_model_within10seconds) # Didn't improve
 
 
 ###############################################################################
@@ -158,7 +158,7 @@ canopy_ignition_mod_table_within10seconds <- model.sel(canopy_ignition_models_wi
 canopy_ignition_mod_table_within10seconds[1:8,]
 summary(best_canopy_ignition_model_within10seconds)
 
-sjPlot::tab_model(best_canopy_ignition_model_within10seconds)
+#sjPlot::tab_model(best_canopy_ignition_model_within10seconds)
 
 ###############################################################################
 # Ignition delay vs leaf traits
@@ -182,9 +182,9 @@ leaf_ignition_mod_table_within10seconds <- model.sel(leaf_ignition_models_within
 leaf_ignition_mod_table_within10seconds[1:8,]
 
 summary(best_leaf_ignition_model_within10seconds) 
-sjPlot::tab_model(best_leaf_ignition_model_within10seconds)
+#sjPlot::tab_model(best_leaf_ignition_model_within10seconds)
 
-AIC(best_canopy_ignition_model_within10seconds, best_leaf_ignition_model_within10seconds) 
+AICc(best_canopy_ignition_model_within10seconds, best_leaf_ignition_model_within10seconds) 
 
 
 ###############################################################################
@@ -199,7 +199,7 @@ canopy_leaf_ignition_model_within10seconds <- afex::lmer(ignition_delay ~ total_
 
 
 
-AIC(best_canopy_ignition_model_within10seconds, canopy_leaf_ignition_model_within10seconds) 
+AICc(best_canopy_ignition_model_within10seconds, canopy_leaf_ignition_model_within10seconds) 
 
 ##########################################################################################################
 
