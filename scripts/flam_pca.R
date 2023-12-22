@@ -97,7 +97,7 @@ dim(final_data)
 # Cleaning the environment
 ###############################################################################
 
-rm( "flam_pca_2022", "flam_loadings",
+rm("flam_loadings",
    "eig_val", "variables_info" ,"contributor_pc1_2022",
    "contributor_pc2_2022", 
    "var_contr_by_cos2")
