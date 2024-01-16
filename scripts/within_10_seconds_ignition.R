@@ -46,12 +46,13 @@ dim(model_data_within_10_seconds)
 any(is.na(model_data_within_10_seconds)) # FALSE
 
 
+model_data_within_10_seconds$ignition_delay <- log(model_data_within_10_seconds$ignition_delay + 1)
+
 
 ###############################################################################
 # A global model of canopy traits with two way interactions for temperature
 # integration.
 ###############################################################################
-
 
 options(na.action = "na.fail")
 canopy_pc1_model_within10seconds <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ratio + 
@@ -62,6 +63,8 @@ canopy_pc1_model_within10seconds <- afex::lmer(degsec_100 ~ total_dry_mass_g + l
                                  leaf_stem_mass_ratio:canopy_density_gm_cm3 +
                                  leaf_stem_mass_ratio:canopy_moisture_content + 
                                  canopy_density_gm_cm3:canopy_moisture_content + 
+                                 mean_pre_burning_temp +
+                                 windspeed_miles_per_hour +   
                                  (1 | analysis_group), data = model_data_within_10_seconds, REML = FALSE)
 
 
@@ -93,6 +96,8 @@ leaf_pc1_model_within10seconds <- afex::lmer(degsec_100 ~ leaf_mass_per_area + l
                                leaf_mass_per_area:leaf_length_per_leaflet +
                                leaf_mass_per_area:leaf_moisture_content + 
                                leaf_length_per_leaflet:leaf_moisture_content +
+                               mean_pre_burning_temp +
+                               windspeed_miles_per_hour +   
                                (1| analysis_group), data = model_data_within_10_seconds, REML = FALSE)
 
 leaf_pc1_models_within10seconds <- dredge(leaf_pc1_model_within10seconds)
@@ -133,8 +138,7 @@ AICc(best_canopy_pc1_model_within10seconds, leaf_plus_best_canopy_traits_model_w
 
 
 ###############################################################################
-# A global model of canopy traits and leaf traits without interaction (to avoid
-# overfitting problem) for ignition delay.
+# A global model of canopy traits and leaf traits for ignition delay.
 # Ignition delay vs canopy traits
 ###############################################################################
 
@@ -147,6 +151,8 @@ canopy_ignition_model_within10seconds <- afex::lmer(ignition_delay ~ total_dry_m
                                       leaf_stem_mass_ratio:canopy_density_gm_cm3 +
                                       leaf_stem_mass_ratio:canopy_moisture_content + 
                                       canopy_density_gm_cm3:canopy_moisture_content + 
+                                      mean_pre_burning_temp +
+                                      windspeed_miles_per_hour +  
                                       (1 | analysis_group), data = model_data_within_10_seconds, REML = FALSE)
 
 
@@ -155,7 +161,9 @@ canopy_ignition_models_within10seconds <- dredge(canopy_ignition_model_within10s
 best_canopy_ignition_model_within10seconds <- get.models(canopy_ignition_models_within10seconds, subset = TRUE)[[1]]
 
 canopy_ignition_mod_table_within10seconds <- model.sel(canopy_ignition_models_within10seconds)
+
 canopy_ignition_mod_table_within10seconds[1:8,]
+
 summary(best_canopy_ignition_model_within10seconds)
 
 #sjPlot::tab_model(best_canopy_ignition_model_within10seconds)
@@ -169,6 +177,8 @@ leaf_traits_ignition_model_within10seconds <- afex::lmer(ignition_delay ~ leaf_m
                                            leaf_mass_per_area:leaf_length_per_leaflet +
                                            leaf_mass_per_area:leaf_moisture_content + 
                                            leaf_length_per_leaflet:leaf_moisture_content +
+                                           mean_pre_burning_temp +
+                                           windspeed_miles_per_hour +   
                                            (1 | analysis_group), data = model_data_within_10_seconds, REML = FALSE)
 
 leaf_ignition_models_within10seconds <- dredge(leaf_traits_ignition_model_within10seconds) 
@@ -179,6 +189,7 @@ best_leaf_ignition_model_within10seconds <- get.models(leaf_ignition_models_with
 
 
 leaf_ignition_mod_table_within10seconds <- model.sel(leaf_ignition_models_within10seconds)
+
 leaf_ignition_mod_table_within10seconds[1:8,]
 
 summary(best_leaf_ignition_model_within10seconds) 
@@ -190,16 +201,18 @@ AICc(best_canopy_ignition_model_within10seconds, best_leaf_ignition_model_within
 ###############################################################################
 # Combination of leaf and canopy traits for ignition delay
 ################################################################################
+
 canopy_leaf_ignition_model_within10seconds <- afex::lmer(ignition_delay ~ total_dry_mass_g +
-                                           leaf_mass_per_area +
-                                           leaf_moisture_content +
-                                           leaf_mass_per_area:leaf_moisture_content +
-                                           (1 | analysis_group), data = model_data_within_10_seconds,
-                                           REML = FALSE)
+                                                           leaf_length_per_leaflet +
+                                                           leaf_mass_per_area +
+                                                           leaf_moisture_content +
+                                                           leaf_moisture_content: total_dry_mass_g +
+                                                           (1 | analysis_group), 
+                                                           data = model_data_within_10_seconds, REML = FALSE)
 
 
 
-AICc(best_canopy_ignition_model_within10seconds, canopy_leaf_ignition_model_within10seconds) 
+AICc(best_canopy_ignition_model_within10seconds, canopy_leaf_ignition_model_within10seconds) # Better
 
 ##########################################################################################################
 
