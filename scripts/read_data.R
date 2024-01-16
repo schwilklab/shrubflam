@@ -422,6 +422,62 @@ any(is.na(leaf_measurements_2022$leaf_mass_per_area)) #FALSE
 # went wrong with them during leaf area measurements, decided to drop the
 # sample.
 
+############################################################################
+# The next part is for fixing the leaf length , subtracting the length
+# of petiole from the leaflets length
+############################################################################
+
+fixed_leaf_length_measurements <- leaf_measurements_2022 %>%
+  filter(! species_id %in% c(1000, 1036, 2007, 2010, 7000, 8888))
+
+length(unique(fixed_leaf_length_measurements$species_id))
+
+corrected_leaf_length_measurements <- leaf_measurements_2022 %>%
+  filter(species_id %in% c(1000, 1036, 2007, 2010, 7000, 8888))
+
+unique(corrected_leaf_length_measurements$species_id)
+
+
+rhus_virens_leaf_length <- corrected_leaf_length_measurements %>%
+  filter(species_id == 1036) %>%
+  mutate(leaf_length_per_leaflet = leaf_length_per_leaflet - 0.0275)
+
+
+diospyros_texana_leaf_length <- corrected_leaf_length_measurements %>%
+  filter(species_id == 1000) %>%
+  mutate(leaf_length_per_leaflet = leaf_length_per_leaflet - 0.01)
+  
+
+ziziphus_leaf_length <- corrected_leaf_length_measurements %>%
+  filter(species_id == 2007) %>%
+  mutate(leaf_length_per_leaflet = leaf_length_per_leaflet - 0.043)
+
+
+forestiera_leaf_length <- corrected_leaf_length_measurements %>%
+  filter(species_id == 2010) %>%
+  mutate(leaf_length_per_leaflet = leaf_length_per_leaflet - 0.036)
+
+
+ilex_vomitoria_leaf_length <- corrected_leaf_length_measurements %>%
+  filter(species_id == 7000) %>%
+  mutate(leaf_length_per_leaflet = leaf_length_per_leaflet - 0.030)
+
+
+
+colima_leaf_length <- corrected_leaf_length_measurements %>%
+  filter(species_id == 8888) %>%
+  mutate(leaf_length_per_leaflet = leaf_length_per_leaflet - 0.010)
+
+final_corrected <- rhus_virens_leaf_length %>%
+  rbind(diospyros_texana_leaf_length) %>%
+  rbind(ziziphus_leaf_length) %>%
+  rbind(forestiera_leaf_length) %>%
+  rbind(ilex_vomitoria_leaf_length) %>%
+  rbind(colima_leaf_length)
+
+
+corrected_leaf_length_measurements_2022 <- fixed_leaf_length_measurements %>%
+  rbind(final_corrected)
 
 
 ###############################################################################
@@ -445,7 +501,7 @@ dim(burn_trials_2022) # 139
 # First, let's get rid of species_id and keeping only sample_id for every merge
 # from now on
 ###############################################################################
-leaf_measurements_2022 <- dplyr::select(leaf_measurements_2022, -species_id)
+corrected_leaf_length_measurements_2022 <- dplyr::select(corrected_leaf_length_measurements_2022, -species_id)
 
 #burn_trials_2022 <- select(burn_trials_2022, -species_id)
 
@@ -453,7 +509,7 @@ leaf_measurements_2022 <- dplyr::select(leaf_measurements_2022, -species_id)
 ## data. Why is species id occurring all over?
 
 herbivore_2022 <- samples_2022 %>%
-  left_join(leaf_measurements_2022, by = "sample_id") %>%
+  left_join(corrected_leaf_length_measurements_2022, by = "sample_id") %>%
   left_join(burn_trials_2022, by = "sample_id") %>%
   filter(! sample_id %in% c("KD07", "UV01")) %>%  # KD07 has missing values of
                                                   # flammability measurements
@@ -481,7 +537,7 @@ herbivore_2022 <- samples_2022 %>%
 ####################################################################################
 
 alldata_2022 <- samples_2022 %>%
-  left_join(leaf_measurements_2022, by = c("sample_id")) %>%
+  left_join(corrected_leaf_length_measurements_2022, by = c("sample_id")) %>%
   left_join(burn_trials_2022, by = c("sample_id")) %>%
   filter( ! field_taxon %in% c("Rhus microphylla","Arbutus xalapensis" ,"Mimosa borealis",
                                "Unknown spp", "Ulmus crassifolia", "Frangula caroliniana"), # Dropping those species which has less than three samples!!
@@ -539,6 +595,9 @@ rm(samples_2022, canopy_measurements_2022,leaf_measurements_2022, moisture_measu
    burn_trials_2022, juniperus_leaf_area_2022,cylindrical_shaped,
    MASS_DISK_1, MASS_DISK_2, only_juniperus,senegalia_leaf_measurements,
    species,SPECIFIC_HEAT_AL,without_juniperus,without_senegalia,
-   ziziphus_CD39, herbivore_2022)
+   ziziphus_CD39, herbivore_2022, colima_leaf_length, corrected_leaf_length_measurements,
+   diospyros_texana_leaf_length, forestiera_leaf_length, ilex_vomitoria_leaf_length,
+   ziziphus_leaf_length, rhus_virens_leaf_length, final_corrected,
+   corrected_leaf_length_measurements_2022, fixed_leaf_length_measurements)
 
 
