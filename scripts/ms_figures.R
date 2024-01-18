@@ -24,7 +24,7 @@ dim(model_data)
 
 best_degsec_plot_data <- model_data %>% 
   dplyr::select(total_dry_mass_g, leaf_length_per_leaflet,
-                degsec_100, analysis_group)
+                leaf_moisture_content, degsec_100, analysis_group)
 
 dim(best_degsec_plot_data)
 
@@ -37,6 +37,7 @@ degsec_by_group <- model_data %>%
   group_by(analysis_group) %>%
   summarize(total_dry_mass_g = mean(total_dry_mass_g),
             leaf_length_per_leaflet = mean(leaf_length_per_leaflet),
+            leaf_moisture_content = mean(leaf_moisture_content),
             degsec_100 = mean(degsec_100))
 
 
@@ -54,29 +55,29 @@ total_dry_mass <- ggplot(model_data, aes(total_dry_mass_g, degsec_100)) +
   pubtheme +
   theme(legend.position = "none") +
   ## DWS: hard coding the values below is not ideal. This is fragile code.
-  geom_abline(intercept = canopy_anova_coefficients[1], 
-              slope = canopy_anova_coefficients[2], size = 1.5, color = "black")
+  geom_abline(intercept = coef(summary(canopy_traits_heat_release_model_mixed))[1], 
+              slope = coef(summary(canopy_traits_heat_release_model_mixed))[2], size = 1.5, color = "black")
 
 ggsave("./results/total_dry_mass.pdf",
        plot = total_dry_mass, height = 180,
        width = 170, units = "mm", dpi = 300)
 
 
-leaf_length_per_leaf <- ggplot(model_data, aes(leaf_length_per_leaflet, degsec_100)) +
+leaf_moisture_content <- ggplot(model_data, aes(leaf_moisture_content, degsec_100)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_point(data = degsec_by_group, size = 4.5 , alpha = 1,
              shape = 16) +
   ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
-  xlab("Leaf length per leaf (cm)")  + 
+  xlab("Leaf moisture content (%)")  + 
   pubtheme +
   theme(legend.position = "none") +
-  geom_abline(intercept = leaf_anova_coefficients[1], 
-              slope = leaf_anova_coefficients[2], size = 1.5, color = "black")
+  geom_abline(intercept = coef(summary(leaf_traits_heat_release_model_mixed))[1], 
+              slope = coef(summary(leaf_traits_heat_release_model_mixed))[3], size = 1.5, color = "black")
 
 
 
-ggsave("./results/leaf_length_per_leaf.pdf",
-       plot = leaf_length_per_leaf, height = 180,
+ggsave("./results/leaf_moisture_content.pdf",
+       plot = leaf_moisture_content, height = 180,
        width = 170, units = "mm", dpi = 300)
 
 ############################################################################
