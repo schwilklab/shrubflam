@@ -308,6 +308,10 @@ cluster_analysis <- kmeans(flam_rank_data$degsec_100, 4)
 
 flam_rank_data$clusters <- cluster_analysis$cluster
 
+flam_rank_data <- flam_rank_data %>%
+  mutate(display_name = ifelse(display_name == "C. ramosissima", "C. erecta", display_name)) %>%
+  mutate(display_name = ifelse(display_name == "Z. fagara", "C. hookeri", display_name))
+
 
 flam_rank_plot <- ggplot(flam_rank_data, aes(x = reorder(display_name, -degsec_100), y = degsec_100)) +
   geom_bar(stat = "identity") +
