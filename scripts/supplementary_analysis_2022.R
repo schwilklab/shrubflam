@@ -9,6 +9,7 @@
 
 library(car)
 library(corrplot)
+library(ggcorrplot)
 library(maps)
 library(glmmTMB) # The package is needed to get the output
 # as pdf or in latex format from sjPlot object
@@ -52,8 +53,6 @@ dim(cor_data)
 
 ####################################################################################################################################
 # Correlation of all morphological traits
-# ggplot2 code for corrplot, source: https://dk81.github.io/
-# dkmathstats_site/rvisual-corrplots.html
 #############################################################################################################################
 
 
@@ -70,34 +69,19 @@ morphological_traits_cor_data <- cor_data %>%
 morphological_traits_cor <- cor(morphological_traits_cor_data, method = "kendall",
                                 use = "pairwise")
 
+morphological_traits_cor <- as.data.frame(morphological_traits_cor)
 
-morphological_traits_cor_plot_melted <- reshape2::melt(morphological_traits_cor)
 
-morphological_traits_cor_plot_ggplot2 <- ggplot(morphological_traits_cor_plot_melted, aes(x = Var1, y = Var2, fill = value)) +
-  geom_tile() +
-  scale_fill_gradient2(midpoint = 0.5, mid ="grey70", limits = c(-1, +1)) +
-  labs(x = "", y = "", fill = "Correlation \n Measure") +
-  theme(plot.title = element_text(hjust = 0.5, colour = "blue"),
-        axis.title.x = element_text(face="bold", colour="darkgreen", size = 12),
-        axis.title.y = element_text(face="bold", colour="darkgreen", size = 12),
-        axis.text.x = element_text(angle = 45, hjust = 1,
-                                   margin = margin(t = 0, r = 5, b = 0, l = 0)),
-        legend.title = element_text(face="bold", colour="brown", size = 10)) +
-  geom_text(aes(x = Var1, y = Var2, label = round(value, 2)), color = "black",
-            fontface = "bold", size = 5)
+
+morphological_traits_cor_plot <- ggcorrplot(morphological_traits_cor, hc.order = TRUE, type = "lower",
+                                                    lab = TRUE) +
+  theme(axis.text.y = element_text(face = "bold", size = 12),
+        axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, size = 12))
 
 ggsave("./results/morphological_traits_correlation_plot.pdf",
-       plot = morphological_traits_cor_plot_ggplot2,
+       plot = morphological_traits_cor_plot,
        width = 18, height = 15, units = "cm")
 
-
-
-# morphological_traits_cor
-# Kendall rank correlation coefficient between canopy_moisture_content and 
-# leaf_moisture_content is 0.64, not a problem since they will be used
-# in two different model.
-# Kendall rank correlation coefficient between leaf_area_per_leaflet and 
-# leaf_length_per_leaflet is 0.65
 
 
 
@@ -133,25 +117,6 @@ leaf_flam_cor <- cor(leaf_flam_data, method = "kendall",
 
 
 
-#################################################################################
-# Saving the anova table of the best models without Juniperus
-# using Kenward_Roger approximation
-#################################################################################
-
-#print(canopy_leaf_anova_withoutj, type = "html",
-      #file = "./results/canopy_anova_table_withoutj.html")
-
-#print(canopy_leaf_coeff_withoutj, type = "html",
-      #file = "./results/canopy_anova_coeff_table_withoutj.html")
-
-
-#print(ignition_xtable_withoutj, type = "html",
-      #file = "./results/ignition_anova_table_without_juniperus.html")
-
-
-#print(ignition_coeff_withoutj, type = "html",
-      #file = "./results/ignition_coeff_table_without_juniperus.html")
-
 
 #########################################################################
 # Saving the Marginal R2 and conditional R2 of the best models
@@ -186,16 +151,16 @@ best_canopy_traits_model_as_data_frame <- best_canopy_traits_model_as_data_frame
 
 # Setting column names correctly.
 
-colnames(best_canopy_traits_model_as_data_frame) <- best_canopy_traits_model_as_data_frame[1,]
+colnames(best_canopy_traits_model_as_data_frame) <- best_canopy_traits_model_as_data_frame[1, ]
 
 # The first row apperaed twice
 
-best_canopy_traits_model_as_data_frame <- best_canopy_traits_model_as_data_frame[-1,]
+best_canopy_traits_model_as_data_frame <- best_canopy_traits_model_as_data_frame[-1, -4]
 
 best_canopy_traits_model_as_xtable <- xtable::xtable(best_canopy_traits_model_as_data_frame)
 
-#print(best_canopy_traits_model_as_xtable,
-      #type = "html", file = "./results/best_canopy_traits_model_r2.html")
+print(best_canopy_traits_model_as_xtable,
+      type = "html", file = "./results/best_canopy_traits_model_r2.html")
 
 
 #########################################################################################
@@ -226,12 +191,12 @@ colnames(best_leaf_traits_model_as_data_frame) <- best_leaf_traits_model_as_data
 
 # The first row apperaed twice
 
-best_leaf_traits_model_as_data_frame <- best_leaf_traits_model_as_data_frame[-1,]
+best_leaf_traits_model_as_data_frame <- best_leaf_traits_model_as_data_frame[-1, -4]
 
 best_leaf_traits_model_as_xtable <- xtable::xtable(best_leaf_traits_model_as_data_frame)
 
-#print(best_leaf_traits_model_as_xtable,
-      #type = "html", file = "./results/best_leaf_traits_model_r2.html")
+print(best_leaf_traits_model_as_xtable,
+      type = "html", file = "./results/best_leaf_traits_model_r2.html")
 
 
 ####################################################################################
@@ -262,12 +227,12 @@ colnames(best_canopy_traits_ignition_model_as_data_frame) <- best_canopy_traits_
 
 # The first row apperaed twice
 
-best_canopy_traits_ignition_model_as_data_frame <- best_canopy_traits_ignition_model_as_data_frame[-1,]
+best_canopy_traits_ignition_model_as_data_frame <- best_canopy_traits_ignition_model_as_data_frame[-1, -4]
 
 best_canopy_traits_ignition_model_as_xtable <- xtable::xtable(best_canopy_traits_ignition_model_as_data_frame)
 
-#print(best_canopy_traits_ignition_model_as_xtable,
-      #type = "html", file = "./results/best_canopy_traits_ignition_model_r2.html")
+print(best_canopy_traits_ignition_model_as_xtable,
+      type = "html", file = "./results/best_canopy_traits_ignition_model_r2.html")
 
 #######################################################################################
 # Now best leaf traits model for ignition delay
@@ -298,12 +263,12 @@ colnames(best_leaf_traits_ignition_model_as_data_frame) <- best_leaf_traits_igni
 
 # The first row apperaed twice
 
-best_leaf_traits_ignition_model_as_data_frame <- best_leaf_traits_ignition_model_as_data_frame[-1,]
+best_leaf_traits_ignition_model_as_data_frame <- best_leaf_traits_ignition_model_as_data_frame[-1, -4]
 
 best_leaf_traits_ignition_model_as_xtable <- xtable::xtable(best_leaf_traits_ignition_model_as_data_frame)
 
-#print(best_leaf_traits_ignition_model_as_xtable,
-      #type = "html", file = "./results/best_leaf_traits_ignition_model_r2.html")
+print(best_leaf_traits_ignition_model_as_xtable,
+      type = "html", file = "./results/best_leaf_traits_ignition_model_r2.html")
 
 
 #############################################################################
@@ -330,3 +295,27 @@ print(maximum_moisture_ignition_delay_xtable,
 ####################################################################################      
 
 
+####################################################################################
+# Flammability ranking
+####################################################################################
+
+flam_rank_data <- final_data %>%
+  dplyr::select(display_name, degsec_100) %>%
+  group_by(display_name) %>%
+  summarise(degsec_100 = mean(degsec_100))
+
+cluster_analysis <- kmeans(flam_rank_data$degsec_100, 4)
+
+flam_rank_data$clusters <- cluster_analysis$cluster
+
+
+flam_rank_plot <- ggplot(flam_rank_data, aes(x = reorder(display_name, -degsec_100), y = degsec_100)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Species",
+       y = expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
+  pubtheme +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, face = "italic"))
+
+ggsave("./results/flam_rank_plot.pdf",
+       plot = flam_rank_plot, height = 180,
+       width = 170, units = "mm", dpi = 300)
