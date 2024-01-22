@@ -23,6 +23,7 @@ source("./scripts/ggplot_theme.R")
 dim(model_data)
 
 best_degsec_plot_data <- model_data %>% 
+  filter(analysis_group != "Juniperus") %>%
   dplyr::select(total_dry_mass_g, leaf_length_per_leaflet,
                 leaf_moisture_content, degsec_100, analysis_group)
 
@@ -34,6 +35,7 @@ dim(best_degsec_plot_data)
 
 
 degsec_by_group <- model_data %>% 
+  filter(analysis_group != "Juniperus") %>%
   group_by(analysis_group) %>%
   summarize(total_dry_mass_g = mean(total_dry_mass_g),
             leaf_length_per_leaflet = mean(leaf_length_per_leaflet),
@@ -46,7 +48,7 @@ degsec_by_group <- model_data %>%
 # data
 ###############################################################################
 
-total_dry_mass <- ggplot(model_data, aes(total_dry_mass_g, degsec_100)) +
+total_dry_mass <- ggplot(best_degsec_plot_data, aes(total_dry_mass_g, degsec_100)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_point(data = degsec_by_group, size = 4.5 , alpha = 1,
              shape = 16) +
@@ -63,7 +65,7 @@ ggsave("./results/total_dry_mass.pdf",
        width = 170, units = "mm", dpi = 300)
 
 
-leaf_moisture_content <- ggplot(model_data, aes(leaf_moisture_content, degsec_100)) +
+leaf_moisture_content <- ggplot(best_degsec_plot_data, aes(leaf_moisture_content, degsec_100)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_point(data = degsec_by_group, size = 4.5 , alpha = 1,
              shape = 16) +
@@ -134,24 +136,25 @@ pca_plot <- ggplot(pca_axis, aes(x = PC1, y = PC2)) +
         axis.text = element_text(size = 10, face = "bold"),
         axis.title = element_text(size = 12, face = "bold")) +
   xlim(-0.1, 0.6) +
-  geom_text(x = variable_loadings[1,1] + 0.08, y = variable_loadings[1,2] - 0.025,
-            label = "Mass consumed (g)", size = 4, color = "black") +
-  geom_text(x = variable_loadings[2,1] + 0.08, y = variable_loadings[2,2] + 0.02,
-            label = "Volume burned (%)", size = 4, color = "black") +
-  geom_text(x = variable_loadings[3,1] + 0.08, y = variable_loadings[3,2],
-            label = "Flame height (cm)", size = 4, color = "black") +
-  geom_text(x = variable_loadings[4,1] + 0.085, y = variable_loadings[4,2],
-            label = "Flame duration (s)", size = 4, color = "black") +
-  geom_text(x = variable_loadings[5,1] + 0.09, y = variable_loadings[5,2] - 0.03,
-            label = "Duration over 100 \u00B0C (s)  ", size = 4, color = "black") +
-  geom_text(x = variable_loadings[6,1] + 0.098, y = variable_loadings[6,2],
-            label = "Peak temperature (\u00B0C)", size = 4, color = "black") +
-  geom_text(x = variable_loadings[7,1] + 0.1, y = variable_loadings[7,2] + 0.04,
-            label = "Temperature integration (\u00B0C.s)", size = 4, color = "black") +
+  geom_text(x = variable_loadings[1,1] + 0.075, y = variable_loadings[1,2] - 0.01,
+            label = "Mass consumed", size = 4, color = "black") +
+  geom_text(x = variable_loadings[2,1] + 0.06, y = variable_loadings[2,2] + 0.02,
+            label = "Volume burned", size = 4, color = "black") +
+  geom_text(x = variable_loadings[3,1] + 0.06, y = variable_loadings[3,2],
+            label = "Flame height", size = 4, color = "black") +
+  geom_text(x = variable_loadings[4,1] + 0.07, y = variable_loadings[4,2] - 0.01,
+            label = "Flame duration", size = 4, color = "black") +
+  geom_text(x = variable_loadings[5,1] + 0.08, y = variable_loadings[5,2] - 0.03,
+            label = "Duration over 100 \u00B0C", size = 4, color = "black") +
+  geom_text(x = variable_loadings[6,1] + 0.08, y = variable_loadings[6,2],
+            label = "Peak temperature", size = 4, color = "black") +
+  geom_text(x = variable_loadings[7,1] + 0.1, y = variable_loadings[7,2] + 0.02,
+            label = "Temperature integration", size = 4, color = "black") +
   geom_text(x = variable_loadings[8,1] + 0.01, y = variable_loadings[8,2]-0.015,
-            label = "Ignition delay time (s)", size = 4, color = "black") 
+            label = "Ignition delay time", size = 4, color = "black") 
  
   
+
 
 ggsave("./results/pca_plot.pdf",
        plot = pca_plot, height = 180,
