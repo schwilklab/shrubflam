@@ -130,6 +130,7 @@ leaf_pc1_models <- dredge(leaf_pc1_model)
 best_leaf_pc1_model <- get.models(leaf_pc1_models, subset = TRUE)[[1]] 
 
 leaf_mod_table <- model.sel(leaf_pc1_models)
+
 leaf_mod_table[1:8,]
 
 

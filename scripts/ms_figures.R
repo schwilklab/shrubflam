@@ -22,6 +22,18 @@ source("./scripts/ggplot_theme.R")
 
 dim(model_data)
 
+juniperus_data <- model_data %>%
+  filter(analysis_group == "Juniperus") %>%
+  dplyr::select(total_dry_mass_g, leaf_length_per_leaflet,
+                leaf_moisture_content, degsec_100, analysis_group)
+
+mean_juniperus <- juniperus_data %>%
+  group_by(analysis_group) %>%
+  summarize(total_dry_mass_g = mean(total_dry_mass_g),
+            leaf_length_per_leaflet = mean(leaf_length_per_leaflet),
+            leaf_moisture_content = mean(leaf_moisture_content),
+            degsec_100 = mean(degsec_100))
+
 best_degsec_plot_data <- model_data %>% 
   filter(analysis_group != "Juniperus") %>%
   dplyr::select(total_dry_mass_g, leaf_length_per_leaflet,
@@ -48,6 +60,7 @@ degsec_by_group <- model_data %>%
 # data
 ###############################################################################
 
+
 total_dry_mass <- ggplot(best_degsec_plot_data, aes(total_dry_mass_g, degsec_100)) +
   geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
   geom_point(data = degsec_by_group, size = 4.5 , alpha = 1,
@@ -60,8 +73,26 @@ total_dry_mass <- ggplot(best_degsec_plot_data, aes(total_dry_mass_g, degsec_100
   geom_abline(intercept = coef(summary(canopy_traits_heat_release_model_mixed))[1], 
               slope = coef(summary(canopy_traits_heat_release_model_mixed))[2], size = 1.5, color = "black")
 
+total_dry_mass_includingj <- ggplot(best_degsec_plot_data, aes(total_dry_mass_g, degsec_100)) +
+  geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
+  geom_point(data = degsec_by_group, size = 4.5 , alpha = 1,
+             shape = 16) +
+  geom_point(data = juniperus_data, size = 2.5, alpha = 0.5, color = "red") +
+  geom_point(data = mean_juniperus,  size = 4.5 , alpha = 1, color = "red") +
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
+  xlab("Total dry mass per 70 cm (g)")  + 
+  pubtheme +
+  theme(legend.position = "none") +
+  ## DWS: hard coding the values below is not ideal. This is fragile code.
+  geom_abline(intercept = coef(summary(canopy_traits_heat_release_model_mixed))[1], 
+              slope = coef(summary(canopy_traits_heat_release_model_mixed))[2], size = 1.5, color = "black")
+
 ggsave("./results/total_dry_mass.pdf",
        plot = total_dry_mass, height = 180,
+       width = 170, units = "mm", dpi = 300)
+
+ggsave("./results/total_dry_mass_includingj.pdf",
+       plot = total_dry_mass_includingj, height = 180,
        width = 170, units = "mm", dpi = 300)
 
 
@@ -74,12 +105,29 @@ leaf_moisture_content <- ggplot(best_degsec_plot_data, aes(leaf_moisture_content
   pubtheme +
   theme(legend.position = "none") +
   geom_abline(intercept = coef(summary(leaf_traits_heat_release_model_mixed))[1], 
-              slope = coef(summary(leaf_traits_heat_release_model_mixed))[3], size = 1.5, color = "black")
+              slope = coef(summary(leaf_traits_heat_release_model_mixed))[3], size = 1.5, color = "black") 
 
+
+leaf_moisture_content_includingj <- ggplot(best_degsec_plot_data, aes(leaf_moisture_content, degsec_100)) +
+  geom_point(size = 2.5, alpha = 0.5, shape = 16) + 
+  geom_point(data = degsec_by_group, size = 4.5 , alpha = 1,
+             shape = 16) +
+  geom_point(data = juniperus_data, size = 2.5, alpha = 0.5, color = "red") +
+  geom_point(data = mean_juniperus,  size = 4.5 , alpha = 1, color = "red") +
+  ylab(expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
+  xlab("Leaf moisture content (%)")  + 
+  pubtheme +
+  theme(legend.position = "none") +
+  geom_abline(intercept = coef(summary(leaf_traits_heat_release_model_mixed))[1], 
+              slope = coef(summary(leaf_traits_heat_release_model_mixed))[3], size = 1.5, color = "black") 
 
 
 ggsave("./results/leaf_moisture_content.pdf",
        plot = leaf_moisture_content, height = 180,
+       width = 170, units = "mm", dpi = 300)
+
+ggsave("./results/leaf_moisture_content_includingj.pdf",
+       plot = leaf_moisture_content_includingj, height = 180,
        width = 170, units = "mm", dpi = 300)
 
 ############################################################################
@@ -130,28 +178,24 @@ pca_plot <- ggplot(pca_axis, aes(x = PC1, y = PC2)) +
     color = "black") +
   labs(x = "Principle component 1",
        y = "Principle component 2") +
-  theme_bw() +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        axis.text = element_text(size = 10, face = "bold"),
-        axis.title = element_text(size = 12, face = "bold")) +
-  xlim(-0.1, 0.6) +
-  geom_text(x = variable_loadings[1,1] + 0.075, y = variable_loadings[1,2] - 0.01,
-            label = "Mass consumed", size = 4, color = "black") +
-  geom_text(x = variable_loadings[2,1] + 0.06, y = variable_loadings[2,2] + 0.02,
-            label = "Volume burned", size = 4, color = "black") +
-  geom_text(x = variable_loadings[3,1] + 0.06, y = variable_loadings[3,2],
-            label = "Flame height", size = 4, color = "black") +
-  geom_text(x = variable_loadings[4,1] + 0.07, y = variable_loadings[4,2] - 0.01,
-            label = "Flame duration", size = 4, color = "black") +
-  geom_text(x = variable_loadings[5,1] + 0.08, y = variable_loadings[5,2] - 0.03,
-            label = "Duration over 100 \u00B0C", size = 4, color = "black") +
-  geom_text(x = variable_loadings[6,1] + 0.08, y = variable_loadings[6,2],
-            label = "Peak temperature", size = 4, color = "black") +
-  geom_text(x = variable_loadings[7,1] + 0.1, y = variable_loadings[7,2] + 0.02,
-            label = "Temperature integration", size = 4, color = "black") +
+  pubtheme +
+  xlim(-0.1, 0.62) +
+  geom_text(x = variable_loadings[1,1] + 0.08, y = variable_loadings[1,2] - 0.01,
+            label = "Mass consumed", size = 4, color = "black", fontface = "plain", family = "sans", alpha = 0.01) +
+  geom_text(x = variable_loadings[2,1] + 0.07, y = variable_loadings[2,2] + 0.02,
+            label = "Volume burned", size = 4,  color = "black", fontface = "plain", family = "sans", alpha = 0.01) +
+  geom_text(x = variable_loadings[3,1] + 0.065, y = variable_loadings[3,2],
+            label = "Flame height", size = 4,  color = "black", fontface = "plain", family = "sans", alpha = 0.01) +
+  geom_text(x = variable_loadings[4,1] + 0.08, y = variable_loadings[4,2] - 0.01,
+            label = "Flame duration", size = 4,  color = "black", fontface = "plain", family = "sans", alpha = 0.01) +
+  geom_text(x = variable_loadings[5,1] + 0.07, y = variable_loadings[5,2] - 0.03,
+            label = "Duration over 100 \u00B0C", size = 4,  color = "black", fontface = "plain", family = "sans", alpha = 0.01) +
+  geom_text(x = variable_loadings[6,1] + 0.082, y = variable_loadings[6,2],
+            label = "Peak temperature", size = 4,  color = "black", fontface = "plain", family = "sans", alpha = 0.01) +
+  geom_text(x = variable_loadings[7,1] + 0.1, y = variable_loadings[7,2] + 0.028,
+            label = "Temperature integration", size = 4,  color = "black", fontface = "plain", family = "sans", alpha = 0.01) +
   geom_text(x = variable_loadings[8,1] + 0.01, y = variable_loadings[8,2]-0.015,
-            label = "Ignition delay time", size = 4, color = "black") 
+            label = "Ignition delay time", size = 4,  color = "black", fontface = "plain", family = "sans", alpha = 0.01) 
  
   
 
