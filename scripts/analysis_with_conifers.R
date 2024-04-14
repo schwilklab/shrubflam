@@ -51,8 +51,11 @@ model_data_withconifers$ignition_delay <- log(model_data_withconifers$ignition_d
 # integration.
 ###############################################################################
 
-
 options(na.action = "na.fail")
+
+null_model_temp_inte_withj <- afex::lmer(degsec_100 ~   (1 | analysis_group),
+                                         data = model_data_withconifers, REML = FALSE)
+
 canopy_pc1_model_withconifers <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                  canopy_density_gm_cm3 + canopy_moisture_content +
                                  total_dry_mass_g:leaf_stem_mass_ratio +
@@ -147,6 +150,9 @@ AICc(leaf_plus_best_canopy_traits_model_withconifers, best_canopy_pc1_model_with
 # Ignition delay vs canopy traits
 ###############################################################################
 
+null_model_ignition_delay_withj <-  afex::lmer(ignition_delay ~  (1 | analysis_group), 
+                                               data = model_data_withconifers, 
+                                               REML = FALSE)
 
 canopy_ignition_model_withconifers <- afex::lmer(ignition_delay ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                                    canopy_density_gm_cm3 + canopy_moisture_content +
