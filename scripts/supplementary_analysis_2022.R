@@ -116,7 +116,95 @@ leaf_flam_cor <- cor(leaf_flam_data, method = "kendall",
 
 
 
+####################################################################################
+# Flammability ranking and spearman correlation between shoot flammability ranking and
+# flammability ranking by firewise
+####################################################################################
 
+flam_rank_data <- final_data %>%
+  group_by(display_name) %>%
+  summarise(degsec_100 = mean(degsec_100))
+
+cluster_analysis <- kmeans(flam_rank_data$degsec_100, 3)
+
+flam_rank_data$clusters <- cluster_analysis$cluster
+
+flam_rank_data <- flam_rank_data %>%
+  filter(! display_name %in% c("C. erecta", "R. virens", "S. berlandieri", "S. obtusifolia", "R. trilobata",
+                               "F. pubescens"))
+
+unique(flam_rank_data$display_name)
+
+flam_rank_data$shoot_flam <- c(1,1,1,3,2,2,3,1)
+flam_rank_data$firewise <- c(2,2,3,3,1,2,3,3)
+
+#View(flam_rank_data)
+
+ranking_cor <- cor.test(flam_rank_data$shoot_flam, flam_rank_data$firewise, method=c("spearman"))
+
+flam_rank_comparison_plot <-  ggplot(flam_rank_data, aes(x = shoot_flam, y = firewise)) +
+  labs(x = "Shoot Flammability Ranking", y = "Firewise Ranking") +
+  scale_x_continuous(limits = c(1, 3),        
+                     breaks = seq(1, 3, by = 1), 
+                     labels = c("Low", "Medium", "High")) +
+  scale_y_continuous(limits = c(1, 3),        
+                     breaks = seq(1, 3, by = 1), 
+                     labels = c("Low", "Medium", "High")) +
+  geom_segment(x = 1, xend = 3, y = 1, yend = 3, linetype = "dashed") +
+  theme(panel.grid.major  = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  geom_text(x = 2.8, y = 3, label = "Juniperus spp", color = "black", fontface = "italic", family = "sans", 
+            alpha = 0.5, size = 4) +
+  geom_text(x = 1.15, y = 1.95, label = "Condalia hookeri", color = "black", fontface = "italic", family = "sans", 
+            alpha = 0.5, size = 4) +
+  geom_text(x = 2.65, y = 2.95, label = "Sophora secundiflora", color = "black", fontface = "italic", family = "sans",
+            alpha = 0.5, size = 4) +
+  geom_text(x = 1.1, y = 3, label = "Ilex vomitoria", color = "black", fontface = "italic", family = "sans",
+            alpha = 0.5, size = 4) +
+  geom_text(x = 1.15, y = 2.95, label = "Senegalia wrightii", color = "black", fontface = "italic", family = "sans", 
+            alpha = 0.5, size = 4) +
+  geom_text(x = 2, y = 2, label = "Prosopis glandulosa", color = "black", fontface = "italic", family = "sans",
+            alpha = 0.5, size = 4) +
+  geom_text(x = 2, y = 1, label = "Mahonia trifoliolata", color = "black", fontface = "italic", family = "sans", 
+            alpha = 0.5, size = 4) +
+  geom_text(x = 1.15, y = 2, label = "Diospyros texana", color = "black", fontface = "italic", family = "sans", 
+            alpha = 0.5, size = 4) +
+  pubtheme
+
+
+
+
+ggsave("./results/flam_rank_comparison_plot.pdf",
+       plot = flam_rank_comparison_plot, height = 180,
+       width = 170, units = "mm", dpi = 300)
+
+
+
+degsec_by_group_final <- final_data %>%
+  group_by(display_name) %>%
+  summarise(degsec_100 = mean(degsec_100))
+
+final_data$standard_error <- sd(final_data$degsec_100) / sqrt(length(final_data$degsec_100))
+
+flam_rank_plot <- ggplot(final_data, aes(x = reorder(display_name, degsec_100), y = degsec_100)) +
+  geom_point(alpha = 0.5) +
+  stat_summary(
+    fun.data = "mean_se",
+    geom = "errorbar",
+    position = position_dodge(width = 1),
+    width = 0.5 ) +
+  geom_point(data = degsec_by_group_final, size = 3 , alpha = 1) +
+  labs(x = "Species",
+       y = expression(Temperature ~ integration ~ (degree~C %.% s))) +
+  coord_flip() +
+  theme(axis.text.y = element_text(angle = 45, hjust = 1, face = "italic")) +
+  pubtheme
+
+
+ggsave("./results/flam_rank_plot.pdf",
+       plot = flam_rank_plot, height = 180,
+       width = 170, units = "mm", dpi = 300)
 
 #########################################################################
 # Saving the Marginal R2 and conditional R2 of the best models
@@ -295,31 +383,3 @@ print(maximum_moisture_ignition_delay_xtable,
 ####################################################################################      
 
 
-####################################################################################
-# Flammability ranking
-####################################################################################
-
-flam_rank_data <- final_data %>%
-  dplyr::select(display_name, degsec_100) %>%
-  group_by(display_name) %>%
-  summarise(degsec_100 = mean(degsec_100))
-
-cluster_analysis <- kmeans(flam_rank_data$degsec_100, 4)
-
-flam_rank_data$clusters <- cluster_analysis$cluster
-
-flam_rank_data <- flam_rank_data %>%
-  mutate(display_name = ifelse(display_name == "C. ramosissima", "C. erecta", display_name)) %>%
-  mutate(display_name = ifelse(display_name == "Z. fagara", "C. hookeri", display_name))
-
-
-flam_rank_plot <- ggplot(flam_rank_data, aes(x = reorder(display_name, -degsec_100), y = degsec_100)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Species",
-       y = expression(Temperature ~ integration ~ (degree~C %.% s ) )) +
-  pubtheme +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, face = "italic"))
-
-ggsave("./results/flam_rank_plot.pdf",
-       plot = flam_rank_plot, height = 180,
-       width = 170, units = "mm", dpi = 300)
