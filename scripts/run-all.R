@@ -32,7 +32,7 @@ source("./scripts/read_data.R")
 DATA_CACHE_DIR <- "./results/tempdata"
 source("./scripts/read_hobos.R")  ## Do this once
 ## After running the above once, just read saved data:
-# hobos_wider_2022 <- readRDS(file.path(DATA_CACHE_DIR, "hobos_wider_2022"))
+hobos_wider_2022 <- readRDS(file.path(DATA_CACHE_DIR, "hobos_wider_2022"))
 
 # run PCAs requires alldata_2022 and hobos_wider_2022 to exist:
 source("./scripts/flam_pca.R") 
