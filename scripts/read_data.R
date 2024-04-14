@@ -560,6 +560,11 @@ any(is.na(alldata_2022$canopy_moisture_content)) #FALSE
 any(is.na(alldata_2022$leaf_moisture_content)) #FALSE
  
 
+alldata_2022 <- alldata_2022 %>%
+  mutate(display_name = ifelse(analysis_group == "Juniperus", "J. spp", display_name)) %>%
+  mutate(display_name = ifelse(display_name == "C. ramosissima", "C. erecta", display_name)) %>%
+  mutate(display_name = ifelse(display_name == "Z. fagara", "C. hookeri", display_name))
+
 
 
 #####################################################################################
