@@ -122,10 +122,10 @@ leaf_flam_cor <- cor(leaf_flam_data, method = "kendall",
 ####################################################################################
 
 flam_rank_data <- final_data %>%
-  group_by(display_name) %>%
+  group_by(specific_epithet) %>%
   summarise(degsec_100 = mean(degsec_100))
 
-cluster_analysis <- kmeans(flam_rank_data$degsec_100, 3)
+cluster_analysis <- kmeans(flam_rank_data$degsec_100, 4)
 
 flam_rank_data$clusters <- cluster_analysis$cluster
 
