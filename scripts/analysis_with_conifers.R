@@ -23,7 +23,6 @@ library(MuMIn)
 # scaling the response variables since they measured in different units
 ###############################################################################
 
-
 zscore <- function(x) (x -mean(x, na.rm=TRUE))/ sd(x, na.rm = TRUE)
 
 model_data_withconifers <- final_data %>%
@@ -34,7 +33,6 @@ model_data_withconifers <- final_data %>%
               "windspeed_miles_per_hour"), list(zscore))
 
 names(model_data_withconifers)
-
 dim(model_data_withconifers)
 
 ###############################################################################
@@ -65,10 +63,8 @@ model_data_withconifers$ignition_delay <- log(model_data_withconifers$ignition_d
 ###############################################################################
 
 options(na.action = "na.fail")
-
 null_model_temp_inte_withj <- afex::lmer(degsec_100 ~ (1 | specific_epithet),
                                          data = model_data_withconifers, REML = FALSE)
-
 canopy_pc1_model_withconifers <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                  canopy_density_gm_cm3 + canopy_moisture_content +
                                  total_dry_mass_g:leaf_stem_mass_ratio +
@@ -80,24 +76,11 @@ canopy_pc1_model_withconifers <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf
                                  mean_pre_burning_temp +
                                  windspeed_miles_per_hour +   
                                  (1 | specific_epithet), data = model_data_withconifers, REML = FALSE)
-
-
-
-
-canopy_pc1_models_withconifers <- dredge(canopy_pc1_model_withconifers) # Performs an automated
-
-# model selection with subsets of the supplied global model. source: ?dredge
-
-best_canopy_pc1_model_withconifers <- get.models(canopy_pc1_models_withconifers, subset = TRUE)[[1]] # returns list and 
-# indexing the first one, top model.
-
-
+canopy_pc1_models_withconifers <- dredge(canopy_pc1_model_withconifers) 
+best_canopy_pc1_model_withconifers <- get.models(canopy_pc1_models_withconifers, subset = TRUE)[[1]] 
 canopy_mod_table_withconifers <- model.sel(canopy_pc1_models_withconifers)
 canopy_mod_table_withconifers[1:8,]
-
 summary(best_canopy_pc1_model_withconifers)
-
-#sjPlot::tab_model(best_canopy_pc1_model_withconifers)
 
 ###############################################################################
 # A global model of leaf traits with two way interaction for heat release
@@ -107,7 +90,6 @@ summary(best_canopy_pc1_model_withconifers)
 # theoretical explanation will be given in thesis/paper.
 ##############################################################################
 
-
 leaf_pc1_model_withconifers <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf_length_per_leaflet +
                                leaf_moisture_content  +
                                leaf_mass_per_area:leaf_length_per_leaflet +
@@ -116,17 +98,11 @@ leaf_pc1_model_withconifers <- afex::lmer(degsec_100 ~ leaf_mass_per_area + leaf
                                mean_pre_burning_temp +
                                windspeed_miles_per_hour +   
                                (1| specific_epithet), data = model_data_withconifers, REML = FALSE)
-
 leaf_pc1_models_withconifers <- dredge(leaf_pc1_model_withconifers)
-
 best_leaf_pc1_model_withconifers <- get.models(leaf_pc1_models_withconifers, subset = TRUE)[[1]] 
-
 leaf_mod_table_withconifers <- model.sel(leaf_pc1_models_withconifers)
 leaf_mod_table_withconifers[1:8,]
-
 summary(best_leaf_pc1_model_withconifers) 
-
-#sjPlot::tab_model(best_leaf_pc1_model_withconifers)
 
 ###############################################################################
 # Comparison between best canopy and leaf model for temperature integration
@@ -143,10 +119,6 @@ leaf_plus_best_canopy_traits_model_withconifers <- afex::lmer(degsec_100 ~ total
                                                                 total_dry_mass_g:leaf_length_per_leaflet +
                                                                 (1 | specific_epithet),
                                                                 data = model_data_withconifers, REML = FALSE)
-
-
-
-
 AICc(leaf_plus_best_canopy_traits_model_withconifers, best_canopy_pc1_model_withconifers) # Improved
 
 ###############################################################################
@@ -156,24 +128,17 @@ AICc(leaf_plus_best_canopy_traits_model_withconifers, best_canopy_pc1_model_with
 null_model_ignition_delay_withj <-  afex::lmer(ignition_delay ~  (1 | specific_epithet), 
                                                data = model_data_withconifers, 
                                                REML = FALSE)
-
 canopy_ignition_model_withconifers <- afex::lmer(ignition_delay ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                                    canopy_density_gm_cm3 + canopy_moisture_content +
                                                    mean_pre_burning_temp +
                                                    windspeed_miles_per_hour +  
                                                    (1 | specific_epithet), data = model_data_withconifers, 
                                                    REML = FALSE)
-
-
 canopy_ignition_models_withconifers <- dredge(canopy_ignition_model_withconifers) 
-
 best_canopy_ignition_model_withconifers <- get.models(canopy_ignition_models_withconifers, subset = TRUE)[[1]]
-
 canopy_ignition_mod_table_withconifers <- model.sel(canopy_ignition_models_withconifers)
 canopy_ignition_mod_table_withconifers[1:8,]
 summary(best_canopy_ignition_model_withconifers)
-
-#sjPlot::tab_model(best_canopy_ignition_model_withconifers)
 
 ###############################################################################
 # Ignition delay vs leaf traits
@@ -185,17 +150,11 @@ leaf_traits_ignition_model_withconifers <- afex::lmer(ignition_delay ~ leaf_mass
                                                         windspeed_miles_per_hour +  
                                                         (1| specific_epithet), data = model_data_withconifers, 
                                                         REML = FALSE)
-
 leaf_ignition_models_withconifers <- dredge(leaf_traits_ignition_model_withconifers) 
-
-
 best_leaf_ignition_model_withconifers <- get.models(leaf_ignition_models_withconifers, subset = TRUE)[[1]] 
-
 leaf_ignition_mod_table_withconifers <- model.sel(leaf_ignition_models_withconifers)
 leaf_ignition_mod_table_withconifers[1:8,]
 summary(best_leaf_ignition_model_withconifers) 
-
-#sjPlot::tab_model(best_leaf_ignition_model_withconifers)
 
 AICc(best_canopy_ignition_model_withconifers, best_leaf_ignition_model_withconifers) 
 
@@ -208,9 +167,6 @@ canopy_leaf_ignition_model_withconifers <- afex::lmer(ignition_delay ~ canopy_de
                                              leaf_mass_per_area + 
                                              (1 | specific_epithet), data = model_data_withconifers,
                                              REML = FALSE)
-
-
-
 AICc(best_leaf_ignition_model_withconifers, canopy_leaf_ignition_model_withconifers)  
 
 #############################################################################################################
@@ -223,23 +179,14 @@ AICc(best_leaf_ignition_model_withconifers, canopy_leaf_ignition_model_withconif
 canopy_traits_heat_release_model_mixed_withconifers <- afex::mixed(degsec_100 ~ total_dry_mass_g + 
                                                                      (1|specific_epithet), data = model_data_withconifers,
                                                                      method = "KR", REML = TRUE)
-
-
-
 canopy_traits_anova_table_model_withconifers <- lme4::lmer(degsec_100 ~ total_dry_mass_g +
                                                 (1 | specific_epithet),
                                                 data = model_data_withconifers)
-
-
 canopy_traits_anova_withconifers <- car::Anova(canopy_traits_anova_table_model_withconifers, 
                                   type = 2, test.statistic = "F")
-
 canopy_anova_withconifers <- xtable::xtable(canopy_traits_anova_withconifers, digits = 3)
-
 canopy_anova_coefficients_withconifers <- summary(canopy_traits_anova_table_model_withconifers)$coefficients
-
 canopy_coeff_withconifers <- xtable::xtable(canopy_anova_coefficients_withconifers, digits = 3)
-
 
 ############################################################################################
 # Now leaf traits for heat release
@@ -249,21 +196,13 @@ leaf_traits_heat_release_model_mixed_withconifers <- afex::mixed(degsec_100 ~ le
                                                       (1| specific_epithet), 
                                                       data = model_data_withconifers,
                                                       method = "KR", REML = TRUE)
-
-
-
 leaf_traits_anova_table_model_withconifers <- lme4::lmer(degsec_100 ~ leaf_length_per_leaflet +
                                                            (1| specific_epithet), 
                                                            data = model_data_withconifers)
-
-
 leaf_traits_anova_withconifers <- car::Anova(leaf_traits_anova_table_model_withconifers, 
                                              type = 2, test.statistic = "F")
-
 leaf_anova_withconifers <- xtable::xtable(leaf_traits_anova_withconifers, digits = 3)
-
 leaf_anova_coefficients_withconifers <- summary(leaf_traits_anova_table_model_withconifers)$coefficients
-
 leaf_coeff_conifers <- xtable::xtable(leaf_anova_coefficients_withconifers, digits = 3)
 
 ###################################################################################################################
@@ -272,24 +211,17 @@ leaf_coeff_conifers <- xtable::xtable(leaf_anova_coefficients_withconifers, digi
 
 canopy_traits_ignition_model_mixed_withconifers <- afex::mixed(ignition_delay ~ canopy_density_gm_cm3 + 
                                                     canopy_moisture_content +
-                                                    (1|analysis_group), data = model_data_withconifers,
+                                                    (1|specific_epithet), data = model_data_withconifers,
                                                     method = "KR", REML = TRUE)
-
 canopy_traits_ignition_anova_table_model_withconifers <- lme4::lmer(ignition_delay ~ canopy_density_gm_cm3 + 
                                                                       canopy_moisture_content + 
-                                                                      (1 | analysis_group), 
+                                                                      (1 | specific_epithet), 
                                                                       data = model_data_withconifers)
-
-
 canopy_traits_ignition_anova_withconifers <- car::Anova(canopy_traits_ignition_anova_table_model_withconifers,
                                                         type = 2, test.statistic = "F")
-
 canopy_ignition_xtable_withconifers <-  xtable::xtable(canopy_traits_ignition_anova_withconifers, digits = 3)
-
 canopy_ignition_anova_coefficients_withconifers <- summary(canopy_traits_ignition_anova_table_model_withconifers)$coefficients
-
 canopy_ignition_coeff_withconifers <- xtable::xtable(canopy_ignition_anova_coefficients_withconifers, digits = 3)
-
 
 ############################################################################################
 # Now leaf traits
@@ -297,51 +229,16 @@ canopy_ignition_coeff_withconifers <- xtable::xtable(canopy_ignition_anova_coeff
 
 leaf_traits_ignition_model_mixed_withconifers <- afex::mixed(ignition_delay ~ leaf_mass_per_area +
                                                                leaf_moisture_content +
-                                                               windspeed_miles_per_hour +
-                                                               (1|analysis_group), 
+                                                               (1|specific_epithet), 
                                                                data = model_data_withconifers,
                                                                method = "KR", REML = TRUE)
-
-
 leaf_traits_ignition_anova_table_model_withconifers <- lme4::lmer(ignition_delay ~ leaf_mass_per_area +
                                                                     leaf_moisture_content + 
-                                                                    windspeed_miles_per_hour +
-                                                                    (1 | analysis_group), 
+                                                                    (1 | specific_epithet), 
                                                                     data = model_data_withconifers)
-
-
 leaf_traits_ignition_anova_withconifers <- car::Anova(leaf_traits_ignition_anova_table_model_withconifers, type = 3,
                                          test.statistic = "F")
-
 leaf_ignition_xtable_withconifers <-  xtable::xtable(leaf_traits_ignition_anova_withconifers, digits = 3)
-
 leaf_ignition_anova_coefficients_withconifers <- summary(leaf_traits_ignition_anova_table_model_withconifers)$coefficients
-
 leaf_ignition_coeff_withconifers <- xtable::xtable(leaf_ignition_anova_coefficients_withconifers, digits = 3)
-
-######################################################################################################
-# Combinations of leaf and canopy traits on ignition delay
-######################################################################################################
-
-leaf_plus_canopy_ignition_model_mixed <- afex::mixed(ignition_delay ~ canopy_density_gm_cm3 +
-                                                       leaf_moisture_content + 
-                                                       leaf_mass_per_area  +   
-                                                       (1 | analysis_group), data = model_data_withconifers,
-                                                       method = "KR", REML = TRUE)
-
-leaf_plus_canopy_ignition_anova_table_model <- lme4::lmer(ignition_delay ~ canopy_density_gm_cm3 +
-                                                            leaf_moisture_content + 
-                                                            leaf_mass_per_area  +   
-                                                            (1 | analysis_group), data = model_data_withconifers)
-
-
-
-leaf_plus_ignition_anova_withconifers <- car::Anova(leaf_plus_canopy_ignition_anova_table_model, type = 3,
-                                                      test.statistic = "F")
-
-leaf_plus_ignition_xtable_withconifers <-  xtable::xtable(leaf_plus_ignition_anova_withconifers, digits = 3)
-
-leaf_plus_canopy_ignition_anova_coefficients_withconifers <- summary(leaf_plus_canopy_ignition_anova_table_model)$coefficients
-
-leaf_plus_canopy_ignition_coeff_withconifers <- xtable::xtable(leaf_plus_ignition_anova_withconifers, digits = 3)
 
