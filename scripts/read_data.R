@@ -35,17 +35,12 @@ species <- read_csv("./data/species.csv") %>%
 ## something like "Senegalia spp". But fine for now because I'm not sure this
 ## will even be used.
 
-
-
-
-
 samples_2022 <- read_csv("./data/year_2022/samples_2022.csv")
 canopy_measurements_2022 <- read_csv("./data/year_2022/canopy_measurements_2022.csv")
 leaf_measurements_2022 <- read_csv("./data/year_2022/leaf_measurements_2022.csv")
 moisture_measurements_2022 <- read_csv("./data/year_2022/moisture_content_2022.csv")
 burn_trials_2022 <- read_csv("./data/year_2022/flam_trials_2022.csv")
 juniperus_leaf_area_2022 <- read_csv("./data/year_2022/juniperus_leaf_area_2022.csv")
-
 
 ###############################################################################
 ## Calculations and cleaning
@@ -69,13 +64,7 @@ samples_2022 <- species %>%
          herbivore_defense, herbivore_preference) %>% 
   right_join(samples_2022, by = "species_id" ) %>%
   dplyr::select(-notes)
-
-## DWS: Note: herbivore_preference column not found anywhere. Original script
-## broke here anyway.
-## AM: got the herbivore_preference, fixed. 
-
 names(samples_2022)
-
 dim(samples_2022) # 139 samples.
 class(samples_2022$species_id)
 class(samples_2022$sample_id)
@@ -95,15 +84,12 @@ any(is.na(samples_2022))
 ## DWS: You don't understand what I am talking about. You are storing the same
 ## data in multiple places, that is the issue. If you need species id, it is a
 ## single step to merge so I do not agree with your rebuttal.
-
-
 ################################################################################
 
 samples_2022 <- dplyr::select(samples_2022, -species_id)
 canopy_measurements_2022 <- dplyr::select(canopy_measurements_2022, -species_id)
 burn_trials_2022 <- dplyr::select(burn_trials_2022, -species_id)
 moisture_measurements_2022 <- dplyr::select(moisture_measurements_2022, -species_id)
-
 
 ###############################################################################
 # Moisture measurements
@@ -132,7 +118,6 @@ moisture_measurements_2022 <- moisture_measurements_2022 %>%
 
 dim(moisture_measurements_2022)
 
-
 ###############################################################################
 # Merge fuel moisture data
 ###############################################################################
@@ -157,8 +142,6 @@ samples_2022 <- left_join(samples_2022, moisture_measurements_2022,
 class(samples_2022$sample_id)
 class(samples_2022$mass_pre)
 dim(samples_2022) # 139
-
-
 any(is.na(moisture_measurements_2022$canopy_moisture_content))
 any(is.na(moisture_measurements_2022$leaf_moisture_content))
 any(is.na(moisture_measurements_2022$field_moisture_content))
@@ -180,7 +163,6 @@ samples_2022 <- samples_2022 %>%
   dplyr::select(-mass_pre, -canopy_fresh_mass_gm)
 
 dim(samples_2022) # 139
-
 
 #############################################################################
 # Canopy measurements
@@ -204,7 +186,6 @@ cylindrical_shaped <- canopy_measurements_2022 %>%
   
 names(cylindrical_shaped)
 dim(cylindrical_shaped) # only two
-
 
 ###############################################################################
 # Only the sample id DC39, a ziziphus sample which is showing really high
@@ -230,7 +211,6 @@ ziziphus_CD39 <- canopy_measurements_2022 %>%
          leaf_stem_mass_ratio = dry_leaf_weight_gm/dry_stem_weight_gm) %>%
   dplyr::select(sample_id, total_mass_gm_paired_branch, 
                 leaf_stem_mass_ratio, canopy_volume_cm3)
-
 
 ###############################################################################
 # Sample those have either truncated cone or combination of two truncated cone
@@ -311,7 +291,7 @@ senegalia_leaf_measurements <- leaf_measurements_2022 %>%
 dim(senegalia_leaf_measurements)
 
 without_senegalia <- leaf_measurements_2022 %>%
-  filter( species_id != 2005) %>%
+  filter( ! species_id %in% c(2005, 2011, 1022, 9000)) %>%
   mutate( leaf1_length_cm = leaf1_length_cm + 0.04 ) %>%
   mutate( leaf2_length_cm = leaf2_length_cm + 0.04 ) %>%
   mutate( leaf3_length_cm = leaf3_length_cm + 0.04 ) %>%
@@ -320,40 +300,36 @@ without_senegalia <- leaf_measurements_2022 %>%
 
 dim(without_senegalia)
 
-leaf_measurements_2022 <- without_senegalia %>%
+leaf_measurements <- without_senegalia %>%
   rbind(senegalia_leaf_measurements)
 
-dim(leaf_measurements_2022) #139
+dim(leaf_measurements)
+
+names(leaf_measurements)
 
 ###############################################################################
 # Average length of Leaflet.
 ###############################################################################
 
-leaf_measurements_2022$average_leaf_length_cm <- apply(leaf_measurements_2022[,7:11], 1, mean, na.rm = TRUE) # Average leaf length of five individual leaflet
+leaf_measurements$average_leaf_length_cm <- apply(leaf_measurements[,7:11], 1, mean, na.rm = TRUE) # Average leaf length of five individual leaflet
 
 # some samples have leaf length of three leaves that's why na.rm was used.
 
-leaf_measurements_2022 <- leaf_measurements_2022 %>%
+leaf_measurements <- leaf_measurements %>%
   dplyr::select(-leaf1_length_cm, -leaf2_length_cm, -leaf3_length_cm, -leaf4_length_cm,
-         -leaf5_length_cm) # Removing leaf length of individual leaf length since we already got the average
+         -leaf5_length_cm) %>%
+  mutate(leaf_area_per_leaflet = leaf_area_cm2/number_of_leaflet) %>%
+  mutate(leaf_area_per_leaflet = round(leaf_area_per_leaflet, 3))
 
+dim(leaf_measurements) 
 
-dim(leaf_measurements_2022) #139
+any(is.na(leaf_measurements$average_leaf_length_cm))
 
-any(is.na(leaf_measurements_2022$average_leaf_length_cm))
-
-names(leaf_measurements_2022)
+names(leaf_measurements)
 
 ###############################################################################
 # Calculating the LMA and leaf area of Juniperus species
 ###############################################################################
-
-# I calculated the leaf area of juniperus species manually. I assumed the
-# individual brnachlets of Juniperus is cylinder in shape. The diameter and
-# leaf length is measured by the slide calipers and meter scales respectively
-# and calculated the surface area according to the formula of cylinder where
-# the breadth and length of individual branchlets are diameter and height of a
-# cylinder respectively. row 311 is an empty row.
 
 
 juniperus_leaf_area_2022 <- juniperus_leaf_area_2022[-311, ] %>% 
@@ -361,78 +337,46 @@ juniperus_leaf_area_2022 <- juniperus_leaf_area_2022[-311, ] %>%
          leaf_length_cm = leaf_length_cm + 0.04, # Adding the 0.04 same way did with length of individual leaflet.
   # turning diameter into radius
   leaf_area_per_leaflet = pi*leaf_radius_cm*leaf_length_cm) %>% # pi*D*L/2 as one sided
-  group_by(sample_id) %>%
+  group_by(sample_id, species_id) %>%
   summarise(leaf_area_cm2 = sum(leaf_area_per_leaflet), # Total leaf area which will be 
             # used to calculate LMA  
-            leaf_area_per_leaflet = mean(leaf_area_per_leaflet))
+            leaf_area_per_leaflet = mean(leaf_area_per_leaflet),
+            average_leaf_length_cm = mean(leaf_length_cm))
 
-dim(juniperus_leaf_area_2022)
-any(is.na(juniperus_leaf_area_2022$leaf_area_cm2))
-any(is.na(juniperus_leaf_area_2022$leaf_area_per_leaflet))
+juniperus_leaf_area <- leaf_measurements_2022 %>%
+  filter(species_id %in% c(2011, 1022, 9000)) %>%
+  select(sample_id, lma_fresh_mass_gm, lma_dry_mass_gm, number_of_leaflet) %>%
+  right_join(juniperus_leaf_area_2022)
 
-###############################################################################
-# Getting only Juniperus from leaf_measurements_2022
-###############################################################################
+dim(juniperus_leaf_area)
+any(is.na(juniperus_leaf_area$leaf_area_cm2))
+any(is.na(juniperus_leaf_area$leaf_area_per_leaflet))
+names(juniperus_leaf_area)
 
-
-only_juniperus <- leaf_measurements_2022 %>%
-  filter(species_id %in% c("1022", "2011", "9000")) %>%
-  dplyr::select(-leaf_area_cm2) %>% # dropping leaf_area_cm2 since I already calculated it in
-# juniperus_leaf_area_2022
-  full_join(juniperus_leaf_area_2022[-311, ], by = c("sample_id")) %>%
-  mutate(leaf_mass_per_area = lma_dry_mass_gm/leaf_area_cm2)
-
-dim(only_juniperus)
-
-###############################################################################
-# Getting all the species except Juniperus from leaf_measurements_2022
-###############################################################################
-
-without_juniperus <- leaf_measurements_2022 %>%
-  filter(!species_id %in% c("1022","2011", "9000") ) %>% # ashei, pinchotii, virginiana
-  mutate(leaf_mass_per_area = lma_dry_mass_gm/leaf_area_cm2, # lma, totla dry mass by total leaf area.
-         leaf_area_per_leaflet = leaf_area_cm2/number_of_leaflet) #  The number of leaflet is not
-# fixed though most of the samples have five leaflet.
-
-
-dim(without_juniperus)
-
-
-
-###############################################################################
-# Making only_juniperus and without_juniperus as a single data frame
-###############################################################################
-
-leaf_measurements_2022 <- without_juniperus %>%
-  rbind(only_juniperus) %>%
+leaf_measurements_combined <- leaf_measurements %>%
+  rbind(juniperus_leaf_area) %>%
+  mutate(leaf_mass_per_area = lma_dry_mass_gm/leaf_area_cm2) %>%
   rename(leaf_length_per_leaflet = average_leaf_length_cm) %>% # renaming the average leaf_length_cm to 
   # leaf_length_per_leaflet
   dplyr::select(-lma_fresh_mass_gm, -lma_dry_mass_gm, -leaf_area_cm2, number_of_leaflet)
 
-dim(leaf_measurements_2022) #139
-any(is.na(leaf_measurements_2022$leaf_length_per_leaflet)) #FALSE
-any(is.na(leaf_measurements_2022$leaf_area_per_leaflet)) #FALSE
-any(is.na(leaf_measurements_2022$leaf_mass_per_area)) #FALSE
+dim(leaf_measurements_combined) #139
+any(is.na(leaf_measurements_combined$leaf_length_per_leaflet)) #FALSE
+any(is.na(leaf_measurements_combined$leaf_area_per_leaflet)) #FALSE
+any(is.na(leaf_measurements_combined$leaf_mass_per_area)) #FALSE
 
-#senegalia_outlier <- leaf_measurements_2022 %>%
-#filter(species_id == 2005)
-
-# View(senegalia_outlier), The sample KD18 is showing exceptionally high LMA
-# value, the reason is the number of leaflet (70) and they are tiny, something
-# went wrong with them during leaf area measurements, decided to drop the
-# sample.
 
 ############################################################################
 # The next part is for fixing the leaf length , subtracting the length
 # of petiole from the leaflets length
 ############################################################################
 
-fixed_leaf_length_measurements <- leaf_measurements_2022 %>%
+fixed_leaf_length_measurements <- leaf_measurements_combined %>%
   filter(! species_id %in% c(1000, 1036, 2007, 2010, 7000, 8888))
 
 length(unique(fixed_leaf_length_measurements$species_id))
 
-corrected_leaf_length_measurements <- leaf_measurements_2022 %>%
+corrected_leaf_length_measurements <- leaf_measurements_combined %>%
   filter(species_id %in% c(1000, 1036, 2007, 2010, 7000, 8888))
 
 unique(corrected_leaf_length_measurements$species_id)
@@ -559,13 +503,10 @@ any(is.na(alldata_2022$leaf_stem_mass_ratio)) #FALSE
 any(is.na(alldata_2022$canopy_moisture_content)) #FALSE
 any(is.na(alldata_2022$leaf_moisture_content)) #FALSE
  
-
 alldata_2022 <- alldata_2022 %>%
   mutate(display_name = ifelse(analysis_group == "Juniperus", "J. spp", display_name)) %>%
   mutate(display_name = ifelse(display_name == "C. ramosissima", "C. erecta", display_name)) %>%
   mutate(display_name = ifelse(display_name == "Z. fagara", "C. hookeri", display_name))
-
-
 
 #####################################################################################
 # Changing the variable names and creating new label 
@@ -591,15 +532,14 @@ alldata_2022 <- alldata_2022 %>%
                                               alldata_2022$windspeed_miles_per_hour[alldata_2022$trials==131])/2,
                                            windspeed_miles_per_hour))
 
- 
 ######################################################################################
 # Cleaning up work space, only keeping the alldata_2022
 ######################################################################################
 
-rm(samples_2022, canopy_measurements_2022,leaf_measurements_2022, moisture_measurements_2022,
-   burn_trials_2022, juniperus_leaf_area_2022,cylindrical_shaped,
-   MASS_DISK_1, MASS_DISK_2, only_juniperus,senegalia_leaf_measurements,
-   species,SPECIFIC_HEAT_AL,without_juniperus,without_senegalia,
+rm(samples_2022, canopy_measurements_2022, leaf_measurements_2022, moisture_measurements_2022,
+   burn_trials_2022, juniperus_leaf_area_2022, cylindrical_shaped,
+   MASS_DISK_1, MASS_DISK_2, senegalia_leaf_measurements,
+   species, SPECIFIC_HEAT_AL, without_senegalia,
    ziziphus_CD39, herbivore_2022, colima_leaf_length, corrected_leaf_length_measurements,
    diospyros_texana_leaf_length, forestiera_leaf_length, ilex_vomitoria_leaf_length,
    ziziphus_leaf_length, rhus_virens_leaf_length, final_corrected,
