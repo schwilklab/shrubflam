@@ -63,8 +63,7 @@ model_data_withconifers$ignition_delay <- log(model_data_withconifers$ignition_d
 ###############################################################################
 
 options(na.action = "na.fail")
-null_model_temp_inte_withj <- afex::lmer(degsec_100 ~ (1 | specific_epithet),
-                                         data = model_data_withconifers, REML = FALSE)
+
 canopy_pc1_model_withconifers <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                  canopy_density_gm_cm3 + canopy_moisture_content +
                                  total_dry_mass_g:leaf_stem_mass_ratio +
@@ -110,24 +109,10 @@ summary(best_leaf_pc1_model_withconifers)
 
 AICc(best_canopy_pc1_model_withconifers, best_leaf_pc1_model_withconifers) 
 
-################################################################################
-# Adding best leaf traits to the best canopy traits model
-################################################################################
-
-leaf_plus_best_canopy_traits_model_withconifers <- afex::lmer(degsec_100 ~ total_dry_mass_g +
-                                                                leaf_length_per_leaflet +
-                                                                total_dry_mass_g:leaf_length_per_leaflet +
-                                                                (1 | specific_epithet),
-                                                                data = model_data_withconifers, REML = FALSE)
-AICc(leaf_plus_best_canopy_traits_model_withconifers, best_canopy_pc1_model_withconifers) # Improved
-
 ###############################################################################
 # Ignition delay vs canopy traits
 ###############################################################################
 
-null_model_ignition_delay_withj <-  afex::lmer(ignition_delay ~  (1 | specific_epithet), 
-                                               data = model_data_withconifers, 
-                                               REML = FALSE)
 canopy_ignition_model_withconifers <- afex::lmer(ignition_delay ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                                    canopy_density_gm_cm3 + canopy_moisture_content +
                                                    mean_pre_burning_temp +

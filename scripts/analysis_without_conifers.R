@@ -21,7 +21,7 @@ model_data_withoutj$ignition_delay <- log(model_data_withoutj$ignition_delay + 1
 ###############################################################################
 
 options(na.action = "na.fail")
-null_model <- afex::lmer(degsec_100 ~  (1 | analysis_group), data = model_data_withoutj, REML = FALSE)
+
 canopy_pc1_model <- afex::lmer(degsec_100 ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                  canopy_density_gm_cm3 + canopy_moisture_content +
                                  total_dry_mass_g:leaf_stem_mass_ratio +
@@ -65,7 +65,7 @@ summary(best_leaf_pc1_model)
 # Comparison between best canopy and leaf model for temperature integration
 ###############################################################################
 
-AICc(best_canopy_pc1_model, best_leaf_pc1_model, null_model) 
+AICc(best_canopy_pc1_model, best_leaf_pc1_model) 
 
 ################################################################################
 # Combination of leaf and canopy traits
@@ -80,13 +80,12 @@ leaf_plus_best_canopy_traits_model <- afex::lmer(degsec_100 ~ total_dry_mass_g +
                                                    (1 | analysis_group),
                                                    data = model_data_withoutj, REML = FALSE)
 
-AICc(leaf_plus_best_canopy_traits_model, best_canopy_pc1_model) # didn't improve the model
+AICc(leaf_plus_best_canopy_traits_model, best_canopy_pc1_model) 
 
 ###############################################################################
 # Ignition delay vs canopy traits
 ###############################################################################
 
-null_model_for_ignition <- afex::lmer(ignition_delay ~ (1 | analysis_group), data = model_data_withoutj, REML = FALSE)
 canopy_ignition_model <- afex::lmer(ignition_delay ~ total_dry_mass_g + leaf_stem_mass_ratio + 
                                       canopy_density_gm_cm3 + canopy_moisture_content +
                                       total_dry_mass_g:leaf_stem_mass_ratio +
@@ -122,7 +121,7 @@ leaf_ignition_mod_table <- model.sel(leaf_ignition_models)
 leaf_ignition_mod_table[1:8,]
 summary(best_leaf_ignition_model) 
 
-AICc(best_canopy_ignition_model, best_leaf_ignition_model, null_model_for_ignition) 
+AICc(best_canopy_ignition_model, best_leaf_ignition_model) 
 
 ###############################################################################
 # Combination of leaf and canopy traits on ignition delay
