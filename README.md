@@ -1,11 +1,11 @@
 # Shrub-Flammability
 
+[![DOI](https://zenodo.org/badge/308097112.svg)](https://doi.org/10.5281/zenodo.14991067)
+
 ## Project goals
 
--   To test whether the canopy traits is more important than leaf traits
-    in shrub flammability or not.
-
--    How well do shoot-level flammability measurements correspond to the flammability category rankings developed by the fire hazard categories listed in the National Fire Protection Association’s Firewise program? 
+- To test relative importance of crown and leaf traits for shrub flammability or not.
+- To determine how well do shoot-level flammability measurements correspond to the flammability category rankings developed by the fire hazard categories listed in the National Fire Protection Association’s Firewise program? 
 
 ## Methods
 
