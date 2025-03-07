@@ -4,7 +4,7 @@
 
 ## Project goals
 
-- To test relative importance of crown and leaf traits for shrub flammability or not.
+- To test relative importance of crown and leaf traits for shrub flammability.
 - To determine how well do shoot-level flammability measurements correspond to the flammability category rankings developed by the fire hazard categories listed in the National Fire Protection Association’s Firewise program? 
 
 ## Methods
