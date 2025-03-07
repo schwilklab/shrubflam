@@ -5,13 +5,11 @@
 -   To test whether the canopy traits is more important than leaf traits
     in shrub flammability or not.
 
--   To test current theory including predictions that heat release and
-    flame spread rate are relatively independent axes of flammability in
-    shrub fuels.
+-    How well do shoot-level flammability measurements correspond to the flammability category rankings developed by the fire hazard categories listed in the National Fire Protection Association’s Firewise program? 
 
 ## Methods
 
-We have collected 23 shrub species from multiple counties in Texas
+We have collected 17 shrub species from multiple counties in Texas
 (species description is in species_table_2022.csv). For each sample for
 each species, we have collected alike, a paired 70 cm branch from the
 same plant. The collected branches were stored in big coolers and
@@ -135,10 +133,6 @@ two minutes for pre-heating. Right before the pre-heating period, the
 weather data (Temperature, humidity and wind speed) were recorded with a
 Kestrel 3000 pocket weather meter. After two minutes of pre-heating ,an
 ignition blow torch turned on until a sample got ignited.
-
--   Heat release : Calculated by the temperature difference of the
-    aluminium disc between before ignition and after flame stopped. The
-    discs temperature recorded by 572-2 Fluke infrared thermometer.
 
 -   Flame duration : The duration of the flame sustained. The duration
     between the time when the ignition started and when the flame
