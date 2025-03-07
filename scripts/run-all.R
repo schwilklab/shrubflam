@@ -25,8 +25,6 @@ hobos_wider_2022 <- readRDS(file.path(DATA_CACHE_DIR, "hobos_wider_2022"))
 
 # run PCAs requires alldata_2022 and hobos_wider_2022 to exist:
 source("./scripts/flam_pca.R")
-source("./scripts/analysis_with_conifers.R")
-source("./scripts/analysis_without_conifers.R")
-#source("./scripts/within_10_seconds_ignition.R")
-source("./scripts/ms_figures.R")
-#source("./scripts/supplementary_analysis_2022.R")
+source("./scripts/analysis.R") # analysis.R
+source("./scripts/ms_figures.R") # figures.R
+

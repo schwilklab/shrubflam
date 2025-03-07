@@ -356,6 +356,7 @@ names(juniperus_leaf_area)
 leaf_measurements_combined <- leaf_measurements %>%
   rbind(juniperus_leaf_area) %>%
   mutate(leaf_mass_per_area = lma_dry_mass_gm/leaf_area_cm2) %>%
+  mutate(ldmc = ((lma_dry_mass_gm*1000)/lma_fresh_mass_gm)/number_of_leaflet) %>%
   rename(leaf_length_per_leaflet = average_leaf_length_cm) %>% # renaming the average leaf_length_cm to 
   # leaf_length_per_leaflet
   dplyr::select(-lma_fresh_mass_gm, -lma_dry_mass_gm, -leaf_area_cm2, number_of_leaflet)

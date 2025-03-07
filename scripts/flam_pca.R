@@ -29,7 +29,7 @@ flam_pca_2022 <- prcomp(pca_data_2022[,-1],
 summary(flam_pca_2022) 
 flam_loadings <- flam_pca_2022$rotation[ ,1:2] 
 flam_loadings
-biplot(flam_pca_2022)
+#biplot(flam_pca_2022)
 
 ###############################################################################
 # Assigning PC1 to pca_data_2022 and then merging with alldata_2022
