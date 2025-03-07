@@ -134,8 +134,8 @@ dim(moisture_measurements_2022)
 
 samples_2022 <- left_join(samples_2022, moisture_measurements_2022, 
                           by = c("sample_id")) %>%  #"species_id"  should only join by sample id, right? AM: Yes.fixed it
-  left_join(dplyr::select(burn_trials_2022, sample_id, mass_pre)) %>%
-  mutate(field_moisture_content = ifelse(site == "Edwards 2020-22", NA, field_moisture_content)) # Replacing field moisture content
+  left_join(dplyr::select(burn_trials_2022, sample_id, mass_pre)) #%>%
+  #mutate(field_moisture_content = ifelse(site == "Edwards 2020-22", NA, field_moisture_content)) # Replacing field moisture content
 # value of the first field trip with NA since samples for measuring the Field moisture content from the first field trip was biased since the paper towel were heavily soaked.
 
   
