@@ -159,8 +159,8 @@ range(samples_2022$field_moisture_content, na.rm = TRUE)
 ###############################################################################
 
 samples_2022 <- samples_2022 %>%
-  mutate(total_dry_mass_gm =mass_pre*(canopy_dry_mass_gm/canopy_fresh_mass_gm)) %>%
-  dplyr::select(-mass_pre, -canopy_fresh_mass_gm)
+  mutate(total_dry_mass_gm = mass_pre*(canopy_dry_mass_gm/canopy_fresh_mass_gm)) %>%
+  dplyr::select( -canopy_fresh_mass_gm)
 
 dim(samples_2022) # 139
 
@@ -436,7 +436,7 @@ burn_trials_2022 <- burn_trials_2022 %>%
          heat2 = (temp_d2_post - temp_d2_pre) * MASS_DISK_2 * SPECIFIC_HEAT_AL,
          heat_release_j = (heat1 + heat2)/2, # average heat release of two disks
          massconsumed = (mass_pre - mass_post)) %>%
-  dplyr::select(-temp_d1_post, -temp_d2_post, -date)
+  dplyr::select(-temp_d1_post, -temp_d2_post, -date, -mass_pre, -mass_post)
 
 dim(burn_trials_2022) # 139
 
@@ -544,6 +544,7 @@ rm(samples_2022, canopy_measurements_2022, leaf_measurements_2022, moisture_meas
    ziziphus_CD39, herbivore_2022, colima_leaf_length, corrected_leaf_length_measurements,
    diospyros_texana_leaf_length, forestiera_leaf_length, ilex_vomitoria_leaf_length,
    ziziphus_leaf_length, rhus_virens_leaf_length, final_corrected,
-   corrected_leaf_length_measurements_2022, fixed_leaf_length_measurements)
+   corrected_leaf_length_measurements_2022, fixed_leaf_length_measurements,
+   leaf_measurements_combined, leaf_measurements, juniperus_leaf_area)
 
 
